@@ -19,4 +19,9 @@ class Assessment extends Model
     {
         return $this->hasMany(AssessmentFeedback::class);
     }
+
+    public function getFeedbackDueAttribute()
+    {
+        return $this->deadline->addWeeks(3);
+    }
 }

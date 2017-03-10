@@ -51,6 +51,7 @@ class User extends Authenticatable
                     'course_code' => $course->code,
                     'course_title' => $course->title,
                     'deadline' => $assessment->deadline->format('Y-m-d H:i'),
+                    'feedback_due' => $assessment->feedback_due->addWeeks(3)->format('Y-m-d H:i'),
                     'type' => $assessment->type,
                     'feedback_missed' => $negativeFeedback,
                 ];

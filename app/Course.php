@@ -13,6 +13,6 @@ class Course extends Model
 
     public function assessments()
     {
-        return $this->belongsToMany(Assessment::class, 'course_assessment');
+        return $this->hasMany(Assessment::class);
     }
 }
