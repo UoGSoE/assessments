@@ -47,7 +47,7 @@ $factory->define(App\Assessment::class, function (Faker\Generator $faker) {
         'Group Report',
     ];
     $now = \Carbon\Carbon::now();
-    $deadline = rand(1, 10) > 5 ? $now->subWeeks(rand(1, 26)) : $now->addWeeks(rand(1, 26));
+    $deadline = $now->addWeeks(rand(1, 26));
     return [
         'deadline' => $deadline,
         'type' => $faker->randomElement($types),
