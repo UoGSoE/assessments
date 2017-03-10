@@ -22,9 +22,17 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $assessment = $this->createAssessment(['course_id' => $course->id]);
         $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student->id, 'feedback_given' => false]);
 
-        $json = $student->fresh()->assessmentsAsJson();
+        $json = $student->assessmentsAsJson();
 
-        dd($json);
+        $this->assertEquals([
+            'course_code' => $course->code,
+            'feedback_missed' => true,
+            'deadline' => $assessment->deadline->format('Y-m-d H:i'),
+            'feedback_due' => $assessment->feedback_due->format('Y-m-d H:i'),
+            'type' => $assessment->type,
+            'course_title' => $course->title,
+            'assessment_id' => $assessment->id,
+        ], json_decode($json, true)[0]);
     }
 
     /** @test */
@@ -34,12 +42,12 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $courses = factory(Course::class, 20)->create()->each(function ($course) use ($student) {
             $course->students()->attach($student);
             $assessments = factory(Assessment::class, 5)->create();
-            $course->assessments()->attach($assessments->pluck('id'));
+            $course->assessments()->saveMany($assessments);
         });
-        $assessment = Assessment::first();
-        $assessment->feedbacks()->save(new AssessmentFeedback(['user_id' => $student->id, 'course_id' => $assessment->course_id, 'assessment_id' => $assessment->id, 'feedback_given' => false]));
-        $json = $student->assessmentsAsJson();
 
-        dd($json);
+        $json = json_decode($student->assessmentsAsJson(), true);
+
+        $this->assertEquals(100, count($json));
+
     }
 }

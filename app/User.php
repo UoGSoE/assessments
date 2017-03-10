@@ -47,16 +47,35 @@ class User extends Authenticatable
                     $negativeFeedback = true;
                 }
                 $data[] = [
-                    'assesssment_id' => $assessment->id,
+                    'assessment_id' => $assessment->id,
                     'course_code' => $course->code,
                     'course_title' => $course->title,
                     'deadline' => $assessment->deadline->format('Y-m-d H:i'),
-                    'feedback_due' => $assessment->feedback_due->addWeeks(3)->format('Y-m-d H:i'),
+                    'feedback_due' => $assessment->feedback_due->format('Y-m-d H:i'),
                     'type' => $assessment->type,
                     'feedback_missed' => $negativeFeedback,
                 ];
             }
         }
         return json_encode($data);
+    }
+
+    public function recordFeedback($assessment)
+    {
+        if (is_numeric($assessment)) {
+            $assessment = findOrFail($assessment);
+        }
+        $assessment->addFeedback($this);
+    }
+
+    public function notOnCourse($courseId)
+    {
+        if (!is_numeric($courseId)) {
+            $courseId = $courseId->id;
+        }
+        if ($this->courses()->where('course_id', $courseId)->first()) {
+            return false;
+        }
+        return true;
     }
 }
