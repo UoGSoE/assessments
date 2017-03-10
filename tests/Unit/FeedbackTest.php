@@ -6,7 +6,6 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Exceptions\NotYourCourseException;
 
 class FeedbackTest extends TestCase
 {
@@ -39,31 +38,16 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function student_can_add_negative_feedback_for_an_assessment()
+    public function an_assessment_with_lots_of_negative_feedback_is_flagged()
     {
-        $student = $this->createStudent();
+        $students = factory(\App\User::class, 10)->states('student')->create();
         $course = $this->createCourse();
-        $course->students()->save($student);
+        $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-
-        $student->recordFeedback($assessment);
-
-        $this->assertEquals(1, $assessment->totalNegativeFeedbacks());
-    }
-
-    /** @test */
-    public function student_cant_add_feedback_for_an_assessment_which_isnt_associated_with_one_of_their_courses()
-    {
-        $student = $this->createStudent();
-        $course = $this->createCourse();
-        $assessment = $this->createAssessment(['course_id' => $course->id]);
-
-        try {
-            $student->recordFeedback($assessment);
-        } catch (NotYourCourseException $e) {
-            return;
+        foreach ($students->take(6) as $student) {
+            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student->id, 'feedback_given' => false]);
         }
 
-        return $this->fail('Student added feedback for an assessment which was not for one of their courses, but no exception thrown');        
+        $this->assertTrue($assessment->isProblematic());
     }
 }

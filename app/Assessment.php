@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\NotYourCourseException;
+use App\Exceptions\TooMuchTimePassedException;
+use Carbon\Carbon;
 
 class Assessment extends Model
 {
@@ -49,6 +51,9 @@ class Assessment extends Model
         if ($student->notOnCourse($this->course)) {
             throw new NotYourCourseException;
         }
+        if ($this->deadline->lt(Carbon::now()->subMonths(3))) {
+            throw new TooMuchTimePassedException;
+        }
         $feedback = $this->feedbacks()->where('user_id', $student->id)->first();
         if (!$feedback) {
             $feedback = new AssessmentFeedback;
@@ -58,5 +63,13 @@ class Assessment extends Model
         $feedback->feedback_given = false;
         $feedback->assessment_id = $this->id;
         $feedback->save();
+    }
+
+    public function isProblematic()
+    {
+        if ($this->percentageNegativeFeedbacks() > 30) {
+            return true;
+        }
+        return false;
     }
 }

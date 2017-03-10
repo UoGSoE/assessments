@@ -14,6 +14,18 @@ use App\AssessmentFeedback;
 class StudentAssessmentsAsJsonTest extends TestCase
 {
     /** @test */
+    public function if_no_assessments_an_empty_json_array_is_returned()
+    {
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->save($student);
+
+        $json = $student->assessmentsAsJson();
+
+        $this->assertEquals([], json_decode($json));
+    }
+
+    /** @test */
     public function if_negative_feedback_given_json_has_feedback_missed_flagged()
     {
         $student = $this->createStudent();
@@ -25,8 +37,8 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $json = $student->assessmentsAsJson();
 
         $this->assertEquals([
-            'course_code' => $course->code,
             'feedback_missed' => true,
+            'course_code' => $course->code,
             'deadline' => $assessment->deadline->format('Y-m-d H:i'),
             'feedback_due' => $assessment->feedback_due->format('Y-m-d H:i'),
             'type' => $assessment->type,
