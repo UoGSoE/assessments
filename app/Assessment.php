@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\NotYourCourseException;
 use App\Exceptions\TooMuchTimePassedException;
+use App\Exceptions\AssessmentNotOverdueException;
 use Carbon\Carbon;
 
 class Assessment extends Model
@@ -43,6 +44,19 @@ class Assessment extends Model
         return $this->deadline->addWeeks(3);
     }
 
+    public function overdue()
+    {
+        if ($this->feedback_due->lt(Carbon::now())) {
+            return true;
+        }
+        return false;
+    }
+
+    public function notOverdue()
+    {
+        return ! $this->overdue();
+    }
+
     public function addFeedback($student)
     {
         if (is_numeric($student)) {
@@ -53,6 +67,9 @@ class Assessment extends Model
         }
         if ($this->deadline->lt(Carbon::now()->subMonths(3))) {
             throw new TooMuchTimePassedException;
+        }
+        if ($this->notOverdue()) {
+            throw new AssessmentNotOverdueException;
         }
         $feedback = $this->feedbacks()->where('user_id', $student->id)->first();
         if (!$feedback) {

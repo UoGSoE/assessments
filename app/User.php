@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\OverdueFeedback;
 
 class User extends Authenticatable
 {
@@ -32,9 +33,27 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class, 'course_student');
     }
 
+    public function assessments()
+    {
+        return $this->hasMany(Assessment::class);
+    }
+
     public function feedbacks()
     {
         return $this->belongsToMany(AssessmentFeedback::class, 'assessment_feedbacks');
+    }
+
+    public function unreadFeedbacks()
+    {
+        $feedbacks = [];
+        foreach ($this->assessments()->with('course', 'feedbacks')->get() as $assessment) {
+            foreach ($assessment->negativeFeedbacks as $feedback) {
+                if ($feedback->isUnread()) {
+                    $feedbacks[] = $feedback;
+                }
+            }
+        }
+        return collect($feedbacks);
     }
 
     public function assessmentsAsJson()
@@ -77,5 +96,25 @@ class User extends Authenticatable
             return false;
         }
         return true;
+    }
+
+    public function markAllFeedbacksAsRead($feedbacks = [])
+    {
+        if (count($feedbacks) == 0) {
+            $feedbacks = $this->unreadFeedbacks();
+        }
+        foreach ($feedbacks as $feedback) {
+            $feedback->markAsRead();
+        }
+    }
+
+    public function notifyAboutUnreadFeedback()
+    {
+        $unread = $this->unreadFeedbacks();
+        if ($unread->count() == 0) {
+            return;
+        }
+        $this->notify(new OverdueFeedback($unread));
+        $this->markAllFeedbacksAsRead($unread);
     }
 }

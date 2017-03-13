@@ -28,6 +28,11 @@ $factory->state(App\User::class, 'student', function ($faker) {
         'is_student' => true,
     ];
 });
+$factory->state(App\User::class, 'staff', function ($faker) {
+    return [
+        'is_student' => false,
+    ];
+});
 
 $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
@@ -54,6 +59,9 @@ $factory->define(App\Assessment::class, function (Faker\Generator $faker) {
         'course_id' => function () {
             return factory(App\Course::class)->create()->id;
         },
+        'user_id' => function () {
+            return factory(App\User::class)->states('staff')->create()->id;
+        },
     ];
 });
 
@@ -69,5 +77,6 @@ $factory->define(App\AssessmentFeedback::class, function (Faker\Generator $faker
             return factory(App\User::class)->create()->id;
         },
         'feedback_given' => false,
+        'staff_notified' => false,
     ];
 });

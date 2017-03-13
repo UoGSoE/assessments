@@ -22,6 +22,7 @@ class CreateAssessmentFeedbacksTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->boolean('feedback_given')->default(true);
+            $table->boolean('staff_notified')->default(false);
             $table->timestamps();
         });
     }

@@ -4,10 +4,12 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Exceptions\NotYourCourseException;
 use App\Exceptions\TooMuchTimePassedException;
+use App\Exceptions\AssessmentNotOverdueException;
 
 class StudentFeedbackTest extends TestCase
 {
@@ -17,7 +19,7 @@ class StudentFeedbackTest extends TestCase
         $student = $this->createStudent();
         $course = $this->createCourse();
         $course->students()->save($student);
-        $assessment = $this->createAssessment(['course_id' => $course->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
 
         $student->recordFeedback($assessment);
 
@@ -63,11 +65,28 @@ class StudentFeedbackTest extends TestCase
         $student = $this->createStudent();
         $course = $this->createCourse();
         $course->students()->save($student);
-        $assessment = $this->createAssessment(['course_id' => $course->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
 
         $student->recordFeedback($assessment);
         $student->recordFeedback($assessment);
 
         $this->assertEquals(1, $assessment->totalNegativeFeedbacks());
+    }
+
+    /** @test */
+    public function student_cant_add_feedback_for_assessment_where_feedback_is_not_overdue()
+    {
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->save($student);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(2)]);
+
+        try {
+            $student->recordFeedback($assessment);
+        } catch (AssessmentNotOverdueException $e) {
+            return;
+        }
+
+        $this->fail('Student added feedback to an assessment which was not overdue, but no exception was thrown');
     }
 }

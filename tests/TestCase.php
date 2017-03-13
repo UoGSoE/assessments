@@ -14,14 +14,22 @@ abstract class TestCase extends BaseTestCase
     {
         return factory(\App\User::class)->states('student')->create($attribs);
     }
+
+    public function createStaff($attribs = [])
+    {
+        return factory(\App\User::class)->states('staff')->create($attribs);
+    }
+
     public function createCourse($attribs = [])
     {
         return factory(\App\Course::class)->create($attribs);
     }
+
     public function createAssessment($attribs = [])
     {
         return factory(\App\Assessment::class)->create($attribs);
     }
+
     public function createFeedback($attribs = [])
     {
         return factory(\App\AssessmentFeedback::class)->create($attribs);
