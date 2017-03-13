@@ -39,11 +39,13 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $this->assertEquals([
             'feedback_missed' => true,
             'course_code' => $course->code,
-            'deadline' => $assessment->deadline->format('Y-m-d H:i'),
-            'feedback_due' => $assessment->feedback_due->format('Y-m-d H:i'),
+            'start' => $assessment->deadline->toIso8601String(),
+            'end' => $assessment->deadline->addHours(1)->toIso8601String(),
+            'feedback_due' => $assessment->feedback_due->toIso8601String(),
             'type' => $assessment->type,
             'course_title' => $course->title,
-            'assessment_id' => $assessment->id,
+            'id' => $assessment->id,
+            'title' => $assessment->title,
         ], json_decode($json, true)[0]);
     }
 

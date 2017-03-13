@@ -44,6 +44,11 @@ class Assessment extends Model
         return $this->deadline->addWeeks(3);
     }
 
+    public function getTitleAttribute()
+    {
+        return $this->course->code . ' - ' . $this->type . ' - ' . $this->deadline->format('d/m/Y H:i');
+    }
+
     public function overdue()
     {
         if ($this->feedback_due->lt(Carbon::now())) {

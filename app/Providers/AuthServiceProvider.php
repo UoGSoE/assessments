@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Carbon\Carbon;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,17 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('can_leave_feedback', function ($student, $assessment) {
+            if ($student->notOnCourse($assessment->course)) {
+                return false;
+            }
+            if ($assessment->deadline->lt(Carbon::now()->subMonths(3))) {
+                return false;
+            }
+            if ($assessment->notOverdue()) {
+                return false;
+            }
+            return true;
+        });
     }
 }

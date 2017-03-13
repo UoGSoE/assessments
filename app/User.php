@@ -66,11 +66,13 @@ class User extends Authenticatable
                     $negativeFeedback = true;
                 }
                 $data[] = [
-                    'assessment_id' => $assessment->id,
+                    'id' => $assessment->id,
+                    'title' => $assessment->title,
                     'course_code' => $course->code,
                     'course_title' => $course->title,
-                    'deadline' => $assessment->deadline->format('Y-m-d H:i'),
-                    'feedback_due' => $assessment->feedback_due->format('Y-m-d H:i'),
+                    'start' => $assessment->deadline->toIso8601String(),
+                    'end' => $assessment->deadline->addHours(1)->toIso8601String(),
+                    'feedback_due' => $assessment->feedback_due->toIso8601String(),
                     'type' => $assessment->type,
                     'feedback_missed' => $negativeFeedback,
                 ];

@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'StudentHomeController@index')->name('home');
+Route::post('/logout', function () {
+})->name('logout');
+Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
