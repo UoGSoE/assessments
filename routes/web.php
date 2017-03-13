@@ -11,7 +11,11 @@
 |
 */
 
-Route::get('/', 'StudentHomeController@index')->name('home');
-Route::post('/logout', function () {
-})->name('logout');
-Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
+Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('/login', 'Auth\LoginController@attemptLogin')->name('login.post');
+Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', 'StudentHomeController@index')->name('home');
+    Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
+});
