@@ -36,6 +36,12 @@ class Assessment extends Model
 
     public function percentageNegativeFeedbacks()
     {
+        if ($this->course->students()->count() == 0) {
+            return 0;
+        }
+        if ($this->totalNegativeFeedbacks() == 0) {
+            return 0;
+        }
         return 100.0 / ($this->course->students()->count() / $this->totalNegativeFeedbacks());
     }
 
@@ -46,7 +52,7 @@ class Assessment extends Model
 
     public function getTitleAttribute()
     {
-        return $this->course->code . ' - ' . $this->type . ' - ' . $this->deadline->format('d/m/Y H:i');
+        return $this->course->code . ' - ' . $this->type;
     }
 
     public function overdue()

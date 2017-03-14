@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function feedbacks()
     {
-        return $this->belongsToMany(AssessmentFeedback::class, 'assessment_feedbacks');
+        return $this->hasMany(AssessmentFeedback::class);
     }
 
     public function unreadFeedbacks()
@@ -54,6 +54,11 @@ class User extends Authenticatable
             }
         }
         return collect($feedbacks);
+    }
+
+    public function fullName()
+    {
+        return $this->surname . ', ' . $this->forenames;
     }
 
     public function assessmentsAsJson()

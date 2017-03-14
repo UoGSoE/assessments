@@ -19,7 +19,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'username' => $faker->unique()->userName,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
-        'surname' => $faker->lastName,
+        'surname' => preg_replace('/[^a-z\s]/i', ' ', $faker->lastName),
         'forenames' => $faker->firstName(),
         'remember_token' => str_random(10),
     ];
@@ -33,6 +33,12 @@ $factory->state(App\User::class, 'student', function ($faker) {
 $factory->state(App\User::class, 'staff', function ($faker) {
     return [
         'is_student' => false,
+    ];
+});
+$factory->state(App\User::class, 'admin', function ($faker) {
+    return [
+        'is_student' => false,
+        'is_admin' => true,
     ];
 });
 

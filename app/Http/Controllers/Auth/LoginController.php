@@ -43,6 +43,10 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
         $this->ldap = $ldap;
     }
+    public function login(Request $request)
+    {
+        return $this->attemptLogin($request);
+    }
 
     protected function attemptLogin(Request $request)
     {
