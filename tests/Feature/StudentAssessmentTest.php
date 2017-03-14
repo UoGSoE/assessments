@@ -60,7 +60,7 @@ class StudentAssessmentTest extends TestCase
         $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
 
         $response->assertStatus(200);
-        $response->assertSee($assessment->title);
+        $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
     }
 }

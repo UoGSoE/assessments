@@ -27,6 +27,7 @@ class AdminTest extends DuskTestCase
             $student->recordFeedback($assessment1);
 
             $browser->loginAs($admin)
+                    ->visit('/')
                     ->assertSee('Admin')
                     ->clickLink('Admin')
                     ->assertSee('All Assessments')

@@ -33,25 +33,19 @@
 </head>
 <body>
     <div id="app">
-
         @include('partials.navbar')
-
-            <div class="section">
-                <div class="container">
-                    <noscript>
-                        <div class="notification is-danger is-outlined">
-                            This site will not work without javascript enabled
-                        </div>
-                    </noscript>
-                    @include('partials.errors')
-                    @include('partials.success')
-                    @yield('content')
-                </div>
+        <div class="section">
+            <div class="container">
+                <noscript>
+                    <div class="notification is-danger is-outlined">
+                        This site will not work without javascript enabled
+                    </div>
+                </noscript>
+                @include('partials.errors')
+                @include('partials.success')
+                @yield('content')
             </div>
         </div>
     </div>
-
-    <script>
-    </script>
 </body>
 </html>

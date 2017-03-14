@@ -56,6 +56,11 @@ class User extends Authenticatable
         return collect($feedbacks);
     }
 
+    public function scopeStaff($query)
+    {
+        return $query->where('is_student', '=', false);
+    }
+
     public function fullName()
     {
         return $this->surname . ', ' . $this->forenames;
@@ -92,6 +97,15 @@ class User extends Authenticatable
             $assessment = findOrFail($assessment);
         }
         $assessment->addFeedback($this);
+    }
+
+    public function hasLeftFeedbackFor($assessment)
+    {
+        $feedback = $this->feedbacks()->where('assessment_id', '=', $assessment->id)->first();
+        if ($feedback) {
+            return true;
+        }
+        return false;
     }
 
     public function notOnCourse($courseId)

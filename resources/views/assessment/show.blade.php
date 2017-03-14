@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="title is-2">
         Assessment Details
-        @if ($assessment->overdue())
+        @if ($assessment->overdue() and Auth::user()->can('can_leave_feedback', $assessment))
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
                 {!! csrf_field() !!}
                 <button class="button is-danger is-outlined" type="submit">

@@ -36,6 +36,9 @@ class AuthServiceProvider extends ServiceProvider
             if ($assessment->notOverdue()) {
                 return false;
             }
+            if ($student->hasLeftFeedbackFor($assessment)) {
+                return false;
+            }
             return true;
         });
         Gate::define('can_see_assessment', function ($user, $assessment) {
