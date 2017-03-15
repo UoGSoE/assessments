@@ -13,7 +13,11 @@
         @endif
     </h2>
     <p>
-        Course : {{ $assessment->course->code }} {{ $assessment->course->title}}
+        Course : 
+            <a href="{!! route('course.show', $assessment->course_id) !!}">
+                {{ $assessment->course->code }}
+            </a>
+            {{ $assessment->course->title}}
     </p>
     <p>
         Assessment Type : {{ $assessment->type }}

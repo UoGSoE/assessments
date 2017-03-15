@@ -60,4 +60,44 @@ class AdminTest extends TestCase
             $response->assertSee($feedback->student->fullName());
         }
     }
+
+    /** @test */
+    public function admin_can_see_all_feedbacks_left_by_a_given_student()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $student = $this->createStudent();
+        $course->students()->sync([$student->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id]);
+        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+
+        $response = $this->actingAs($admin)->get(route('student.show', $student->id));
+
+        $response->assertStatus(200);
+        $response->assertSee($student->fullName());
+        $response->assertSee('Feedbacks Left');
+        foreach ($feedbacks as $feedback) {
+            $response->assertSee($feedback->course->code);
+        }
+    }
+
+    /** @test */
+    public function admin_can_see_the_details_for_a_course()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $students = factory(\App\User::class, 5)->states('student')->create();
+        $course->students()->sync($students->pluck('id'));
+        $assessments = factory(\App\Assessment::class, 5)->create(['course_id' => $course->id]);
+
+        $response = $this->actingAs($admin)->get(route('course.show', $course->id));
+
+        $response->assertStatus(200);
+        foreach ($assessments as $assessment) {
+            $response->assertSee($assessment->title);
+        }
+        foreach ($students as $student) {
+            $response->assertSee($student->fullName());
+        }
+    }
 }

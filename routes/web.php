@@ -23,5 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
         Route::get('report', 'ReportController@assessments')->name('report.assessments');
         Route::get('student/{id}', 'StudentController@show')->name('student.show');
+        Route::get('course/{id}', 'CourseController@show')->name('course.show');
     });
 });

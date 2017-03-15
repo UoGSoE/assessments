@@ -10,20 +10,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'username', 'email', 'password', 'surname', 'forenames', 'is_student'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -54,6 +44,11 @@ class User extends Authenticatable
             }
         }
         return collect($feedbacks);
+    }
+
+    public function getMatricAttribute()
+    {
+        return preg_replace('/[^0-9]/', '', $this->username);
     }
 
     public function scopeStaff($query)

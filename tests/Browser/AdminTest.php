@@ -43,7 +43,12 @@ class AdminTest extends DuskTestCase
                     ->assertSee($assessment1->title)
                     ->clickLink($assessment1->title)
                     ->assertSee('Assessment Details')
-                    ->assertSee($assessment1->course->code);
+                    ->assertSee($assessment1->course->code)
+                    ->clickLink($assessment1->course->code)
+                    ->assertSee('Course Details')
+                    ->pause(10000)
+                    ->assertSee($course1->title)
+                    ->assertSee($course1->students()->first()->fullName());
         });
     }
 }
