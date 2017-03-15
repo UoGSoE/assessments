@@ -117,7 +117,7 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($course->code);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
-        $response->assertSee($assessment->feedback_due->format('d/m/Y H:i'));
+        $response->assertSee($assessment->feedback_due->format('d/m/Y'));
         $response->assertSee($student->fullName());
         $response->assertSee($assessment->feedbacks()->first()->created_at->format('d/m/Y H:i'));
     }

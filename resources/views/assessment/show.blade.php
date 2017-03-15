@@ -26,7 +26,8 @@
         Deadline : {{ $assessment->deadline->format('d/m/Y H:i') }}
     </p>
     <p>
-        Feedback Due : {{ $assessment->feedback_due->format('d/m/Y H:i') }}
+        Feedback Due : {{ $assessment->feedback_due->format('d/m/Y') }}
+        ({{ $assessment->feedback_due->diffForHumans() }})
     </p>
     @if (Auth::user()->is_admin)
         <hr />
