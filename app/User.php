@@ -20,7 +20,10 @@ class User extends Authenticatable
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_student');
+        if ($this->is_student) {
+            return $this->belongsToMany(Course::class, 'course_student');
+        }
+        return $this->belongsToMany(Course::class, 'course_staff');
     }
 
     public function assessments()
@@ -59,6 +62,11 @@ class User extends Authenticatable
     public function fullName()
     {
         return $this->surname . ', ' . $this->forenames;
+    }
+
+    public function isStaff()
+    {
+        return ! $this->is_student;
     }
 
     public function assessmentsAsJson()

@@ -59,9 +59,7 @@ class LoginController extends Controller
         $user = User::where('username', $username)->first();
         if (!$user) {
             $user = new User(['username' => $username, 'surname' => $ldapUser['surname'], 'forenames' => $ldapUser['forenames'], 'email' => $ldapUser['email'], 'password' => bcrypt(str_random(64))]);
-            if ($this->isAStudent($username)) {
-                $user->is_student = true;
-            }
+            $user->is_student = $this->isAStudent($username);
             $user->save();
         }
         Auth::login($user);
@@ -70,7 +68,7 @@ class LoginController extends Controller
 
     protected function isAStudent($username)
     {
-        if (preg_match('/^[0-9]{7}[a-z]$/', $username)) {
+        if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
             return true;
         }
         return false;

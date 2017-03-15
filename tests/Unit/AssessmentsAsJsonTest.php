@@ -11,10 +11,10 @@ use App\Course;
 use App\Assessment;
 use App\AssessmentFeedback;
 
-class StudentAssessmentsAsJsonTest extends TestCase
+class AssessmentsAsJsonTest extends TestCase
 {
     /** @test */
-    public function if_no_assessments_an_empty_json_array_is_returned()
+    public function if_student_has_no_assessments_an_empty_json_array_is_returned()
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -26,7 +26,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function if_negative_feedback_given_json_has_feedback_missed_flagged()
+    public function if_student_left_negative_feedback_given_json_has_feedback_missed_flagged()
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -60,6 +60,22 @@ class StudentAssessmentsAsJsonTest extends TestCase
         });
 
         $json = json_decode($student->assessmentsAsJson(), true);
+
+        $this->assertEquals(100, count($json));
+
+    }
+
+    /** @test */
+    public function we_can_fetch_all_assessments_for_a_given_staffmember_as_json()
+    {
+        $staff = $this->createStaff();
+        $courses = factory(Course::class, 20)->create()->each(function ($course) use ($staff) {
+            $course->staff()->attach($staff);
+            $assessments = factory(Assessment::class, 5)->create();
+            $course->assessments()->saveMany($assessments);
+        });
+
+        $json = json_decode($staff->assessmentsAsJson(), true);
 
         $this->assertEquals(100, count($json));
 

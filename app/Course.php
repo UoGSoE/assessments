@@ -11,6 +11,11 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'course_student');
     }
 
+    public function staff()
+    {
+        return $this->belongsToMany(User::class, 'course_staff');
+    }
+
     public function assessments()
     {
         return $this->hasMany(Assessment::class);

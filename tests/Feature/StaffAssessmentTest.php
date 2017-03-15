@@ -68,4 +68,32 @@ class StaffAssessmentTest extends TestCase
         $this->assertEquals(0, $staff->unreadFeedbacks()->count());
         
     }
+
+    /** @test */
+    public function staff_can_see_all_applicable_assessments()
+    {
+        $staff = $this->createStaff();
+        $course1 = $this->createCourse();
+        $course1->staff()->sync([$staff->id]);
+        $course2 = $this->createCourse();
+        $course2->staff()->sync([$staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'user_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'user_id' => $staff->id]);
+        $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'user_id' => $staff->id]);
+        $assessment4 = $this->createAssessment(['type' => 'SHOULDNTSHOWUP']);
+
+        $response = $this->actingAs($staff)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee($course1->code);
+        $response->assertSee($course2->code);
+        $response->assertSee($assessment1->type);
+        $response->assertSee($assessment2->type);
+        $response->assertSee($assessment3->type);
+        $response->assertDontSee($assessment4->type);
+        $response->assertSee($assessment1->deadline->toIso8601String());
+        $response->assertSee($assessment2->deadline->toIso8601String());
+        $response->assertSee($assessment3->deadline->toIso8601String());
+    }
+
 }

@@ -29,7 +29,7 @@
         Feedback Due : {{ $assessment->feedback_due->format('d/m/Y') }}
         ({{ $assessment->feedback_due->diffForHumans() }})
     </p>
-    @if (Auth::user()->is_admin)
+    @can('see_feedbacks', $assessment)
         <hr />
         <h3 class="title is-3">
             Feedbacks Left
@@ -43,5 +43,5 @@
                 ({{ $feedback->created_at->diffForHumans($assessment->feedback_due) }} due date)
             </li>
         @endforeach
-    @endif
+    @endcan
 @endsection

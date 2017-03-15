@@ -19,10 +19,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'StudentHomeController@index')->name('home');
     Route::get('/assessment/{id}', 'AssessmentController@show')->name('assessment.show');
     Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
+    Route::get('course/{id}', 'CourseController@show')->name('course.show');
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
         Route::get('report', 'ReportController@assessments')->name('report.assessments');
         Route::get('student/{id}', 'StudentController@show')->name('student.show');
-        Route::get('course/{id}', 'CourseController@show')->name('course.show');
     });
 });
