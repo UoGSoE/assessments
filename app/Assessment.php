@@ -81,7 +81,7 @@ class Assessment extends Model
         if ($student->notOnCourse($this->course)) {
             throw new NotYourCourseException;
         }
-        if ($this->deadline->lt(Carbon::now()->subMonths(3))) {
+        if ($this->isReallyOld()) {
             throw new TooMuchTimePassedException;
         }
         if ($this->notOverdue()) {
@@ -96,6 +96,11 @@ class Assessment extends Model
         $feedback->feedback_given = false;
         $feedback->assessment_id = $this->id;
         $feedback->save();
+    }
+
+    public function isReallyOld()
+    {
+        return $this->deadline->lt(Carbon::now()->subMonths(3));
     }
 
     public function isProblematic()
