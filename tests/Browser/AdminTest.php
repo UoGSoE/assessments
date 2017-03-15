@@ -26,7 +26,6 @@ class AdminTest extends DuskTestCase
             $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'deadline' => Carbon::now()->subWeeks(5)]);
             $assessment4 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE4', 'deadline' => Carbon::now()->addDays(5)]);
             $student->recordFeedback($assessment1);
-
             $browser->loginAs($admin)
                     ->visit('/')
                     ->assertSee('Admin')
