@@ -7,18 +7,28 @@
     <p>
         Name : {{ $student->fullName() }}
     </p>
-    <hr />
-    <h3 class="title is-3">
-        Feedbacks Left
-    </h3>
-    @foreach ($student->feedbacks()->get() as $feedback)
-        <li>
-            <a href="{!! route('assessment.show', $feedback->assessment_id) !!}">
-                {{ $feedback->assessment->title }}
-                {{ $feedback->created_at->format('d/m/Y H:i') }}
+    <p>
+        Courses :
+        @foreach ($student->courses as $course)
+            <a href="{!! route('course.show', $course->id) !!}">
+                {{ $course->code }}
             </a>
-        </li>
-    @endforeach
+        @endforeach
+    </p>
+    @if ($student->hasLeftFeedbacks())
+        <hr />
+        <h3 class="title is-3">
+            Feedbacks Left
+        </h3>
+        @foreach ($student->feedbacks()->get() as $feedback)
+            <li>
+                <a href="{!! route('assessment.show', $feedback->assessment_id) !!}">
+                    {{ $feedback->assessment->title }}
+                    {{ $feedback->created_at->format('d/m/Y H:i') }}
+                </a>
+            </li>
+        @endforeach
+    @endif
     <hr />
     <h3 class="title is-3">
         Assessments for {{ $student->fullName() }}

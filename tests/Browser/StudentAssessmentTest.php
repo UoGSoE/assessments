@@ -28,7 +28,6 @@ class StudentAssessmentTest extends DuskTestCase
             $browser->loginAs($student)
                     ->visit('/')
                     ->assertSee('Your Assessments')
-                    //->assertSee($assessment1->title)
                     ->assertSee($assessment2->title)
                     ->assertSee($assessment3->title)
                     ->assertDontSee($assessment4->title)

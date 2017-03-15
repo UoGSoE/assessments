@@ -69,7 +69,7 @@ class AdminTest extends TestCase
         $student = $this->createStudent();
         $course->students()->sync([$student->id]);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id, 'user_id' => $student->id]);
 
         $response = $this->actingAs($admin)->get(route('student.show', $student->id));
 

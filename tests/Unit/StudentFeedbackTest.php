@@ -89,4 +89,17 @@ class StudentFeedbackTest extends TestCase
 
         $this->fail('Student added feedback to an assessment which was not overdue, but no exception was thrown');
     }
+
+    /** @test */
+    public function we_can_check_if_a_student_has_left_any_feedback_at_all()
+    {
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->save($student);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+
+        $student->recordFeedback($assessment);
+
+        $this->assertTrue($student->hasLeftFeedbacks());
+    }
 }

@@ -133,4 +133,12 @@ class User extends Authenticatable
         $this->notify(new OverdueFeedback($unread));
         $this->markAllFeedbacksAsRead($unread);
     }
+
+    public function hasLeftFeedbacks()
+    {
+        if ($this->feedbacks()->count() == 0) {
+            return false;
+        }
+        return true;
+    }
 }
