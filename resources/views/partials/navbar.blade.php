@@ -1,8 +1,7 @@
-<div class="container">
 <nav class="nav has-shadow">
 
   <div class="nav-left">
-    <a class="nav-item is-brand" href="/">
+    <a class="nav-item" href="/">
       {{ config('app.name') }}
     </a>
   </div>
@@ -27,4 +26,3 @@
     </div>
   @endif
 </nav>
-</div>
