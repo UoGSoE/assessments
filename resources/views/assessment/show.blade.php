@@ -23,7 +23,10 @@
         Assessment Type : {{ $assessment->type }}
     </p>
     <p>
-        Due : {{ $assessment->deadline->format('d/m/Y H:i') }}
+        Deadline : {{ $assessment->deadline->format('d/m/Y H:i') }}
+    </p>
+    <p>
+        Feedback Due : {{ $assessment->feedback_due->format('d/m/Y H:i') }}
     </p>
     @if (Auth::user()->is_admin)
         <hr />
@@ -36,6 +39,7 @@
                     {{ $feedback->student->fullName() }}
                 </a>
                 {{ $feedback->created_at->format('d/m/Y H:i') }}
+                ({{ $feedback->created_at->diffForHumans($assessment->feedback_due) }} due date)
             </li>
         @endforeach
     @endif

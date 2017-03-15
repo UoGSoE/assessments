@@ -7,6 +7,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Carbon\Carbon;
 
 class AdminTest extends TestCase
 {
@@ -99,5 +100,25 @@ class AdminTest extends TestCase
         foreach ($students as $student) {
             $response->assertSee($student->fullName());
         }
+    }
+
+    /** @test */
+    public function admin_can_see_the_details_for_an_assessment()
+    {
+        $admin = $this->createAdmin();
+        $course = $this->createCourse();
+        $student = $this->createStudent();
+        $course->students()->sync([$student->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+        $student->recordFeedback($assessment);
+
+        $response = $this->actingAs($admin)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee($course->code);
+        $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
+        $response->assertSee($assessment->feedback_due->format('d/m/Y H:i'));
+        $response->assertSee($student->fullName());
+        $response->assertSee($assessment->feedbacks()->first()->created_at->format('d/m/Y H:i'));
     }
 }
