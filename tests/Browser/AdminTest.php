@@ -32,7 +32,7 @@ class AdminTest extends DuskTestCase
                     ->clickLink('Admin')
                     ->assertSee('All Assessments')
                     ->assertSee($assessment1->course->code)
-                    ->clickLink("{$assessment1->course->code} {$assessment1->course->title}")
+                    ->clickLink($assessment1->course->code)
                     ->assertSee('Assessment Details')
                     ->assertSee('Feedbacks Left')
                     ->assertSee($student->fullName())

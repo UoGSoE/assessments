@@ -19,8 +19,9 @@
                 <tr @if ($assessment->isProblematic()) class="is-problematic" @endif>
                     <td>
                         <a href="{!! route('assessment.show', $assessment->id) !!}">
-                            {{ $assessment->course->code }} {{ $assessment->course->title }}
+                            {{ $assessment->course->code }}
                         </a>
+                         {{ $assessment->course->title }}
                     </td>
                     <td>{{ $assessment->type }}</td>
                     <td>{{ $assessment->deadline->format('Y-m-d H:i') }}</td>
