@@ -50,7 +50,7 @@ class StudentAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function student_can_see_an_assessment()
+    public function student_can_see_an_assessment_which_is_for_one_of_their_courses()
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -62,5 +62,6 @@ class StudentAssessmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
+        $response->assertSee($assessment->user->fullName());
     }
 }

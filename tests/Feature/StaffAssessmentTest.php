@@ -96,4 +96,35 @@ class StaffAssessmentTest extends TestCase
         $response->assertSee($assessment3->deadline->toIso8601String());
     }
 
+    /** @test */
+    public function staff_can_see_feedbacks_for_assessments_which_are_theirs()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id]);
+
+        $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Feedbacks');
+        $response->assertSee($feedback->student->fullName());
+    }
+
+    /** @test */
+    public function staff_cant_see_feedbacks_for_assessments_which_are_not_theirs()
+    {
+        $staff1 = $this->createStaff();
+        $staff2 = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff1->id, $staff2->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff2->id]);
+        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id]);
+
+        $response = $this->actingAs($staff1)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Feedbacks');
+    }
 }

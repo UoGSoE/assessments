@@ -20,6 +20,9 @@
             {{ $assessment->course->title}}
     </p>
     <p>
+        Set By : {{ $assessment->user->fullName() }}
+    </p>
+    <p>
         Assessment Type : {{ $assessment->type }}
     </p>
     <p>
@@ -36,10 +39,14 @@
         </h3>
         @foreach ($assessment->negativeFeedbacks()->get() as $feedback)
             <li>
-                <a href="{!! route('student.show', $feedback->student->id) !!}">
+                @if (Auth::user()->is_admin)
+                    <a href="{!! route('student.show', $feedback->student->id) !!}">
+                        {{ $feedback->student->fullName() }}
+                    </a>
+                @else
                     {{ $feedback->student->fullName() }}
-                </a>
-                {{ $feedback->created_at->format('d/m/Y H:i') }}
+                @endif
+                on {{ $feedback->created_at->format('d/m/Y H:i') }}
                 ({{ $feedback->created_at->diffForHumans($assessment->feedback_due) }} due date)
             </li>
         @endforeach

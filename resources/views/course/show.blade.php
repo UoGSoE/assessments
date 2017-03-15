@@ -12,18 +12,24 @@
     </p>
     <hr />
     <div class="columns">
-        <div class="column">
-            <h3 class="title is-3">
-                Students
-            </h3>
-            @foreach ($course->students as $student)
-                <li>
-                    <a href="{!! route('student.show', $student->id) !!}">
-                        {{ $student->fullName() }}
-                    </a>
-                </li>
-            @endforeach
-        </div>
+        @if (Auth::user()->isStaff())
+            <div class="column">
+                <h3 class="title is-3">
+                    Students
+                </h3>
+                @foreach ($course->students as $student)
+                    <li>
+                        @if (Auth::user()->is_admin)
+                            <a href="{!! route('student.show', $student->id) !!}">
+                                {{ $student->fullName() }}
+                            </a>
+                        @else
+                            {{ $student->fullName() }}
+                        @endif
+                    </li>
+                @endforeach
+            </div>
+        @endif
         <div class="column">
             <h3 class="title is-3">
                 Assessments

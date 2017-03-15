@@ -24,6 +24,11 @@ class Assessment extends Model
         return $this->hasMany(AssessmentFeedback::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function negativeFeedbacks()
     {
         return $this->feedbacks()->where('feedback_given', false);

@@ -24,8 +24,9 @@
             <li>
                 <a href="{!! route('assessment.show', $feedback->assessment_id) !!}">
                     {{ $feedback->assessment->title }}
-                    {{ $feedback->created_at->format('d/m/Y H:i') }}
                 </a>
+                {{ $feedback->created_at->format('d/m/Y H:i') }}
+                ({{ $feedback->created_at->diffForHumans($feedback->assessment->feedback_due) }} due date)
             </li>
         @endforeach
     @endif
