@@ -30,7 +30,10 @@
     </p>
     <p>
         Feedback Due : {{ $assessment->feedback_due->format('d/m/Y') }}
-        ({{ $assessment->feedback_due->diffForHumans() }})
+        - {{ $assessment->feedback_due->diffForHumans() }}
+        @if ($assessment->feedbackFrom(Auth::user()))
+                - You reported feedback late on {{ $assessment->feedbackFrom(Auth::user())->created_at->format('d/m/Y') }}
+        @endif
     </p>
     <p>
         Feedback Completed :
@@ -55,6 +58,11 @@
             @endif
         @endif
     </p>
+    @if ($assessment->comment)
+        <p>
+            Comments : {{ $assessment->comment }}
+        </p>
+    @endif
     @can('see_feedbacks', $assessment)
         <hr />
         <h3 class="title is-3">

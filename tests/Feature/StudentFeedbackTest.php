@@ -72,6 +72,21 @@ class StudentFeedbackTest extends TestCase
             'course_id' => $course->id,
             'user_id' => $student->id,
         ]);
+    }
 
+    /** @test */
+    public function if_a_student_has_already_left_feedback_then_that_is_indicated_to_them()
+    {
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+        $student->recordFeedback($assessment);
+        $feedback = $student->feedbacks()->first();
+
+        $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee("You reported feedback late on " . $feedback->created_at->format('d/m/Y'));
     }
 }

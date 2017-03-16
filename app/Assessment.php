@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 class Assessment extends Model
 {
+    protected $fillable = ['comment', 'type', 'user_id'];
+    
     protected $casts = [
         'deadline' => 'date',
         'feedback_left' => 'date',
@@ -61,6 +63,13 @@ class Assessment extends Model
         return $this->course->code . ' - ' . $this->type;
     }
 
+    public function reportFeedbackLeft()
+    {
+        if ($this->feedback_left) {
+            return $this->feedback_left->format('Y-m-d');
+        }
+        return 'No';
+    }
     public function overdue()
     {
         if ($this->feedback_due->lt(Carbon::now())) {
@@ -110,5 +119,20 @@ class Assessment extends Model
             return true;
         }
         return false;
+    }
+
+    public function feedbackFrom($user)
+    {
+        if (is_numeric($user)) {
+            $user = User::findOrFail($user);
+        }
+        return $this->feedbacks()->where('user_id', '=', $user->id)->first();
+    }
+
+    public function updateFromForm($request)
+    {
+        $this->fill($request->only(['comment', 'user_id', 'type']));
+        $this->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
+        $this->save();
     }
 }

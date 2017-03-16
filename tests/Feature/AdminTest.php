@@ -17,7 +17,7 @@ class AdminTest extends TestCase
         $admin = $this->createAdmin();
         $assessment1 = $this->createAssessment();
         $assessment2 = $this->createAssessment();
-        $assessment3 = $this->createAssessment();
+        $assessment3 = $this->createAssessment(['feedback_left' => Carbon::now()->subDays(3)]);
 
         $response = $this->actingAs($admin)->get(route('report.assessments'));
 
@@ -25,6 +25,7 @@ class AdminTest extends TestCase
         $response->assertSee($assessment1->course->code);
         $response->assertSee($assessment2->course->code);
         $response->assertSee($assessment3->course->code);
+        $response->assertSee($assessment3->feedback_left->format('Y-m-d'));
     }
 
     /** @test */
@@ -109,7 +110,7 @@ class AdminTest extends TestCase
         $course = $this->createCourse();
         $student = $this->createStudent();
         $course->students()->sync([$student->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'comment' => 'HAPPYDAYS']);
         $student->recordFeedback($assessment);
 
         $response = $this->actingAs($admin)->get(route('assessment.show', $assessment->id));
@@ -120,5 +121,6 @@ class AdminTest extends TestCase
         $response->assertSee($assessment->feedback_due->format('d/m/Y'));
         $response->assertSee($student->fullName());
         $response->assertSee($assessment->feedbacks()->first()->created_at->format('d/m/Y H:i'));
+        $response->assertSee($assessment->comment);
     }
 }
