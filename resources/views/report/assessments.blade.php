@@ -16,8 +16,13 @@
         </thead>
         <tbody>
             @foreach ($assessments as $assessment)
-                <tr @if ($assessment->isProblematic()) class="is-problematic" @endif>
+                <tr @if ($assessment->isProblematic()) data-search="is-problematic" @endif>
                     <td>
+                        @if ($assessment->isProblematic())
+                            <span class="icon">
+                              <i class="fa fa-bell animated infinite tada"></i>
+                            </span>
+                        @endif
                         <a href="{!! route('assessment.show', $assessment->id) !!}">
                             {{ $assessment->course->code }}
                         </a>
@@ -28,9 +33,6 @@
                     <td>{{ $assessment->feedback_due->format('Y-m-d H:i') }}</td>
                     <td>
                         {{ $assessment->totalNegativeFeedbacks() }}
-                        @if ($assessment->isProblematic())
-                            ALERT
-                        @endif
                     </td>
                 </tr>
             @endforeach

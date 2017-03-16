@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($student->notOnCourse($assessment->course)) {
                 return false;
             }
-            if ($assessment->deadline->lt(Carbon::now()->subMonths(3))) {
+            if ($assessment->isReallyOld()) {
                 return false;
             }
             if ($assessment->notOverdue()) {
