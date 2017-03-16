@@ -7,6 +7,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Carbon\Carbon;
 
 class StudentAssessmentTest extends TestCase
 {
@@ -63,5 +64,21 @@ class StudentAssessmentTest extends TestCase
         $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
         $response->assertSee($assessment->user->fullName());
+        $this->assertRegExp("/Feedback Completed :\s+No/s", $response->content());
+    }
+
+    /** @test */
+    public function student_can_see_feedback_completed_date_if_has_been_set()
+    {
+        $student = $this->createStudent();
+        $course = $this->createCourse();
+        $course->students()->sync([$student->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'feedback_left' => Carbon::now()]);
+        $feedbackLeftString = $assessment->feedback_left->format('d/m/Y');
+
+        $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $this->assertRegExp("#Feedback Completed :\s+" . $feedbackLeftString . "#s", $response->content());
     }
 }

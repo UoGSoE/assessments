@@ -19,7 +19,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'StudentHomeController@index')->name('home');
     Route::get('/assessment/{id}', 'AssessmentController@show')->name('assessment.show');
     Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
+    Route::post('/assessment/{id}/feedback_complete', 'StaffFeedbackController@store')->name('feedback.complete');
     Route::get('course/{id}', 'CourseController@show')->name('course.show');
+
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
         Route::get('report', 'ReportController@assessments')->name('report.assessments');

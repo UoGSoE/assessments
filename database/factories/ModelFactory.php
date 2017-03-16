@@ -70,6 +70,7 @@ $factory->define(App\Assessment::class, function (Faker\Generator $faker) {
         'user_id' => function () {
             return factory(App\User::class)->states('staff')->create()->id;
         },
+        'feedback_left' => null,
     ];
 });
 

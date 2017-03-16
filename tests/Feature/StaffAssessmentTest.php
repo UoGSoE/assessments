@@ -110,6 +110,7 @@ class StaffAssessmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Feedbacks');
         $response->assertSee($feedback->student->fullName());
+        $response->assertSee('Feedback Completed :');
     }
 
     /** @test */
@@ -126,5 +127,67 @@ class StaffAssessmentTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertDontSee('Feedbacks');
+    }
+
+    /** @test */
+    public function staff_can_mark_that_an_assessment_has_had_complete_feedback_left()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $givenDate = $assessment->feedback_due->subDays(2);
+
+        $response = $this->actingAs($staff)->post(route('feedback.complete', $assessment->id), ['date' => $givenDate->format('d/m/Y')]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success_message');
+        $this->assertEquals($assessment->fresh()->feedback_left->format('d/m/Y'), $givenDate->format('d/m/Y'));
+    }
+
+    /** @test */
+    public function staff_cant_set_an_invalid_date_for_complete_feedback_left()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)->post(route('feedback.complete', $assessment->id), ['date' => 'blah blah blah']);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['date']);
+        $this->assertNull($assessment->fresh()->feedback_left);
+    }
+
+    /** @test */
+    public function can_see_the_date_feedback_was_marked_as_complete_if_it_has_been_marked_as_such()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $givenDate = $assessment->feedback_due->subDays(2);
+        $assessment->feedback_left = $givenDate;
+        $assessment->save();
+
+        $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee($givenDate->format('d/m/Y'));
+    }
+
+    /** @test */
+    public function can_see_the_form_form_feedback_completed_if_it_hasnt_been_marked_as_such()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+
+        $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertSee(route('feedback.complete', $assessment->id));
     }
 }

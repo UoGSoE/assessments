@@ -62,6 +62,15 @@ class AuthServiceProvider extends ServiceProvider
             }
             return true;
         });
+        Gate::define('complete_feedback', function ($user, $assessment) {
+            if ($user->is_admin) {
+                return true;
+            }
+            if ($user->id != $assessment->user_id) {
+                return false;
+            }
+            return true;
+        });
         Gate::define('see_course', function ($user, $course) {
             if ($user->is_admin) {
                 return true;

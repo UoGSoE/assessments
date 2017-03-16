@@ -32,6 +32,29 @@
         Feedback Due : {{ $assessment->feedback_due->format('d/m/Y') }}
         ({{ $assessment->feedback_due->diffForHumans() }})
     </p>
+    <p>
+        Feedback Completed :
+        @if ($assessment->feedback_left)
+            {{ $assessment->feedback_left->format('d/m/Y') }}
+        @else
+            @if (Auth::user()->is_student)
+                No
+            @else
+                <form method="POST" action="{!! route('feedback.complete', $assessment->id) !!}
+                ">
+                    {!! csrf_field() !!}
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-info">Save</button>
+                        </p>
+                    </div>
+                </form>
+            @endif
+        @endif
+    </p>
     @can('see_feedbacks', $assessment)
         <hr />
         <h3 class="title is-3">
@@ -51,4 +74,12 @@
             </li>
         @endforeach
     @endcan
+<script>
+$(document).ready(function () {
+    var picker = new Pikaday({ 
+        field: document.getElementById('datepicker'),
+        format: 'DD/MM/YYYY',
+    });
+});
+</script>
 @endsection

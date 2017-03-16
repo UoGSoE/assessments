@@ -12,6 +12,7 @@ class Assessment extends Model
 {
     protected $casts = [
         'deadline' => 'date',
+        'feedback_left' => 'date',
     ];
 
     public function course()
