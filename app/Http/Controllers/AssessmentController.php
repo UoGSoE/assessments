@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Assessment;
+use App\User;
 
 class AssessmentController extends Controller
 {
@@ -17,6 +18,13 @@ class AssessmentController extends Controller
         return view('assessment.show', compact('assessment'));
     }
 
+    public function edit($id)
+    {
+        $assessment = Assessment::findOrFail($id);
+        $staff = User::staff()->orderBy('surname')->get();
+        return view('assessment.edit', compact('assessment', 'staff'));
+    }
+
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -26,7 +34,7 @@ class AssessmentController extends Controller
         ]);
         $assessment = Assessment::findOrFail($id);
         $assessment->updateFromForm($request);
-        return redirect()->back()->with('success_message', 'Updated');
+        return redirect()->route('assessment.show', $id)->with('success_message', 'Updated');
     }
 
     public function destroy($id)

@@ -3,6 +3,11 @@
 @section('content')
     <h2 class="title is-2">
         Assessment Details
+        @if (Auth::user()->is_admin)
+            <a href="{!! route('assessment.edit', $assessment->id) !!}" class="button">
+                Edit
+            </a>
+        @endif
         @if ($assessment->overdue() and Auth::user()->can('can_leave_feedback', $assessment))
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
                 {!! csrf_field() !!}

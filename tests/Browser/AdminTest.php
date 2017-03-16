@@ -52,4 +52,31 @@ class AdminTest extends DuskTestCase
                     ->assertSee($course1->students()->first()->fullName());
         });
     }
+
+    /** @test */
+    public function admin_can_edit_an_assessment()
+    {
+        $this->browse(function ($browser) {
+            $now = Carbon::now();
+            $admin = $this->createAdmin();
+            $staff = $this->createStaff();
+            $student = $this->createStudent();
+            $course = $this->createCourse();
+            $course->students()->sync([$student->id]);
+            $assessment = $this->createAssessment(['course_id' => $course->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
+            $student->recordFeedback($assessment);
+            $browser->loginAs($admin)
+                    ->visit("/assessment/{$assessment->id}")
+                    ->clickLink('Edit')
+                    ->assertSee("Edit Assessment")
+                    ->select('type', 'something')
+                    ->select('user_id', $staff->id)
+                    ->type('date', $now->format('d/m/Y'))
+                    ->type('time', $now->format('H:i'))
+                    ->press('Update')
+                    ->assertSee('Updated')
+                    ->assertSee($staff->fullName())
+                    ->assertSee($now->format('d/m/Y H:i'));
+        });
+    }
 }
