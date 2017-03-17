@@ -15,7 +15,7 @@
           <span class="select">
             <select name="user_id">
                 @foreach ($staff as $user)
-                    <option value="{{ $user->id }}">{{ $user->fullName() }}</option>
+                    <option value="{{ $user->id }}" @if ($assessment->user_id == $user->id) selected @endif>{{ $user->fullName() }}</option>
                 @endforeach
             </select>
           </span>
@@ -26,7 +26,7 @@
             <span class="select">
               <select name="course_id">
                   @foreach ($courses as $course)
-                      <option value="{{ $course->id }}">{{ $course->code }}</option>
+                      <option value="{{ $course->id }}" @if ($assessment->course_id == $course->id) selected @endif>{{ $course->code }}</option>
                   @endforeach
               </select>
             </span>
@@ -34,13 +34,21 @@
         @endif
         <label class="label">Deadline Date</label>
         <p class="control">
-            <input class="input" name="date" type="text" placeholder="dd/mm/yyyy">
+            <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy" value="{{ $assessment->deadlineDate() }}">
         </p>
         <label class="label">Time</label>
         <p class="control">
-            <input class="input" name="time" type="text" placeholder="hh:mm">
+            <input class="input" name="time" type="text" placeholder="hh:mm" value="{{ $assessment->deadlineTime() }}">
         </p>
         <label class="label">Comment</label>
         <p class="control">
-          <textarea class="textarea" name="comment"></textarea>
+          <textarea class="textarea" name="comment">{{ $assessment->comment }}</textarea>
         </p>
+<script>
+$(document).ready(function () {
+    var picker = new Pikaday({ 
+        field: document.getElementById('datepicker'),
+        format: 'DD/MM/YYYY',
+    });
+});
+</script>

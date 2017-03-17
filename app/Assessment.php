@@ -144,4 +144,20 @@ class Assessment extends Model
         $assessment->save();
         return $assessment;
     }
+
+    public function deadlineDate()
+    {
+        if (!$this->deadline) {
+            return '';
+        }
+        return $this->deadline->format('d/m/Y');
+    }
+
+    public function deadlineTime()
+    {
+        if (!$this->deadline) {
+            return '16:00';
+        }
+        return $this->deadline->format('H:i');
+    }
 }

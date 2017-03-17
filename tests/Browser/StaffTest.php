@@ -30,6 +30,7 @@ class StaffTest extends DuskTestCase
             $browser->loginAs($staff)
                     ->visit("/assessment/{$assessment->id}")
                     ->click('#datepicker')
+                    ->waitFor('.pika-lendar')
                     ->click('[data-day="1"]')
                     ->press('Save')
                     ->assertSee('Feedback marked as complete')
