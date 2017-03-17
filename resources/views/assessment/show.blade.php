@@ -52,22 +52,22 @@
         @if ($assessment->feedback_left)
             {{ $assessment->feedback_left->format('d/m/Y') }}
         @else
-            @if (Auth::user()->is_student)
-                No
+            @can('complete_feedback', $assessment)
+            <form method="POST" action="{!! route('feedback.complete', $assessment->id) !!}
+            ">
+                {!! csrf_field() !!}
+                <div class="field has-addons">
+                    <p class="control">
+                        <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
+                    </p>
+                    <p class="control">
+                        <button type="submit" class="button is-info">Save</button>
+                    </p>
+                </div>
+            </form>
             @else
-                <form method="POST" action="{!! route('feedback.complete', $assessment->id) !!}
-                ">
-                    {!! csrf_field() !!}
-                    <div class="field has-addons">
-                        <p class="control">
-                            <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
-                        </p>
-                        <p class="control">
-                            <button type="submit" class="button is-info">Save</button>
-                        </p>
-                    </div>
-                </form>
-            @endif
+                No
+            @endcan
         @endif
     </p>
     @if ($assessment->comment)

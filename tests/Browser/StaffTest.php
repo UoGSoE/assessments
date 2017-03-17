@@ -12,6 +12,30 @@ class StaffTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
+    public function staff_can_see_all_assessments_but_only_click_their_own()
+    {
+        $this->browse(function ($browser) {
+            $now = Carbon::now();
+            $course = $this->createCourse();
+            $staff = $this->createStaff();
+            $course->staff()->sync([$staff->id]);
+            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id, 'deadline' => Carbon::now()]);
+            $assessment2 = $this->createAssessment(['deadline' => Carbon::now()]);
+
+            $browser->loginAs($staff)
+                    ->visit("/")
+                    ->assertSee('Your Assessments')
+                    ->assertSee($assessment1->course->code)
+                    ->assertSee($assessment2->course->code)
+                    ->clickLink($assessment2->title)
+                    ->assertSee('Your Assessments')
+                    ->clickLink($assessment1->title)
+                    ->assertSee('Assessment Details')
+                    ->assertSee($assessment1->deadline->format('d/m/Y'));
+        });
+    }
+
+    /** @test */
     public function staff_can_mark_assessment_feedback_as_having_been_given()
     {
         $this->browse(function ($browser) {

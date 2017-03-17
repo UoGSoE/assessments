@@ -4,9 +4,11 @@
         $(document).ready(function () {
             $('#calendar').fullCalendar({
                 events: {!! $assessments !!},
-                //header: { center: 'month,agendaWeek,agendaDay' },
                 eventClick: function(calEvent, jsEvent, view) {
-                    window.location.replace("/assessment/" + calEvent.id);
+                    if (calEvent.mine) {
+                        window.location.replace("/assessment/" + calEvent.id);
+                    }
+                    console.log(calEvent);
                 },
             });
         });

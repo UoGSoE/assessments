@@ -80,7 +80,7 @@ class StaffAssessmentTest extends TestCase
         $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'user_id' => $staff->id]);
         $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'user_id' => $staff->id]);
         $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'user_id' => $staff->id]);
-        $assessment4 = $this->createAssessment(['type' => 'SHOULDNTSHOWUP']);
+        $assessment4 = $this->createAssessment(['type' => 'SOMEONEELSES']);
 
         $response = $this->actingAs($staff)->get(route('home'));
 
@@ -90,7 +90,7 @@ class StaffAssessmentTest extends TestCase
         $response->assertSee($assessment1->type);
         $response->assertSee($assessment2->type);
         $response->assertSee($assessment3->type);
-        $response->assertDontSee($assessment4->type);
+        $response->assertSee($assessment4->type);
         $response->assertSee($assessment1->deadline->toIso8601String());
         $response->assertSee($assessment2->deadline->toIso8601String());
         $response->assertSee($assessment3->deadline->toIso8601String());
@@ -178,7 +178,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function can_see_the_form_form_feedback_completed_if_it_hasnt_been_marked_as_such()
+    public function can_see_the_form_form_feedback_completed_if_it_hasnt_been_marked_as_such_and_it_is_their_assessment()
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -189,5 +189,19 @@ class StaffAssessmentTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee(route('feedback.complete', $assessment->id));
+    }
+
+    /** @test */
+    public function cant_see_the_form_form_feedback_completed_if_it_isnt_their_assessment()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id]);
+
+        $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertDontSee(route('feedback.complete', $assessment->id));
     }
 }

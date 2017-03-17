@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\OverdueFeedback;
+use App\Course;
 
 class User extends Authenticatable
 {
@@ -71,6 +72,14 @@ class User extends Authenticatable
 
     public function assessmentsAsJson()
     {
+        if ($this->isStaff()) {
+            return $this->staffAssessmentsAsJson();
+        }
+        return $this->studentAssessmentsAsJson();
+    }
+
+    protected function studentAssessmentsAsJson()
+    {
         $data = [];
         foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
             foreach ($course->assessments as $assessment) {
@@ -88,7 +97,42 @@ class User extends Authenticatable
                     'feedback_due' => $assessment->feedback_due->toIso8601String(),
                     'type' => $assessment->type,
                     'feedback_missed' => $negativeFeedback,
+                    'mine' => true,
                 ];
+            }
+        }
+        return json_encode($data);
+    }
+
+    protected function staffAssessmentsAsJson()
+    {
+        $data = [];
+        foreach (Course::with('assessments.feedbacks')->get() as $course) {
+            foreach ($course->assessments as $assessment) {
+                $negativeFeedback = $assessment->feedbacks()->where('user_id', $this->id)->first();
+                if ($negativeFeedback) {
+                    $negativeFeedback = true;
+                }
+                $event = [
+                    'id' => $assessment->id,
+                    'title' => $assessment->title,
+                    'course_code' => $course->code,
+                    'course_title' => $course->title,
+                    'start' => $assessment->deadline->toIso8601String(),
+                    'end' => $assessment->deadline->addHours(1)->toIso8601String(),
+                    'feedback_due' => $assessment->feedback_due->toIso8601String(),
+                    'type' => $assessment->type,
+                    'feedback_missed' => $negativeFeedback,
+                    'mine' => false,
+                    'color' => 'steelblue',
+                ];
+                if ($this->id == $assessment->user_id) {
+                    $event['mine'] = true;
+                } else {
+                    $event['color'] = 'whitesmoke';
+                    $event['textColor'] = 'black';
+                }
+                $data[] = $event;
             }
         }
         return json_encode($data);

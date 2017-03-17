@@ -66,10 +66,10 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_admin) {
                 return true;
             }
-            if ($user->id != $assessment->user_id) {
-                return false;
+            if ($user->id == $assessment->user_id) {
+                return true;
             }
-            return true;
+            return false;
         });
         Gate::define('see_course', function ($user, $course) {
             if ($user->is_admin) {
