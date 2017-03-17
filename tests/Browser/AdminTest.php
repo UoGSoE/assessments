@@ -70,13 +70,44 @@ class AdminTest extends DuskTestCase
                     ->clickLink('Edit')
                     ->assertSee("Edit Assessment")
                     ->select('type', 'something')
-                    ->select('user_id', $staff->id)
+                    ->select('user_id', "$staff->id")
                     ->type('date', $now->format('d/m/Y'))
                     ->type('time', $now->format('H:i'))
                     ->press('Update')
                     ->assertSee('Updated')
                     ->assertSee($staff->fullName())
                     ->assertSee($now->format('d/m/Y H:i'));
+        });
+    }
+
+    /** @test */
+    public function admin_can_create_a_new_assessment()
+    {
+        $this->browse(function ($browser) {
+            $now = Carbon::now();
+            $admin = $this->createAdmin();
+            $staff = $this->createStaff();
+            $course = $this->createCourse();
+            fwrite(STDERR, $staff->fullName());
+            fwrite(STDERR, $admin->fullName());
+            fwrite(STDERR, $staff->id);
+            fwrite(STDERR, $admin->id);
+            $browser->loginAs($admin)
+                    ->visit("/admin/report")
+                    ->clickLink('Add New Assessment')
+                    ->assertSee("New Assessment")
+                    ->select('type', 'something')
+                    ->select('user_id', "$staff->id")
+                    ->type('date', $now->format('d/m/Y'))
+                    ->type('time', $now->format('H:i'))
+                    ->type('comment', 'blah blah blah')
+                    ->select('course_id', "$course->id")
+                    ->press('Create')
+                    ->assertSee('Created')
+                    ->assertSee($staff->fullName())
+                    ->assertSee($now->format('d/m/Y H:i'))
+                    ->assertSee($course->title)
+                    ->assertSee('blah blah blah');
         });
     }
 }

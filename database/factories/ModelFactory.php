@@ -22,6 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'surname' => preg_replace('/[^a-z\s]/i', ' ', $faker->lastName),
         'forenames' => $faker->firstName(),
         'remember_token' => str_random(10),
+        'is_student' => false,
     ];
 });
 

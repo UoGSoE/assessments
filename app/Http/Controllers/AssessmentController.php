@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Assessment;
 use App\User;
+use App\Course;
 
 class AssessmentController extends Controller
 {
@@ -16,6 +17,27 @@ class AssessmentController extends Controller
             return redirect('/');
         }
         return view('assessment.show', compact('assessment'));
+    }
+
+    public function create()
+    {
+        $assessment = new Assessment;
+        $staff = User::staff()->orderBy('surname')->get();
+        $courses = Course::orderBy('code')->get();
+        return view('assessment.create', compact('assessment', 'staff', 'courses'));
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|integer|exists:users,id',
+            'date' => 'required|date_format:d/m/Y',
+            'time' => 'required|date_format:H:i',
+            'type' => 'required',
+            'course_id' => 'required|integer|exists:courses,id',
+        ]);
+        $assessment = Assessment::createFromForm($request);
+        return redirect()->route('assessment.show', $assessment->id)->with('success_message', 'Created');
     }
 
     public function edit($id)

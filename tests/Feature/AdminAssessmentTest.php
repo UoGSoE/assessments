@@ -81,4 +81,33 @@ class AdminAssessmentTest extends TestCase
         $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);        
         $this->assertDatabaseMissing('assessment_feedbacks', ['assessment_id' => $assessment->id, 'user_id' => $student->id]);        
     }
+
+    /** @test */
+    public function admin_can_create_an_assessment()
+    {
+        $admin = $this->createAdmin();
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $now = Carbon::now();
+
+        $response = $this->actingAs($admin)->post(route('assessment.store'), [
+            'date' => $now->format('d/m/Y'),
+            'time' => $now->format('H:i'),
+            'type' => 'Whatever',
+            'comment' => 'I am very happy with my cheese purchase',
+            'user_id' => $staff->id,
+            'course_id' => $course->id,
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('assessments', [
+            'comment' => 'I am very happy with my cheese purchase',
+            'type' => 'Whatever',
+            'user_id' => $staff->id,
+            'deadline' => $now->format('Y-m-d H:i:00'),
+            'course_id' => $course->id,
+        ]);
+    }
+
 }

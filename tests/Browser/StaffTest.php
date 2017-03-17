@@ -20,6 +20,13 @@ class StaffTest extends DuskTestCase
             $staff = $this->createStaff();
             $course->staff()->sync([$staff->id]);
             $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+
+            /*
+                By way of an explanation... The date field on the form has a JS datepicker 
+                attached, so this just clicks the date field, picks the first day available and 
+                saves it.  The first day on the datepicker *should* be the first day of the month
+                 - hence the startofMonth() carbon call.
+            */
             $browser->loginAs($staff)
                     ->visit("/assessment/{$assessment->id}")
                     ->click('#datepicker')

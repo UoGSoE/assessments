@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('report', 'ReportController@assessments')->name('report.assessments');
         Route::get('student/{id}', 'StudentController@show')->name('student.show');
 
+        Route::get('/assessent/create', 'AssessmentController@create')->name('assessment.create');
+        Route::post('/assessment', 'AssessmentController@store')->name('assessment.store');
         Route::get('/assessment/{id}/edit', 'AssessmentController@edit')->name('assessment.edit');
         Route::post('/assessment/{id}', 'AssessmentController@update')->name('assessment.update');
         Route::delete('/assessment/{id}', 'AssessmentController@destroy')->name('assessment.destroy');

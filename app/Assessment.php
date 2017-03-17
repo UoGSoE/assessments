@@ -10,11 +10,11 @@ use Carbon\Carbon;
 
 class Assessment extends Model
 {
-    protected $fillable = ['comment', 'type', 'user_id'];
-    
+    protected $fillable = ['comment', 'type', 'user_id', 'course_id', 'type'];
+
     protected $casts = [
-        'deadline' => 'date',
-        'feedback_left' => 'date',
+        'deadline' => 'datetime',
+        'feedback_left' => 'datetime',
     ];
 
     public function course()
@@ -134,5 +134,14 @@ class Assessment extends Model
         $this->fill($request->only(['comment', 'user_id', 'type']));
         $this->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
         $this->save();
+    }
+
+    public static function createFromForm($request)
+    {
+        $assessment = new static;
+        $assessment->fill($request->only(['comment', 'user_id', 'type', 'course_id']));
+        $assessment->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
+        $assessment->save();
+        return $assessment;
     }
 }
