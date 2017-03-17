@@ -34,6 +34,11 @@ abstract class DuskTestCase extends BaseTestCase
         );
     }
 
+    public function log($value)
+    {
+        fwrite(STDERR, $value);
+    }
+
     public function createStudent($attribs = [])
     {
         return factory(\App\User::class)->states('student')->create($attribs);

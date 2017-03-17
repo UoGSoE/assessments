@@ -7,6 +7,13 @@
             <a href="{!! route('assessment.edit', $assessment->id) !!}" class="button">
                 Edit
             </a>
+            <form method="POST" action="" data-href="{!! route('assessment.destroy', $assessment->id) !!}" id="delete-form">
+                {!! csrf_field() !!}
+                <input type="hidden" name="_method" value="DELETE">
+                <button id="delete-button" class="button is-danger is-pulled-right">
+                    Delete
+                </button>
+            </form>
         @endif
         @if ($assessment->overdue() and Auth::user()->can('can_leave_feedback', $assessment))
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
@@ -93,6 +100,33 @@ $(document).ready(function () {
         field: document.getElementById('datepicker'),
         format: 'DD/MM/YYYY',
     });
+    $('#delete-button').click(function (e) {
+        e.preventDefault();
+        $("#pop-up").addClass('animated').addClass('fadeIn').addClass('is-active');
+    });
+    $('#modal-cancel').click(function (e) {
+        $("#pop-up").removeClass('is-active');
+    });
+    $('#modal-confirm').click(function (e) {
+        uri = $('#delete-form').data('href');
+        $('#delete-form').attr('action', uri).submit();
+    });
+
 });
 </script>
+<div id="pop-up" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Are you sure?</p>
+    </header>
+    <section class="modal-card-body">
+        Do you <em>really</em> want to delete this assessment?
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-danger" id="modal-confirm">Yes</a>
+      <a class="button is-pulled-right" id="modal-cancel">No</a>
+    </footer>
+  </div>
+</div>
 @endsection

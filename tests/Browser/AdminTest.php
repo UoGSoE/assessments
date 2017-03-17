@@ -88,10 +88,6 @@ class AdminTest extends DuskTestCase
             $admin = $this->createAdmin();
             $staff = $this->createStaff();
             $course = $this->createCourse();
-            fwrite(STDERR, $staff->fullName());
-            fwrite(STDERR, $admin->fullName());
-            fwrite(STDERR, $staff->id);
-            fwrite(STDERR, $admin->id);
             $browser->loginAs($admin)
                     ->visit("/admin/report")
                     ->clickLink('Add New Assessment')
@@ -108,6 +104,34 @@ class AdminTest extends DuskTestCase
                     ->assertSee($now->format('d/m/Y H:i'))
                     ->assertSee($course->title)
                     ->assertSee('blah blah blah');
+        });
+    }
+
+    /** @test */
+    public function admin_can_delete_an_assessment()
+    {
+        $this->browse(function ($browser) {
+            $now = Carbon::now();
+            $admin = $this->createAdmin();
+            $staff = $this->createStaff();
+            $student = $this->createStudent();
+            $course = $this->createCourse();
+            $course->students()->sync([$student->id]);
+            $assessment = $this->createAssessment(['course_id' => $course->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
+            $student->recordFeedback($assessment);
+            $browser->loginAs($admin)
+                    ->visit("/assessment/{$assessment->id}")
+                    ->press("Delete")
+                    ->waitFor('#pop-up')
+                    ->assertSee('Do you really want to delete')
+                    ->clickLink('No')
+                    ->assertDontSee('Do you really want to delete')
+                    ->assertSee($assessment->course->code)
+                    ->press("Delete")
+                    ->waitFor('#pop-up')
+                    ->clickLink('Yes')
+                    ->assertSee('All Assessments')
+                    ->assertSee('Assessment deleted');
         });
     }
 }
