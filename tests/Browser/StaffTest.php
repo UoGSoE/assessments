@@ -7,16 +7,4 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class StaffTest extends DuskTestCase
 {
-    /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $this->browse(function ($browser) {
-            $browser->visit('/')
-                    ->assertSee('Laravel');
-        });
-    }
 }
