@@ -1,12 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="title is-2">
+
+<nav class="level">
+  <div class="level-left">
+    <div class="level-item">
+      <p class="subtitle is-2">
         Assessment Details
+      </p>
+      @if (Auth::user()->is_admin)
+        <p>&nbsp;
+          <a href="{!! route('assessment.edit', $assessment->id) !!}" class="button">
+              Edit
+          </a>
+        </p>
+        @endif
+    </div>
+  </div>
+
+  <div class="level-right">
         @if (Auth::user()->is_admin)
-            <a href="{!! route('assessment.edit', $assessment->id) !!}" class="button">
-                Edit
-            </a>
             <form method="POST" action="" data-href="{!! route('assessment.destroy', $assessment->id) !!}" id="delete-form">
                 {!! csrf_field() !!}
                 <input type="hidden" name="_method" value="DELETE">
@@ -23,7 +36,8 @@
                 </button>
             </form>
         @endif
-    </h2>
+  </div>
+</nav>
     <p>
         Course : 
             <a href="{!! route('course.show', $assessment->course_id) !!}">

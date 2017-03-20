@@ -15,7 +15,7 @@
   @if (Auth::user())
     <div class="nav-center">
       @if (Auth::user() and Auth::user()->is_admin)
-        <a class="nav-item" href="{!! route('report.assessments') !!}">Admin</a>
+        <a class="nav-item" href="{!! route('report.feedback') !!}">Admin</a>
       @endif
     </div>
     <div class="nav-right nav-menu">

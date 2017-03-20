@@ -64,6 +64,6 @@ class AssessmentController extends Controller
         $assessment = Assessment::findOrFail($id);
         $assessment->feedbacks()->get()->each->delete();
         $assessment->delete();
-        return redirect()->route('report.assessments')->with('success_message', 'Assessment deleted');
+        return redirect()->route('report.feedback')->with('success_message', 'Assessment deleted');
     }
 }

@@ -3,9 +3,6 @@
 @section('content')
     <h2 class="title is-2">
         All Assessments
-        <a href="{!! route('assessment.create') !!}" class="button is-pulled-right">
-            Add New Assessment
-        </a>
     </h2>
     <table class="table is-striped" id="assessmentTable">
         <thead>

@@ -22,6 +22,7 @@ abstract class TestCase extends BaseTestCase
     protected function disableExceptionHandling()
     {
         $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
+
         $this->app->instance(ExceptionHandler::class, new class extends Handler {
             public function __construct() {}
             public function report(\Exception $e) {}

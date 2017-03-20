@@ -30,7 +30,7 @@ class AdminTest extends DuskTestCase
                     ->visit('/')
                     ->assertSee('Admin')
                     ->clickLink('Admin')
-                    ->assertSee('All Assessments')
+                    ->assertSee('Feedback Report')
                     ->assertSee($assessment1->course->code)
                     ->clickLink($assessment1->course->code)
                     ->assertSee('Assessment Details')
@@ -130,7 +130,7 @@ class AdminTest extends DuskTestCase
                     ->press("Delete")
                     ->waitFor('#pop-up')
                     ->clickLink('Yes')
-                    ->assertSee('All Assessments')
+                    ->assertSee('Feedback Report')
                     ->assertSee('Assessment deleted');
         });
     }

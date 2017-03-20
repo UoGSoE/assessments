@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ProblematicAssessment;
+use App\Notifications\OverdueFeedback;
 
 class NotificationTest extends TestCase
 {
@@ -61,5 +62,26 @@ class NotificationTest extends TestCase
             $assessment1,
             ProblematicAssessment::class
         );
+    }
+
+    /** @test */
+    public function can_be_notified_about_unread_feedbacks()
+    {
+        Notification::fake();
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $student1 = $this->createStudent();
+        $student2 = $this->createStudent();
+        $course->students()->sync([$student1->id, $student2->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
+        $student1->recordFeedback($assessment1);
+        $student2->recordFeedback($assessment2);
+
+        $staff->notifyAboutUnreadFeedback();
+
+        Notification::assertSentTo($staff, OverdueFeedback::class);
+        $this->assertEquals(0, $staff->unreadFeedbacks()->count());
+        
     }
 }

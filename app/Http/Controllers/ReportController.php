@@ -15,7 +15,7 @@ class ReportController extends Controller
 
     public function feedback()
     {
-        $assessments = Assessment::with('course', 'feedbacks')->orderBy('user_id', 'desc')->get();
+        $assessments = Assessment::with('course', 'feedbacks')->orderBy('user_id')->get();
         return view('report.feedback', compact('assessments'));
     }
 }

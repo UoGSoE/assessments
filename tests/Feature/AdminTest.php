@@ -19,7 +19,7 @@ class AdminTest extends TestCase
         $assessment2 = $this->createAssessment();
         $assessment3 = $this->createAssessment(['feedback_left' => Carbon::now()->subDays(3)]);
 
-        $response = $this->actingAs($admin)->get(route('report.assessments'));
+        $response = $this->actingAs($admin)->get(route('report.feedback'));
 
         $response->assertStatus(200);
         $response->assertSee($assessment1->course->code);
@@ -38,7 +38,7 @@ class AdminTest extends TestCase
         $assessment = $this->createAssessment(['course_id' => $course->id]);
         $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
 
-        $response = $this->actingAs($admin)->get(route('report.assessments'));
+        $response = $this->actingAs($admin)->get(route('report.feedback'));
 
         $response->assertStatus(200);
         $response->assertSee('is-problematic');

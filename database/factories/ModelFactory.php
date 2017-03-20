@@ -84,7 +84,7 @@ $factory->define(App\AssessmentFeedback::class, function (Faker\Generator $faker
             return factory(App\Assessment::class)->create()->id;
         },
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(App\User::class)->states('student')->create()->id;
         },
         'feedback_given' => false,
         'staff_notified' => false,
