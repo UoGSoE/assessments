@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AssessmentFeedback extends Model
 {
     protected $fillable = [
-        'user_id', 'course_id', 'assessment_id', 'feedback_given'
+        'student_id', 'course_id', 'assessment_id', 'feedback_given'
     ];
 
     protected $casts = [
@@ -21,7 +21,7 @@ class AssessmentFeedback extends Model
 
     public function student()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'student_id');
     }
 
     public function course()

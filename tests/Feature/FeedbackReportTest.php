@@ -22,7 +22,7 @@ class FeedbackReportTest extends TestCase
         $response->assertSee('Feedback Report');
         foreach ($assessments as $assessment) {
             $response->assertSee($assessment->course->code);
-            $response->assertSee($assessment->user->fullName());
+            $response->assertSee($assessment->staff->fullName());
             $response->assertSee($assessment->type);
             $response->assertSee($assessment->deadline->format('Y-m-d H:i'));
             $response->assertSee($assessment->reportFeedbackLeft());

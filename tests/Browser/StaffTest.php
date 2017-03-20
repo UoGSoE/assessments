@@ -19,7 +19,7 @@ class StaffTest extends DuskTestCase
             $course = $this->createCourse();
             $staff = $this->createStaff();
             $course->staff()->sync([$staff->id]);
-            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id, 'deadline' => Carbon::now()]);
+            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()]);
             $assessment2 = $this->createAssessment(['deadline' => Carbon::now()]);
 
             $browser->loginAs($staff)
@@ -43,7 +43,7 @@ class StaffTest extends DuskTestCase
             $course = $this->createCourse();
             $staff = $this->createStaff();
             $course->staff()->sync([$staff->id]);
-            $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
+            $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
 
             /*
                 By way of an explanation... The date field on the form has a JS datepicker 

@@ -30,7 +30,7 @@ class AssessmentController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'user_id' => 'required|integer|exists:users,id',
+            'staff_id' => 'required|integer|exists:users,id',
             'date' => 'required|date_format:d/m/Y',
             'time' => 'required|date_format:H:i',
             'type' => 'required',
@@ -50,7 +50,7 @@ class AssessmentController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'user_id' => 'required|integer|exists:users,id',
+            'staff_id' => 'required|integer|exists:users,id',
             'date' => 'required|date_format:d/m/Y',
             'time' => 'required|date_format:H:i',
         ]);

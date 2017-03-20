@@ -44,7 +44,7 @@ class StudentAssessmentTest extends DuskTestCase
                     ->assertDontSee('Report assessment feedback');
             $this->assertDatabaseHas('assessment_feedbacks', [
                 'course_id' => $course1->id,
-                'user_id' => $student->id,
+                'student_id' => $student->id,
                 'assessment_id' => $assessment1->id
             ]);
         });

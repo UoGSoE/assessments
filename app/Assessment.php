@@ -14,7 +14,7 @@ class Assessment extends Model
 {
     use Notifiable;
 
-    protected $fillable = ['comment', 'type', 'user_id', 'course_id', 'type', 'deadline'];
+    protected $fillable = ['comment', 'type', 'staff_id', 'course_id', 'type', 'deadline'];
 
     protected $casts = [
         'deadline' => 'datetime',
@@ -31,9 +31,9 @@ class Assessment extends Model
         return $this->hasMany(AssessmentFeedback::class);
     }
 
-    public function user()
+    public function staff()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'staff_id', 'id');
     }
 
     public function negativeFeedbacks()
@@ -101,12 +101,12 @@ class Assessment extends Model
         if ($this->notOverdue()) {
             throw new AssessmentNotOverdueException;
         }
-        $feedback = $this->feedbacks()->where('user_id', $student->id)->first();
+        $feedback = $this->feedbacks()->where('student_id', $student->id)->first();
         if (!$feedback) {
             $feedback = new AssessmentFeedback;
         }
         $feedback->course_id = $this->course->id;
-        $feedback->user_id = $student->id;
+        $feedback->student_id = $student->id;
         $feedback->feedback_given = false;
         $feedback->assessment_id = $this->id;
         $feedback->save();
@@ -158,12 +158,12 @@ class Assessment extends Model
         if (is_numeric($user)) {
             $user = User::findOrFail($user);
         }
-        return $this->feedbacks()->where('user_id', '=', $user->id)->first();
+        return $this->feedbacks()->where('student_id', '=', $user->id)->first();
     }
 
     public function updateFromForm($request)
     {
-        $this->fill($request->only(['comment', 'user_id', 'type']));
+        $this->fill($request->only(['comment', 'staff_id', 'type']));
         $this->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
         $this->save();
     }
@@ -171,7 +171,7 @@ class Assessment extends Model
     public static function createFromForm($request)
     {
         $assessment = new static;
-        $assessment->fill($request->only(['comment', 'user_id', 'type', 'course_id']));
+        $assessment->fill($request->only(['comment', 'staff_id', 'type', 'course_id']));
         $assessment->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
         $assessment->save();
         return $assessment;

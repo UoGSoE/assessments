@@ -22,19 +22,19 @@ class User extends Authenticatable
     public function courses()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Course::class, 'course_student');
+            return $this->belongsToMany(Course::class, 'course_student', 'student_id');
         }
-        return $this->belongsToMany(Course::class, 'course_staff');
+        return $this->belongsToMany(Course::class, 'course_staff', 'staff_id');
     }
 
     public function assessments()
     {
-        return $this->hasMany(Assessment::class);
+        return $this->hasMany(Assessment::class, 'staff_id');
     }
 
     public function feedbacks()
     {
-        return $this->hasMany(AssessmentFeedback::class);
+        return $this->hasMany(AssessmentFeedback::class, 'student_id');
     }
 
     public function unreadFeedbacks()
@@ -83,7 +83,7 @@ class User extends Authenticatable
         $data = [];
         foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
             foreach ($course->assessments as $assessment) {
-                $negativeFeedback = $assessment->feedbacks()->where('user_id', $this->id)->first();
+                $negativeFeedback = $assessment->feedbacks()->where('student_id', $this->id)->first();
                 if ($negativeFeedback) {
                     $negativeFeedback = true;
                 }
@@ -110,10 +110,10 @@ class User extends Authenticatable
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
             $year = substr($course->code, 3, 1);
             foreach ($course->assessments as $assessment) {
-                $negativeFeedback = $assessment->feedbacks()->where('user_id', $this->id)->first();
-                if ($negativeFeedback) {
-                    $negativeFeedback = true;
-                }
+                // $negativeFeedback = $assessment->feedbacks()->where('staff_id', $this->id)->first();
+                // if ($negativeFeedback) {
+                //     $negativeFeedback = true;
+                // }
                 $event = [
                     'id' => $assessment->id,
                     'title' => $assessment->title,
@@ -123,12 +123,12 @@ class User extends Authenticatable
                     'end' => $assessment->deadline->addHours(1)->toIso8601String(),
                     'feedback_due' => $assessment->feedback_due->toIso8601String(),
                     'type' => $assessment->type,
-                    'feedback_missed' => $negativeFeedback,
+                    // 'feedback_missed' => $negativeFeedback,
                     'mine' => false,
                     'color' => 'steelblue',
                     'year' => $year,
                 ];
-                if ($this->id == $assessment->user_id) {
+                if ($this->id == $assessment->staff_id) {
                     $event['mine'] = true;
                 } else {
                     $event['color'] = 'whitesmoke';

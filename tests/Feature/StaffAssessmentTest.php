@@ -20,8 +20,8 @@ class StaffAssessmentTest extends TestCase
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();
         $course->students()->sync([$student1->id, $student2->id]);
-        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
-        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
 
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
@@ -37,8 +37,8 @@ class StaffAssessmentTest extends TestCase
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();
         $course->students()->sync([$student1->id, $student2->id]);
-        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
-        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
 
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
@@ -56,9 +56,9 @@ class StaffAssessmentTest extends TestCase
         $course1->staff()->sync([$staff->id]);
         $course2 = $this->createCourse();
         $course2->staff()->sync([$staff->id]);
-        $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'user_id' => $staff->id]);
-        $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'user_id' => $staff->id]);
-        $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'user_id' => $staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'staff_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'staff_id' => $staff->id]);
+        $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'staff_id' => $staff->id]);
         $assessment4 = $this->createAssessment(['type' => 'SOMEONEELSES']);
 
         $response = $this->actingAs($staff)->get(route('home'));
@@ -81,7 +81,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
         $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id]);
 
         $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
@@ -99,7 +99,7 @@ class StaffAssessmentTest extends TestCase
         $staff2 = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff1->id, $staff2->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff2->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff2->id]);
         $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id]);
 
         $response = $this->actingAs($staff1)->get(route('assessment.show', $assessment->id));
@@ -114,7 +114,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
         $givenDate = $assessment->feedback_due->subDays(2);
 
         $response = $this->actingAs($staff)->post(route('feedback.complete', $assessment->id), ['date' => $givenDate->format('d/m/Y')]);
@@ -130,7 +130,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
 
         $response = $this->actingAs($staff)->post(route('feedback.complete', $assessment->id), ['date' => 'blah blah blah']);
 
@@ -145,7 +145,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
         $givenDate = $assessment->feedback_due->subDays(2);
         $assessment->feedback_left = $givenDate;
         $assessment->save();
@@ -162,7 +162,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'user_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
 
         $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
 

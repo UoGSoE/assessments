@@ -68,7 +68,7 @@ $factory->define(App\Assessment::class, function (Faker\Generator $faker) {
         'course_id' => function () {
             return factory(App\Course::class)->create()->id;
         },
-        'user_id' => function () {
+        'staff_id' => function () {
             return factory(App\User::class)->states('staff')->create()->id;
         },
         'feedback_left' => null,
@@ -83,7 +83,7 @@ $factory->define(App\AssessmentFeedback::class, function (Faker\Generator $faker
         'assessment_id' => function () {
             return factory(App\Assessment::class)->create()->id;
         },
-        'user_id' => function () {
+        'student_id' => function () {
             return factory(App\User::class)->states('student')->create()->id;
         },
         'feedback_given' => false,

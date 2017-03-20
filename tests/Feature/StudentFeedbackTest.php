@@ -26,7 +26,7 @@ class StudentFeedbackTest extends TestCase
         $response->assertSessionHas('success_message');
         $this->assertDatabaseHas('assessment_feedbacks', [
             'course_id' => $course->id,
-            'user_id' => $student->id,
+            'student_id' => $student->id,
         ]);
     }
 

@@ -13,7 +13,7 @@
         <label class="label">Staff</label>
         <p class="control">
           <span class="select">
-            <select name="user_id">
+            <select name="staff_id">
                 @foreach ($staff as $user)
                     <option value="{{ $user->id }}" @if ($assessment->user_id == $user->id) selected @endif>{{ $user->fullName() }}</option>
                 @endforeach

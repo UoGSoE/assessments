@@ -73,8 +73,8 @@ class NotificationTest extends TestCase
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();
         $course->students()->sync([$student1->id, $student2->id]);
-        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
-        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'user_id' => $staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(4), 'staff_id' => $staff->id]);
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
 

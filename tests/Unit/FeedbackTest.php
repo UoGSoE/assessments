@@ -17,8 +17,8 @@ class FeedbackTest extends TestCase
         $course = $this->createCourse();
         $course->students()->saveMany([$student1, $student2]);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student1->id, 'feedback_given' => false]);
-        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student2->id, 'feedback_given' => false]);
+        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student1->id, 'feedback_given' => false]);
+        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student2->id, 'feedback_given' => false]);
 
         $this->assertEquals(2, $assessment->totalNegativeFeedbacks());
     }
@@ -31,7 +31,7 @@ class FeedbackTest extends TestCase
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
         foreach ($students->take(6) as $student) {
-            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student->id, 'feedback_given' => false]);
+            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
         }
 
         $this->assertEquals(60, $assessment->percentageNegativeFeedbacks());
@@ -45,7 +45,7 @@ class FeedbackTest extends TestCase
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
         foreach ($students->take(6) as $student) {
-            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student->id, 'feedback_given' => false]);
+            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
         }
 
         $this->assertTrue($assessment->isProblematic());

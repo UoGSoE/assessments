@@ -30,7 +30,7 @@
             </a>
           </td>
           <td>{{ $assessment->type }}</td>
-          <td>{{ $assessment->user->fullName() }}</td>
+          <td>{{ $assessment->staff->fullName() }}</td>
           <td>{{ $assessment->deadline->format('Y-m-d H:i') }}</td>
           <td>{{ $assessment->reportFeedbackLeft() }}</td>
           <td>{{ $assessment->totalNegativeFeedbacks() }}</td>

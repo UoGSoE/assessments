@@ -32,7 +32,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $course = $this->createCourse();
         $course->students()->save($student);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'user_id' => $student->id, 'feedback_given' => false]);
+        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
 
         $json = $student->assessmentsAsJson();
 

@@ -23,7 +23,7 @@ class TestDataSeeder extends Seeder
         foreach ($courses as $course) {
             foreach (range(1, 10) as $i) {
                 $now = \Carbon\Carbon::now()->subWeeks(26);
-                $deadline = $now->addWeeks(rand(0, 51))->addDays(rand(0, 6));
+                $deadline = $now->addWeeks(rand(0, 51))->addDays(rand(0, 6))->hour(16)->minute(0);
                 $assessment = factory(\App\Assessment::class)->create(['course_id' => $course->id, 'deadline' => $deadline]);
             }
         }

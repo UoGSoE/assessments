@@ -46,7 +46,7 @@
             {{ $assessment->course->title}}
     </p>
     <p>
-        Set By : {{ $assessment->user->fullName() }}
+        Set By : {{ $assessment->staff->fullName() }}
     </p>
     <p>
         Assessment Type : {{ $assessment->type }}

@@ -10,12 +10,12 @@ class Course extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'course_student');
+        return $this->belongsToMany(User::class, 'course_student', 'course_id', 'student_id');
     }
 
     public function staff()
     {
-        return $this->belongsToMany(User::class, 'course_staff');
+        return $this->belongsToMany(User::class, 'course_staff', 'course_id', 'staff_id');
     }
 
     public function assessments()

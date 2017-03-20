@@ -16,10 +16,10 @@ class CreateAssessmentFeedbacksTable extends Migration
         Schema::create('assessment_feedbacks', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('assessment_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('student_id');
             $table->unsignedInteger('course_id');
             $table->foreign('assessment_id')->references('id')->on('assessments')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->boolean('feedback_given')->default(true);
             $table->boolean('staff_notified')->default(false);

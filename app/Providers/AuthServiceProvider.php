@@ -57,7 +57,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_admin) {
                 return true;
             }
-            if ($user->id != $assessment->user_id) {
+            if ($user->id != $assessment->staff_id) {
                 return false;
             }
             return true;
@@ -66,7 +66,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_admin) {
                 return true;
             }
-            if ($user->id == $assessment->user_id) {
+            if ($user->id == $assessment->staff_id) {
                 return true;
             }
             return false;

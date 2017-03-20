@@ -23,13 +23,13 @@ class ExportController extends Controller
 
     protected function generateAssessmentsData()
     {
-        $assessments = Assessment::with('course', 'feedbacks')->orderBy('user_id')->get();
+        $assessments = Assessment::with('course', 'feedbacks')->orderBy('staff_id')->get();
         $rows = [];
         foreach ($assessments as $assessment) {
             $row = [
                 $assessment->course->code,
                 $assessment->type,
-                $assessment->user->fullName(),
+                $assessment->staff->fullName(),
                 $assessment->deadline->format('d/m/Y H:i'),
                 $assessment->reportFeedbackLeft(),
                 $assessment->totalNegativeFeedbacks()

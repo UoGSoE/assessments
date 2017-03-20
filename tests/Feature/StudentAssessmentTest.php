@@ -63,7 +63,7 @@ class StudentAssessmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
-        $response->assertSee($assessment->user->fullName());
+        $response->assertSee($assessment->staff->fullName());
         $this->assertRegExp("/Feedback Completed :\s+No/s", $response->content());
     }
 

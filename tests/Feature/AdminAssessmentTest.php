@@ -27,7 +27,7 @@ class AdminAssessmentTest extends TestCase
             'time' => $now->format('H:i'),
             'type' => 'Whatever',
             'comment' => 'I am very happy with my cheese purchase',
-            'user_id' => $staff->id,
+            'staff_id' => $staff->id,
         ]);
 
         $response->assertStatus(302);
@@ -36,7 +36,7 @@ class AdminAssessmentTest extends TestCase
             'id' => $assessment->id,
             'comment' => 'I am very happy with my cheese purchase',
             'type' => 'Whatever',
-            'user_id' => $staff->id,
+            'staff_id' => $staff->id,
             'deadline' => $now->format('Y-m-d H:i:00'),
         ]);
     }
@@ -54,11 +54,11 @@ class AdminAssessmentTest extends TestCase
         $response = $this->actingAs($admin)->post(route('assessment.update', $assessment->id), [
             'date' => 'blah',
             'time' => 'something',
-            'user_id' => 1000000,
+            'staff_id' => 1000000,
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['date', 'time', 'user_id']);
+        $response->assertSessionHasErrors(['date', 'time', 'staff_id']);
         $freshAssessment = $assessment->fresh();
         $this->assertEquals($assessment->user_id, $freshAssessment->user_id);
         $this->assertEquals($assessment->deadline->timestamp, $freshAssessment->deadline->timestamp);
@@ -79,7 +79,7 @@ class AdminAssessmentTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success_message');
         $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);        
-        $this->assertDatabaseMissing('assessment_feedbacks', ['assessment_id' => $assessment->id, 'user_id' => $student->id]);        
+        $this->assertDatabaseMissing('assessment_feedbacks', ['assessment_id' => $assessment->id, 'student_id' => $student->id]);        
     }
 
     /** @test */
@@ -95,7 +95,7 @@ class AdminAssessmentTest extends TestCase
             'time' => $now->format('H:i'),
             'type' => 'Whatever',
             'comment' => 'I am very happy with my cheese purchase',
-            'user_id' => $staff->id,
+            'staff_id' => $staff->id,
             'course_id' => $course->id,
         ]);
 
@@ -104,7 +104,7 @@ class AdminAssessmentTest extends TestCase
         $this->assertDatabaseHas('assessments', [
             'comment' => 'I am very happy with my cheese purchase',
             'type' => 'Whatever',
-            'user_id' => $staff->id,
+            'staff_id' => $staff->id,
             'deadline' => $now->format('Y-m-d H:i:00'),
             'course_id' => $course->id,
         ]);
