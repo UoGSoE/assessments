@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\User;
+use App\Assessment;
 
-class NotifyNewFeedbacks extends Command
+class NotifyOffice extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'assessments:notifystaff';
+    protected $signature = 'assessments:notifyoffice';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send email notifications to staff about new feedbacks';
+    protected $description = 'Notify teaching office about problematic assessments';
 
     /**
      * Create a new command instance.
@@ -38,9 +38,6 @@ class NotifyNewFeedbacks extends Command
      */
     public function handle()
     {
-        $staff = User::staff()->get();
-        foreach ($staff as $user) {
-            $user->notifyAboutUnreadFeedback();
-        }
+        Assessment::all()->each->notifyIfProblematic();
     }
 }

@@ -146,8 +146,9 @@ class Assessment extends Model
 
     public function officeHaveBeenNotified()
     {
-        return $this->office_notified;
+        return (bool) $this->office_notified;
     }
+
     public function routeNotificationForMail()
     {
         return config('assessments.office_email');

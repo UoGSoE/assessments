@@ -15,7 +15,7 @@
           <span class="select">
             <select name="staff_id">
                 @foreach ($staff as $user)
-                    <option value="{{ $user->id }}" @if ($assessment->user_id == $user->id) selected @endif>{{ $user->fullName() }}</option>
+                    <option value="{{ $user->id }}" @if ($assessment->staff_id == $user->id) selected @endif>{{ $user->fullName() }}</option>
                 @endforeach
             </select>
           </span>
