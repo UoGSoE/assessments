@@ -2,15 +2,19 @@
 
 namespace App;
 
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\NotYourCourseException;
 use App\Exceptions\TooMuchTimePassedException;
 use App\Exceptions\AssessmentNotOverdueException;
+use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
 
 class Assessment extends Model
 {
-    protected $fillable = ['comment', 'type', 'user_id', 'course_id', 'type'];
+    use Notifiable;
+
+    protected $fillable = ['comment', 'type', 'user_id', 'course_id', 'type', 'deadline'];
 
     protected $casts = [
         'deadline' => 'datetime',
@@ -119,6 +123,34 @@ class Assessment extends Model
             return true;
         }
         return false;
+    }
+
+    public function notifyIfProblematic()
+    {
+        if ($this->officeHaveBeenNotified()) {
+            return false;
+        }
+        if (!$this->isProblematic()) {
+            return false;
+        }
+        $this->notify(new ProblematicAssessment($this));
+        $this->markOfficeNotified();
+        return true;
+    }
+
+    public function markOfficeNotified()
+    {
+        $this->office_notified = true;
+        $this->save();
+    }
+
+    public function officeHaveBeenNotified()
+    {
+        return $this->office_notified;
+    }
+    public function routeNotificationForMail()
+    {
+        return config('assessments.office_email');
     }
 
     public function feedbackFrom($user)

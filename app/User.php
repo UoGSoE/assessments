@@ -108,6 +108,7 @@ class User extends Authenticatable
     {
         $data = [];
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
+            $year = substr($course->code, 3, 1);
             foreach ($course->assessments as $assessment) {
                 $negativeFeedback = $assessment->feedbacks()->where('user_id', $this->id)->first();
                 if ($negativeFeedback) {
@@ -125,6 +126,7 @@ class User extends Authenticatable
                     'feedback_missed' => $negativeFeedback,
                     'mine' => false,
                     'color' => 'steelblue',
+                    'year' => $year,
                 ];
                 if ($this->id == $assessment->user_id) {
                     $event['mine'] = true;

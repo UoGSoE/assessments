@@ -10,6 +10,12 @@
                     }
                     console.log(calEvent);
                 },
+                eventRender: function eventRender( event, element, view ) {
+                    return ['all', event.year].indexOf($('#year-selector').val()) >= 0
+                }
             });
+            $('#year-selector').on('change',function(){
+                $('#calendar').fullCalendar('rerenderEvents');
+            })
         });
     </script>
