@@ -22,6 +22,8 @@
     <script src="/js/pikaday.js"></script>
     <script src="/js/fullcalendar/fullcalendar.min.js"></script>
     <link rel="shortcut icon" href="/favicon.ico">
+    <script src="/js/dropit/dropit.js"></script>
+    <link href="/js/dropit/dropit.css" rel="stylesheet">
     <!-- Scripts -->
     <script>
         window.Laravel = <?php echo json_encode([

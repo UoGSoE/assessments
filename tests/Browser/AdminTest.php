@@ -67,7 +67,7 @@ class AdminTest extends DuskTestCase
             $student->recordFeedback($assessment);
             $browser->loginAs($admin)
                     ->visit("/assessment/{$assessment->id}")
-                    ->clickLink('Edit')
+                    ->click('#edit-assessment-button')
                     ->assertSee("Edit Assessment")
                     ->select('type', 'something')
                     ->select('staff_id', "$staff->id")
@@ -90,7 +90,7 @@ class AdminTest extends DuskTestCase
             $course = $this->createCourse();
             $browser->loginAs($admin)
                     ->visit("/admin/report")
-                    ->clickLink('Add New Assessment')
+                    ->click('#add-assessment-button')
                     ->assertSee("New Assessment")
                     ->select('type', 'something')
                     ->select('staff_id', "$staff->id")
@@ -121,17 +121,43 @@ class AdminTest extends DuskTestCase
             $student->recordFeedback($assessment);
             $browser->loginAs($admin)
                     ->visit("/assessment/{$assessment->id}")
-                    ->press("Delete")
+                    ->press("#delete-button")
                     ->waitFor('#pop-up')
                     ->assertSee('Do you really want to delete')
                     ->clickLink('No')
                     ->assertDontSee('Do you really want to delete')
                     ->assertSee($assessment->course->code)
-                    ->press("Delete")
+                    ->press("#delete-button")
                     ->waitFor('#pop-up')
                     ->clickLink('Yes')
                     ->assertSee('Feedback Report')
                     ->assertSee('Assessment deleted');
+        });
+    }
+
+    /** @test */
+    public function admin_can_delete_all_old_data()
+    {
+        $this->browse(function ($browser) {
+            $admin = $this->createAdmin();
+            $assessments = factory(\App\Assessment::class, 5)->create();
+            $firstAssessment = $assessments->first();
+            $feedbacks = factory(\App\AssessmentFeedback::class, 5)->create();
+            $browser->loginAs($admin)
+                    ->visit("/admin/report/feedback")
+                    ->assertSee($firstAssessment->course->code)
+                    ->press('#delete-button')
+                    ->waitFor('#pop-up')
+                    ->assertSee('Do you really want to delete')
+                    ->clickLink('No')
+                    ->assertDontSee('Do you really want to delete')
+                    ->assertSee($firstAssessment->course->code)
+                    ->press("#delete-button")
+                    ->waitFor('#pop-up')
+                    ->clickLink('Yes')
+                    ->assertSee('Feedback Report')
+                    ->assertSee('Old data removed')
+                    ->assertDontSee($firstAssessment->course->code);
         });
     }
 }

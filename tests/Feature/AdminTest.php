@@ -123,4 +123,20 @@ class AdminTest extends TestCase
         $response->assertSee($assessment->feedbacks()->first()->created_at->format('d/m/Y H:i'));
         $response->assertSee($assessment->comment);
     }
+
+    /** @test */
+    public function admin_can_remove_all_old_data()
+    {
+        $admin = $this->createAdmin();
+        $assessments = factory(\App\Assessment::class, 5)->create();
+        $feedbacks = factory(\App\AssessmentFeedback::class, 5)->create();
+
+        $response = $this->actingAs($admin)->delete(route('admin.clearold'));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('report.feedback'));
+        $response->assertSessionHas('success_message');
+        $this->assertCount(0, \App\Assessment::all());
+        $this->assertCount(0, \App\AssessmentFeedback::all());
+    }
 }

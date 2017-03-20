@@ -10,8 +10,10 @@
       </p>
       @if (Auth::user()->is_admin)
         <p>&nbsp;
-          <a href="{!! route('assessment.edit', $assessment->id) !!}" class="button">
-              Edit
+          <a href="{!! route('assessment.edit', $assessment->id) !!}" id="edit-assessment-button" class="button" title="Edit">
+              <span class="icon">
+                <i class="fa fa-edit"></i>
+              </span>
           </a>
         </p>
         @endif
@@ -23,8 +25,10 @@
             <form method="POST" action="" data-href="{!! route('assessment.destroy', $assessment->id) !!}" id="delete-form">
                 {!! csrf_field() !!}
                 <input type="hidden" name="_method" value="DELETE">
-                <button id="delete-button" class="button is-danger is-pulled-right">
-                    Delete
+                <button id="delete-button" class="button is-danger is-pulled-right" title="Delete">
+                    <span class="icon">
+                      <i class="fa fa-trash"></i>
+                    </span>
                 </button>
             </form>
         @endif
