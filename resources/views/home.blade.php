@@ -19,5 +19,5 @@
           &nbsp;
         </p>
     @endif
-    @include('student.partials.calendar')
+    @include('partials.calendar')
 @endsection

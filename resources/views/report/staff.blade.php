@@ -16,7 +16,16 @@
         <tbody>
             @foreach ($staff as $user)
                 <tr>
-                    <td>{{ $user->fullName() }}</td>
+                    <td>
+                        <a href="{!! route('staff.show', $user->id) !!}">
+                            {{ $user->fullName() }}
+                        </a>
+                        @if ($user->is_admin)
+                            <span class="icon is-admin-{{ $user->id }}" title="Admin">
+                              <i class="fa fa-user-circle"></i>
+                            </span>
+                        @endif
+                    </td>
                     <td>{{ $user->numberOfAssessments() }}</td>
                     <td>{{ $user->numberOfStaffFeedbacks() }}</td>
                     <td>{{ $user->numberOfMissedDeadlines() }}</td>

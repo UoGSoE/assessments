@@ -22,4 +22,9 @@ class Course extends Model
     {
         return $this->hasMany(Assessment::class);
     }
+
+    public function orderedAssessments()
+    {
+        return $this->assessments()->orderBy('deadline')->get();
+    }
 }

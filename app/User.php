@@ -20,6 +20,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+        'is_admin' => 'boolean'
+    ];
+
     public function courses()
     {
         if ($this->is_student) {
@@ -31,6 +35,11 @@ class User extends Authenticatable
     public function assessments()
     {
         return $this->hasMany(Assessment::class, 'staff_id');
+    }
+
+    public function orderedAssessments()
+    {
+        return $this->hasMany(Assessment::class, 'staff_id')->orderBy('deadline')->get();
     }
 
     public function numberOfAssessments()
@@ -136,10 +145,6 @@ class User extends Authenticatable
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
             $year = substr($course->code, 3, 1);
             foreach ($course->assessments as $assessment) {
-                // $negativeFeedback = $assessment->feedbacks()->where('staff_id', $this->id)->first();
-                // if ($negativeFeedback) {
-                //     $negativeFeedback = true;
-                // }
                 $event = [
                     'id' => $assessment->id,
                     'title' => $assessment->title,
@@ -149,12 +154,11 @@ class User extends Authenticatable
                     'end' => $assessment->deadline->addHours(1)->toIso8601String(),
                     'feedback_due' => $assessment->feedback_due->toIso8601String(),
                     'type' => $assessment->type,
-                    // 'feedback_missed' => $negativeFeedback,
                     'mine' => false,
                     'color' => 'steelblue',
                     'year' => $year,
                 ];
-                if ($this->id == $assessment->staff_id) {
+                if ($this->can('can_see_assessment', $assessment)) {
                     $event['mine'] = true;
                 } else {
                     $event['color'] = 'whitesmoke';
@@ -220,5 +224,27 @@ class User extends Authenticatable
             return false;
         }
         return true;
+    }
+
+    public static function createFromLdap($ldapData)
+    {
+        $user = new static([
+            'username' => $ldapData['username'],
+            'surname' => $ldapData['surname'],
+            'forenames' => $ldapData['forenames'],
+            'email' => $ldapData['email'],
+            'password' => bcrypt(str_random(64))
+        ]);
+        $user->is_student = $user->usernameIsMatric($ldapData['username']);
+        $user->save();
+        return $user;
+    }
+
+    protected function usernameIsMatric($username)
+    {
+        if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
+            return true;
+        }
+        return false;
     }
 }

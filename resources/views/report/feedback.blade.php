@@ -1,18 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="title is-2">
-        Feedback Report
+<nav class="level">
+  <div class="level-left">
+    <div class="level-item">
+      <h2 class="title is-2">
+          Feedback Report
+      </h2>
+    </div>
+    <div class="level-item">
         <a href="{!! route('assessment.create') !!}" id="add-assessment-button" class="button" title="Add new assessment">
           <span class="icon">
             <i class="fa fa-plus"></i>
           </span>
         </a>
+    </div>
+    <div class="level-item">
         <a href="{!! route('export.assessments') !!}" id="export-excel-button" class="button" title="Export As Excel">
           <span class="icon">
             <i class="fa fa-download"></i>
           </span>
         </a>
+    </div>
+    <div class="level-item">
+        <a href="{!! route('report.staff') !!}" id="staff-report-button" class="button" title="Staff Report">
+          <span class="icon">
+            <i class="fa fa-user"></i>
+          </span>
+        </a>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
         @if (Auth::user()->is_admin)
             <form method="POST" action="" data-href="{!! route('admin.clearold') !!}" id="delete-form" class="is-pulled-right">
                 {!! csrf_field() !!}
@@ -24,7 +43,9 @@
                 </button>
             </form>
         @endif
-    </h2>
+      </div>
+  </div>
+</nav>
     <table class="table is-striped datatable" id="feedback-table">
       <thead>
         <tr>
@@ -45,7 +66,11 @@
             </a>
           </td>
           <td>{{ $assessment->type }}</td>
-          <td>{{ $assessment->staff->fullName() }}</td>
+          <td>
+            <a href="{!! route('staff.show', $assessment->staff->id) !!}">
+              {{ $assessment->staff->fullName() }}
+            </a>
+          </td>
           <td>{{ $assessment->deadline->format('Y-m-d H:i') }}</td>
           <td>{{ $assessment->reportFeedbackLeft() }}</td>
           <td>{{ $assessment->totalNegativeFeedbacks() }}</td>

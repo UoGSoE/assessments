@@ -28,6 +28,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->state(App\User::class, 'student', function ($faker) {
     return [
+        'username' => $faker->unique()->numberBetween(1000000, 9999999) . $faker->randomLetter,
         'is_student' => true,
     ];
 });
@@ -45,7 +46,7 @@ $factory->state(App\User::class, 'admin', function ($faker) {
 
 $factory->define(App\Course::class, function (Faker\Generator $faker) {
     return [
-        'code' => 'ENG' . $faker->unique()->numberBetween(1000, 9999),
+        'code' => 'ENG' . $faker->unique()->numberBetween(1000, 5999),
         'title' => $faker->sentence,
     ];
 });

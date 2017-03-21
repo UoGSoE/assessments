@@ -34,5 +34,5 @@
     <h3 class="title is-3">
         Assessments for {{ $student->fullName() }}
     </h3>
-    @include('student.partials.calendar', ['assessments' => $student->assessmentsAsJson()])
+    @include('partials.calendar', ['assessments' => $student->assessmentsAsJson()])
 @endsection

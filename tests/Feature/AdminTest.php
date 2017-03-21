@@ -139,4 +139,45 @@ class AdminTest extends TestCase
         $this->assertCount(0, \App\Assessment::all());
         $this->assertCount(0, \App\AssessmentFeedback::all());
     }
+
+    /** @test */
+    public function admin_can_see_details_of_a_member_of_staff()
+    {
+        $admin = $this->createAdmin();
+        $staff = $this->createStaff();
+        $course1 = $this->createCourse();
+        $course2 = $this->createCourse();
+        $course3 = $this->createCourse();
+        $course1->staff()->sync([$staff->id]);
+        $course2->staff()->sync([$staff->id]);
+        $assessments = factory(\App\Assessment::class, 2)->create(['staff_id' => $staff->id, 'course_id' => $course1->id]);
+        $assessments = factory(\App\Assessment::class, 3)->create(['staff_id' => $staff->id, 'course_id' => $course2->id]);
+
+        $response = $this->actingAs($admin)->get(route('staff.show', $staff->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Staff Details');
+        $response->assertSee($staff->fullName());
+        $response->assertSee($course1->code);
+        $response->assertSee($course2->code);
+        $response->assertDontSee($course3->code);
+        foreach ($staff->assessments as $assessment) {
+            $response->assertSee($assessment->course->code);
+        }
+    }
+
+    /** @test */
+    public function admin_can_toggle_a_users_admin_flag()
+    {
+        $admin = $this->createAdmin();
+        $staff = $this->createStaff();
+
+        $response = $this->actingAs($admin)->post(route('staff.toggle_admin', $staff->id));
+        $response->assertStatus(200);
+        $this->assertTrue($staff->fresh()->is_admin);
+
+        $response = $this->actingAs($admin)->post(route('staff.toggle_admin', $staff->id));
+        $response->assertStatus(200);
+        $this->assertFalse($staff->fresh()->is_admin);
+    }
 }

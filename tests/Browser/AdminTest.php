@@ -49,7 +49,12 @@ class AdminTest extends DuskTestCase
                     ->clickLink($assessment1->course->code)
                     ->assertSee('Course Details')
                     ->assertSee($course1->title)
-                    ->assertSee($course1->students()->first()->fullName());
+                    ->assertSee($course1->students()->first()->fullName())
+                    ->clickLink('Admin')
+                    ->clickLink($assessment1->staff->fullName())
+                    ->assertSee('Staff Details')
+                    ->assertSee($assessment1->staff->email)
+                    ->assertSee($assessment1->course->code);
         });
     }
 
@@ -89,7 +94,7 @@ class AdminTest extends DuskTestCase
             $staff = $this->createStaff();
             $course = $this->createCourse();
             $browser->loginAs($admin)
-                    ->visit("/admin/report")
+                    ->visit("/admin/report/feedback")
                     ->click('#add-assessment-button')
                     ->assertSee("New Assessment")
                     ->select('type', 'something')
@@ -159,5 +164,58 @@ class AdminTest extends DuskTestCase
                     ->assertSee('Old data removed')
                     ->assertDontSee($firstAssessment->course->code);
         });
+    }
+
+    /** @test */
+    public function admin_can_see_the_staff_report()
+    {
+        $this->browse(function ($browser) {
+            $admin = $this->createAdmin();
+            $staff1 = $this->createStaff();
+            $staff2 = $this->createStaff();
+            $course = $this->createCourse();
+            $course->staff()->sync([$staff1->id]);
+            $assessments = factory(\App\Assessment::class, 5)->create(['staff_id' => $staff1->id]);
+            $assessments = factory(\App\Assessment::class, 7)->create(['staff_id' => $staff2->id]);
+            $assessments->each(function ($assessment) {
+                $feedbacks = factory(\App\AssessmentFeedback::class, rand(1, 5))->create(['assessment_id' => $assessment->id]);
+            });
+            $browser->loginAs($admin)
+                    ->visit("/")
+                    ->clickLink('Admin')
+                    ->click('#staff-report-button')
+                    ->assertSee('Staff Report')
+                    ->assertSee($staff1->fullName())
+                    ->clickLink($staff1->fullName())
+                    ->assertSee('Staff Details')
+                    ->assertSee($staff1->courses()->first()->code);
+        });
+    }
+
+    /** @test */
+    public function admin_can_see_toggle_users_admin_flag()
+    {
+        $this->browse(function ($browser) {
+            $admin = $this->createAdmin();
+            $assessment = factory(\App\Assessment::class)->create();
+            $staff = $assessment->staff;
+
+            $browser->loginAs($admin)
+                    ->visit("/")
+                    ->clickLink('Admin')
+                    ->clickLink($staff->fullName())
+                    ->assertSee('Staff Details')
+                    ->check('is_admin')
+                    ->pause(100);
+            $this->assertTrue($staff->fresh()->is_admin);
+            $browser->loginAs($admin)
+                    ->visit("/")
+                    ->clickLink('Admin')
+                    ->clickLink($staff->fullName())
+                    ->assertSee('Staff Details')
+                    ->uncheck('is_admin')
+                    ->pause(100);
+            $this->assertFalse($staff->fresh()->is_admin);
+     });
     }
 }

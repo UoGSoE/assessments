@@ -34,7 +34,7 @@
             <h3 class="title is-3">
                 Assessments
             </h3>
-            @foreach ($course->assessments()->orderBy('deadline')->get() as $assessment)
+            @foreach ($course->orderedAssessments() as $assessment)
                 <li>
                     <a href="{!! route('assessment.show', $assessment->id) !!}">
                         {{ $assessment->title }}

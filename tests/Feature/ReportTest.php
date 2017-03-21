@@ -52,5 +52,6 @@ class ReportTest extends TestCase
             $response->assertSee("" . $user->numberOfStaffFeedbacks());
             $response->assertSee("" . $user->numberOfMissedDeadlines());
         }
+        $response->assertSee("is-admin-{$admin->id}");
     }
 }
