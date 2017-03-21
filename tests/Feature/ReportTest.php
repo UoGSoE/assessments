@@ -7,8 +7,9 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\User;
 
-class FeedbackReportTest extends TestCase
+class ReportTest extends TestCase
 {
     /** @test */
     public function admin_can_view_the_overall_feedback_report()
@@ -27,6 +28,29 @@ class FeedbackReportTest extends TestCase
             $response->assertSee($assessment->deadline->format('Y-m-d H:i'));
             $response->assertSee($assessment->reportFeedbackLeft());
             $response->assertSee("" . $assessment->totalNegativeFeedbacks());
+        }
+    }
+
+    /** @test */
+    public function admin_can_view_the_staff_report()
+    {
+        $admin = $this->createAdmin();
+        $staff = factory(User::class, 5)->states('staff')->create()->each(function ($user) {
+            $assessments = factory(\App\Assessment::class, 2)->create(['staff_id' => $user->id]);
+            $assessments->each(function ($assessment) {
+                $feedbacks = factory(\App\AssessmentFeedback::class, rand(1, 5))->create(['assessment_id' => $assessment->id]);
+            });
+        });
+
+        $response = $this->actingAs($admin)->get(route('report.staff'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Staff Report');
+        foreach ($staff as $user) {
+            $response->assertSee($user->fullName());
+            $response->assertSee("" . $user->numberOfAssessments());
+            $response->assertSee("" . $user->numberOfStaffFeedbacks());
+            $response->assertSee("" . $user->numberOfMissedDeadlines());
         }
     }
 }

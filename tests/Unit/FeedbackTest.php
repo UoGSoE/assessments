@@ -6,6 +6,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Carbon\Carbon;
 
 class FeedbackTest extends TestCase
 {
@@ -35,6 +36,42 @@ class FeedbackTest extends TestCase
         }
 
         $this->assertEquals(60, $assessment->percentageNegativeFeedbacks());
+    }
+
+    /** @test */
+    public function we_can_get_the_number_of_feedbacks_left_for_a_member_of_staff()
+    {
+        $students = factory(\App\User::class, 3)->states('student')->create();
+        $course = $this->createCourse();
+        $course->students()->saveMany($students);
+        $assessment = $this->createAssessment(['course_id' => $course->id]);
+        foreach ($students as $student) {
+            $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
+        }
+
+        $this->assertEquals(3, $assessment->staff->numberOfStaffFeedbacks());
+    }
+
+    /** @test */
+    public function we_can_get_the_number_of_feedback_deadlines_a_member_of_staff_has_missed()
+    {
+        $staff = $this->createStaff();
+        $noFeedbackLeft = $this->createAssessment([
+            'staff_id' => $staff->id,
+            'deadline' => Carbon::now()->subWeeks(4),
+        ]);
+        $leftOnTime = $this->createAssessment([
+            'staff_id' => $staff->id,
+            'deadline' => Carbon::now()->subWeeks(4),
+            'feedback_left' => Carbon::now()->subweeks(2)
+        ]);
+        $leftLate = $this->createAssessment([
+            'staff_id' => $staff->id,
+            'deadline' => Carbon::now()->subWeeks(4),
+            'feedback_left' => Carbon::now(),
+        ]);
+
+        $this->assertEquals(2, $staff->numberOfMissedDeadlines());
     }
 
     /** @test */

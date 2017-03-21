@@ -26,6 +26,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
         Route::get('report', 'ReportController@feedback')->name('report.feedback');
         Route::get('report/feedback', 'ReportController@feedback')->name('report.feedback');
+        Route::get('report/staff', 'ReportController@staff')->name('report.staff');
+
         Route::get('student/{id}', 'StudentController@show')->name('student.show');
 
         Route::get('/assessent/create', 'AssessmentController@create')->name('assessment.create');

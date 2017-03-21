@@ -82,6 +82,17 @@ class Assessment extends Model
         return false;
     }
 
+    public function feedbackWasGivenLate()
+    {
+        if ($this->notOverdue()) {
+            return false;
+        }
+        if (!$this->feedback_left) {
+            return true;
+        }
+        return $this->feedback_left->gte($this->feedback_due);
+    }
+
     public function notOverdue()
     {
         return ! $this->overdue();

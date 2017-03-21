@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\OverdueFeedback;
 use App\Course;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -32,9 +33,34 @@ class User extends Authenticatable
         return $this->hasMany(Assessment::class, 'staff_id');
     }
 
+    public function numberOfAssessments()
+    {
+        return (int) $this->assessments()->count();
+    }
+
     public function feedbacks()
     {
         return $this->hasMany(AssessmentFeedback::class, 'student_id');
+    }
+
+    public function numberOfStaffFeedbacks()
+    {
+        $reportedAssessments = $this->assessments()->has('feedbacks')->get();
+        return $reportedAssessments->reduce(function ($carry, $assessment) {
+            return $carry + $assessment->totalNegativeFeedbacks();
+        }, 0);
+    }
+
+    public function numberOfMissedDeadlines()
+    {
+        $cutoff = Carbon::now()->subWeeks(3);
+        $missed = $this->assessments()->where('deadline', '<=', $cutoff)->get();
+        return $missed->reduce(function ($carry, $assessment) {
+            if ($assessment->feedbackWasGivenLate()) {
+                return $carry + 1;
+            }
+            return $carry;
+        }, 0);
     }
 
     public function unreadFeedbacks()

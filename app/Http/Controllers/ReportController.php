@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Assessment;
+use App\User;
 
 class ReportController extends Controller
 {
@@ -17,5 +18,11 @@ class ReportController extends Controller
     {
         $assessments = Assessment::with('course', 'feedbacks')->orderBy('staff_id')->get();
         return view('report.feedback', compact('assessments'));
+    }
+
+    public function staff()
+    {
+        $staff = User::staff()->with('assessments.feedbacks')->orderBy('surname')->get();
+        return view('report.staff', compact('staff'));
     }
 }
