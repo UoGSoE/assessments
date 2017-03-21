@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Assessment;
 use App\User;
 use App\Course;
+use Carbon\Carbon;
 
 class AssessmentController extends Controller
 {
@@ -21,7 +22,7 @@ class AssessmentController extends Controller
 
     public function create()
     {
-        $assessment = new Assessment;
+        $assessment = new Assessment(['deadline' => Carbon::now()->hour(16)->minute(0)]);
         $staff = User::staff()->orderBy('surname')->get();
         $courses = Course::orderBy('code')->get();
         return view('assessment.create', compact('assessment', 'staff', 'courses'));
