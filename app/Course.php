@@ -27,4 +27,22 @@ class Course extends Model
     {
         return $this->assessments()->orderBy('deadline')->get();
     }
+
+    public static function findByCode($code)
+    {
+        return static::where('code', '=', $code)->first();
+    }
+
+    public static function fromWlmData($wlmCourse)
+    {
+        $code = $wlmCourse['Code'];
+        $title = $wlmCourse['Title'];
+        $course = static::findByCode($code);
+        if (!$course) {
+            $course = new static(['code' => $code]);
+        }
+        $course->title = $title;
+        $course->save();
+        return $course;
+    }
 }

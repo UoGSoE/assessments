@@ -95,14 +95,24 @@ class User extends Authenticatable
         return $query->where('is_student', '=', false);
     }
 
+    public function scopeStudent($query)
+    {
+        return $query->where('is_student', '=', true);
+    }
+
     public function fullName()
     {
         return $this->surname . ', ' . $this->forenames;
     }
 
+    public function isStudent()
+    {
+        return $this->is_student;
+    }
+
     public function isStaff()
     {
-        return ! $this->is_student;
+        return ! $this->isStudent();
     }
 
     public function assessmentsAsJson()
@@ -246,5 +256,46 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    public static function findByUsername($username)
+    {
+        return static::where('username', '=', $username)->first();
+    }
+
+    public static function staffFromWlmData($wlmStaff)
+    {
+        $username = $wlmStaff['GUID'];
+        $staff = User::findByUsername($username);
+        if (!$staff) {
+            $staff = new static([
+                'username' => $username,
+                'email' => $wlmStaff['Email'],
+            ]);
+        }
+        $staff->surname = $wlmStaff['Surname'];
+        $staff->forenames = $wlmStaff['Forenames'];
+        $staff->password = bcrypt(str_random(32));
+        $staff->is_student = false;
+        $staff->save();
+        return $staff;
+    }
+
+    public static function studentFromWlmData($wlmStudent)
+    {
+        $username = strtolower($wlmStudent['Matric'] . substr($wlmStudent['Surname'], 0, 1));
+        $student = User::findByUsername($username);
+        if (!$student) {
+            $student = new static([
+                'username' => $username,
+                'email' => "{$username}@student.gla.ac.uk",
+            ]);
+        }
+        $student->surname = $wlmStudent['Surname'];
+        $student->forenames = $wlmStudent['Forenames'];
+        $student->password = bcrypt(str_random(32));
+        $student->is_student = true;
+        $student->save();
+        return $student;
     }
 }
