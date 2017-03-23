@@ -12,11 +12,13 @@ class WlmClient
     public $responseMessage;
     public $responseCode;
     protected $wlmStaff;
+    protected $baseUri;
 
     public function __construct()
     {
         $this->client = new Client;
         $this->wlmStaff = collect([]);
+        $this->baseUri = config('assessments.wlm_uri');
     }
 
     protected function get($url)
@@ -24,9 +26,9 @@ class WlmClient
         return $this->client->get($url);
     }
 
-    public function getData($url)
+    public function getData($endpoint)
     {
-        $this->response = $this->get($url);
+        $this->response = $this->get($this->baseUri . $endpoint);
         $this->statusCode = $this->response->getStatusCode();
         $json = json_decode($this->response->getBody(), true);
         if (!array_key_exists('Data', $json)) {
@@ -39,18 +41,18 @@ class WlmClient
 
     public function getCourses()
     {
-        return $this->getData('http://localhost:8088/persons3/api/getcourse/all');
+        return $this->getData('getcourse/all');
     }
 
     public function getCourse($code)
     {
-        return $this->getData("http://localhost:8088/persons3/api/getcourse/{$code}");
+        return $this->getData("getcourse/{$code}");
     }
 
     public function getStaff($guid)
     {
         if (!$this->wlmStaff->has($guid)) {
-            $this->wlmStaff[$guid] = $this->getData("http://localhost:8088/persons3/api/getdetails/{$guid}");
+            $this->wlmStaff[$guid] = $this->getData("getdetails/{$guid}");
         }
         return $this->wlmStaff[$guid];
     }
