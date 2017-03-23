@@ -36,7 +36,12 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             //'database' => database_path('dusk.sqlite'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_DATABASE', database_path('dusk.sqlite')),
+            'prefix' => '',
+        ],
+        'sqlite_dusk' => [
+            'driver' => 'sqlite',
+            'database' => database_path('dusk.sqlite'),
             'prefix' => '',
         ],
 

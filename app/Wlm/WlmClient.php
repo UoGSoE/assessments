@@ -6,11 +6,11 @@ use GuzzleHttp\Client;
 
 class WlmClient
 {
-    protected $client;
     public $response;
     public $statusCode;
     public $responseMessage;
     public $responseCode;
+    protected $client;
     protected $wlmStaff;
     protected $baseUri;
 
