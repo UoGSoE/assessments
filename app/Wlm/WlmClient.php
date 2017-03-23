@@ -9,6 +9,8 @@ class WlmClient
     protected $client;
     public $response;
     public $statusCode;
+    public $responseMessage;
+    public $responseCode;
     protected $wlmStaff;
 
     public function __construct()
@@ -30,12 +32,19 @@ class WlmClient
         if (!array_key_exists('Data', $json)) {
             return collect([]);
         }
+        $this->responseMessage = $json['Response'];
+        $this->responseCode = $json['ResponseCode'];
         return collect($json['Data']);
     }
 
     public function getCourses()
     {
         return $this->getData('http://localhost:8088/persons3/api/getcourse/all');
+    }
+
+    public function getCourse($code)
+    {
+        return $this->getData("http://localhost:8088/persons3/api/getcourse/{$code}");
     }
 
     public function getStaff($guid)

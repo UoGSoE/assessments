@@ -7,6 +7,8 @@ class FakeWlmClient
     public $response;
     public $statusCode;
     protected $wlmStaff;
+    public $responseCode;
+    public $responseMessage;
 
     public function __construct()
     {
@@ -21,70 +23,26 @@ class FakeWlmClient
     public function getCourses()
     {
         $this->statusCode = 200;
-        return collect([
-            'ENG1234' => [
-                'Code' => 'ENG1234',
-                'Title' => "Fake Course 1234",
-                'Students' => [
-                    '1234567' => [
-                        'Matric' => '1234567',
-                        'Surname' => 'McFake',
-                        'Forenames' => 'Fakey'
-                    ],
-                    '7654321' => [
-                        'Matric' => '7654321',
-                        'Surname' => 'Smith',
-                        'Forenames' => 'Jenny'
-                    ],
-                ],
-                'Staff' => [
-                    'fake1x' => [
-                        'GUID' => 'fake1x',
-                        'Surname' => 'Faker',
-                        'Forenames' => 'Prof'
-                    ],
-                    'blah2y' => [
-                        'GUID' => 'blah2y',
-                        'Surname' => 'McManus',
-                        'Forenames' => 'Mark'
-                    ],
-                ],
-            ],
-            'ENG4321' => [
-                'Code' => 'ENG4321',
-                'Title' => "Fake Course 4321",
-                'Students' => [
-                    '9999999' => [
-                        'Matric' => '9999999',
-                        'Surname' => 'Goldie',
-                        'Forenames' => 'Debbie'
-                    ],
-                    '7654321' => [
-                        'Matric' => '7654321',
-                        'Surname' => 'Smith',
-                        'Forenames' => 'Jenny'
-                    ],
-                ],
-                'Staff' => [
-                    'doc2w' => [
-                        'GUID' => 'doc2w',
-                        'Surname' => 'Baker',
-                        'Forenames' => 'Tom'
-                    ],
-                    'blah2y' => [
-                        'GUID' => 'blah2y',
-                        'Surname' => 'McManus',
-                        'Forenames' => 'Mark'
-                    ],
-                ],
-            ],
+        return collect(['TEST1234' => $this->getCourse1(), 'TEST4321' => $this->getCourse2()]);
+    }
 
-        ]);
+    public function getCourse($code)
+    {
+        $this->statusCode = 200;
+        return $this->getCourse1();
     }
 
     public function getStaff($guid)
     {
         $this->statusCode = 200;
+        if ($guid == 'NONEXISTANT') {
+            $this->responseCode = -1;
+            $this->responseMessage = 'No such GUID';
+            return collect([]);
+        }
+        if ($guid == 'WLMDOWN') {
+            throw new \Exception('WLM Error');
+        }
         if (!$this->wlmStaff->has($guid)) {
             $this->wlmStaff[$guid] = collect([
                 'GUID' => $guid,
@@ -94,5 +52,69 @@ class FakeWlmClient
             ]);
         }
         return $this->wlmStaff[$guid];
+    }
+
+    protected function getCourse1()
+    {
+        return [
+            'Code' => 'TEST1234',
+            'Title' => "Fake Course 1234",
+            'Students' => [
+                '1234567' => [
+                    'Matric' => '1234567',
+                    'Surname' => 'McFake',
+                    'Forenames' => 'Fakey'
+                ],
+                '7654321' => [
+                    'Matric' => '7654321',
+                    'Surname' => 'Smith',
+                    'Forenames' => 'Jenny'
+                ],
+            ],
+            'Staff' => [
+                'fake1x' => [
+                    'GUID' => 'fake1x',
+                    'Surname' => 'Faker',
+                    'Forenames' => 'Prof'
+                ],
+                'blah2y' => [
+                    'GUID' => 'blah2y',
+                    'Surname' => 'McManus',
+                    'Forenames' => 'Mark'
+                ],
+            ],
+        ];
+    }
+
+    protected function getCourse2()
+    {
+        return [
+            'Code' => 'TEST4321',
+            'Title' => "Fake Course 4321",
+            'Students' => [
+                '9999999' => [
+                    'Matric' => '9999999',
+                    'Surname' => 'Goldie',
+                    'Forenames' => 'Debbie'
+                ],
+                '7654321' => [
+                    'Matric' => '7654321',
+                    'Surname' => 'Smith',
+                    'Forenames' => 'Jenny'
+                ],
+            ],
+            'Staff' => [
+                'doc2w' => [
+                    'GUID' => 'doc2w',
+                    'Surname' => 'Baker',
+                    'Forenames' => 'Tom'
+                ],
+                'blah2y' => [
+                    'GUID' => 'blah2y',
+                    'Surname' => 'McManus',
+                    'Forenames' => 'Mark'
+                ],
+            ],
+        ];
     }
 }

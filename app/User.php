@@ -273,8 +273,8 @@ class User extends Authenticatable
                 'email' => $wlmStaff['Email'],
             ]);
         }
-        $staff->surname = $wlmStaff['Surname'];
-        $staff->forenames = $wlmStaff['Forenames'];
+        $staff->surname = $wlmStaff['Surname'] ?? 'Unknown';
+        $staff->forenames = $wlmStaff['Forenames'] ?? 'Unknown';
         $staff->password = bcrypt(str_random(32));
         $staff->is_student = false;
         $staff->save();
@@ -291,8 +291,8 @@ class User extends Authenticatable
                 'email' => "{$username}@student.gla.ac.uk",
             ]);
         }
-        $student->surname = $wlmStudent['Surname'];
-        $student->forenames = $wlmStudent['Forenames'];
+        $student->surname = $wlmStudent['Surname'] ?? 'Unknown';
+        $student->forenames = $wlmStudent['Forenames'] ?? 'Unknown';
         $student->password = bcrypt(str_random(32));
         $student->is_student = true;
         $student->save();

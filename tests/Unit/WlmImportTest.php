@@ -95,43 +95,5 @@ class WlmImportTest extends TestCase
         $this->assertCount(1, Course::all());
     }
 
-    /** @test */
-    public function can_get_a_list_of_all_courses_from_the_wlm()
-    {
-        $client = new FakeWlmClient;
-        
-        $courses = $client->getCourses();
-        
-        $this->assertEquals(200, $client->statusCode);
-        $this->assertCount(2, $courses);
-    }
 
-    /** @test */
-    public function can_get_a_member_of_staff_from_the_wlm()
-    {
-        $client = new FakeWlmClient;
-        
-        $staff = $client->getStaff('fake1z');
-        
-        $this->assertEquals(200, $client->statusCode);
-        $this->assertEquals('fake1z@glasgow.ac.uk', $staff['Email']);
-    }
-
-    /** @test */
-    public function can_import_the_data_from_the_wlm()
-    {
-        $importer = new WlmImporter(new FakeWlmClient);
-        $importer->run();
-
-        $this->assertCount(2, Course::all());
-        $this->assertCount(3, User::staff()->get());
-        $this->assertCount(3, User::student()->get());
-        Course::all()->each(function ($course) {
-            $this->assertCount(2, $course->staff()->get());
-            $this->assertCount(2, $course->students()->get());
-        });
-        User::staff()->get()->each(function ($staff) {
-            $this->assertEquals("{$staff->username}@glasgow.ac.uk", $staff->email);
-        });
-    }
 }
