@@ -59,7 +59,7 @@ class Assessment extends Model
 
     public function getFeedbackDueAttribute()
     {
-        return $this->deadline->addWeeks(3);
+        return $this->deadline->addDays(config('assessments.feedback_grace_days'));
     }
 
     public function getTitleAttribute()

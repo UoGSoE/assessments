@@ -62,7 +62,7 @@ class User extends Authenticatable
 
     public function numberOfMissedDeadlines()
     {
-        $cutoff = Carbon::now()->subWeeks(3);
+        $cutoff = Carbon::now()->subDays(config('assessments.feedback_grace_days'));
         $missed = $this->assessments()->where('deadline', '<=', $cutoff)->get();
         return $missed->reduce(function ($carry, $assessment) {
             if ($assessment->feedbackWasGivenLate()) {
