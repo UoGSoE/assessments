@@ -20,7 +20,7 @@ class StudentAssessmentTest extends DuskTestCase
             $course1->students()->sync([$student->id]);
             $course2 = $this->createCourse();
             $course2->students()->sync([$student->id]);
-            $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
+            $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'deadline' => Carbon::parse('First Monday of Last Month')]);
             $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'deadline' => Carbon::now()->addDays(4)]);
             $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'deadline' => Carbon::now()->addDays(5)]);
             $assessment4 = $this->createAssessment(['type' => 'SHOULDNTSHOWUP']);

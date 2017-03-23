@@ -12,7 +12,8 @@
                 },
                 eventRender: function eventRender( event, element, view ) {
                     return ['all', event.year].indexOf($('#year-selector').val()) >= 0
-                }
+                },
+                weekends: false
             });
             $('#year-selector').on('change',function(){
                 $('#calendar').fullCalendar('rerenderEvents');
