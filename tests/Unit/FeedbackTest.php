@@ -7,6 +7,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
+use App\Assessment;
 
 class FeedbackTest extends TestCase
 {
@@ -86,5 +87,51 @@ class FeedbackTest extends TestCase
         }
 
         $this->assertTrue($assessment->isProblematic());
+    }
+
+    /** @test */
+    public function we_can_get_a_list_of_assessments_with_no_feedback_left_by_academics()
+    {
+        factory(Assessment::class, 2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
+        factory(Assessment::class, 3)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
+
+        $this->assertEquals(2, Assessment::noAcademicFeedback()->count());
+
+    }
+
+    /** @test */
+    public function an_assessment_can_be_signed_off_if_there_are_no_negative_feedbacks_and_a_sufficient_amount_of_time_has_passed()
+    {
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
+
+        $this->assertTrue($assessment->canBeSignedOff());
+    }
+
+    /** @test */
+    public function an_assessment_cant_be_signed_off_if_it_has_negative_feedbacks()
+    {
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
+        $feedback = $this->createFeedback(['assessment_id' => $assessment->id]);
+
+        $this->assertFalse($assessment->canBeSignedOff());
+    }
+
+    /** @test */
+    public function an_assessment_cant_be_signed_off_too_soon()
+    {
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 2)]);
+
+        $this->assertFalse($assessment->canBeSignedOff());
+    }
+
+    /** @test */
+    public function an_assessment_can_be_signed_off_by_the_system()
+    {
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(4)]);
+
+        $assessment->signOff();
+
+        $this->assertNotNull($assessment->feedbackWasGiven());
+        $this->assertEquals($assessment->feedback_due, $assessment->feedback_left);
     }
 }

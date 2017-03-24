@@ -36,6 +36,11 @@ class Assessment extends Model
         return $this->belongsTo(User::class, 'staff_id', 'id');
     }
 
+    public function scopeNoAcademicFeedback($query)
+    {
+        return $query->whereNull('feedback_left');
+    }
+
     public function negativeFeedbacks()
     {
         return $this->feedbacks()->where('feedback_given', false);
@@ -80,6 +85,37 @@ class Assessment extends Model
             return true;
         }
         return false;
+    }
+
+    public function canBeSignedOff()
+    {
+        if ($this->notOverdue()) {
+            return false;
+        }
+        if ($this->feedbackWasGiven()) {
+            return false;
+        }
+        if ($this->totalNegativeFeedbacks() > 0) {
+            return false;
+        }
+        if ($this->feedback_due->addDays(21)->gte(Carbon::now())) {
+            return false;
+        }
+        return true;
+    }
+
+    public function signOff()
+    {
+        $this->feedback_left = $this->feedback_due;
+        $this->save();
+    }
+
+    public function feedbackWasGiven()
+    {
+        if (!$this->feedback_left) {
+            return false;
+        }
+        return true;
     }
 
     public function feedbackWasGivenLate()

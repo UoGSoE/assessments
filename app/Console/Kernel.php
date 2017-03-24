@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\NotifyNewFeedbacks::class,
         Commands\NotifyOffice::class,
+        Commands\AutoSignoffAssessments::class,
     ];
 
     /**
@@ -25,8 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('assessments:autosignoff')->dailyAt('03:00');
+        $schedule->command('assessments:notifyoffice')->dailyAt('04:00');
+        $schedule->command('assessments:notifystaff')->dailyAt('05:00');
     }
 
     /**

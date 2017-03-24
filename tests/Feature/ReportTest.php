@@ -25,7 +25,7 @@ class ReportTest extends TestCase
             $response->assertSee($assessment->course->code);
             $response->assertSee($assessment->staff->fullName());
             $response->assertSee($assessment->type);
-            $response->assertSee($assessment->deadline->format('Y-m-d H:i'));
+            $response->assertSee($assessment->feedback_due->format('Y-m-d'));
             $response->assertSee($assessment->reportFeedbackLeft());
             $response->assertSee("" . $assessment->totalNegativeFeedbacks());
         }

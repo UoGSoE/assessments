@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
+use App\Assessment;
 
 class ArtisanTest extends TestCase
 {
@@ -50,5 +51,22 @@ class ArtisanTest extends TestCase
 
         Notification::assertSentTo($assessment, ProblematicAssessment::class);
         $this->assertTrue($assessment->fresh()->officeHaveBeenNotified());
+    }
+
+    /** @test */
+    public function running_the_auto_signoff_command_signs_off_appropriate_assessments()
+    {
+        $canBeSignedOff = factory(Assessment::class, 3)->create([
+            'deadline' => Carbon::now()->subWeeks(6)
+        ]);
+        $cantBeSignedOff = factory(Assessment::class, 2)->create([
+            'deadline' => Carbon::now()->subWeeks(2)
+        ]);
+
+        $this->assertEquals(5, Assessment::noAcademicFeedback()->count());
+
+        \Artisan::call('assessments:autosignoff');
+
+        $this->assertEquals(2, Assessment::noAcademicFeedback()->count());
     }
 }
