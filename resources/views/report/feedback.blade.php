@@ -52,7 +52,7 @@
           <th>Course</th>
           <th>Type</th>
           <th>Staff</th>
-          <th>Deadline</th>
+          <th>Feedback Deadline</th>
           <th>Given</th>
           <th>Complaints</th>
         </tr>
@@ -71,7 +71,7 @@
               {{ $assessment->staff->fullName() }}
             </a>
           </td>
-          <td>{{ $assessment->deadline->format('Y-m-d H:i') }}</td>
+          <td>{{ $assessment->feedback_due->format('Y-m-d') }}</td>
           <td>{{ $assessment->reportFeedbackLeft() }}</td>
           <td>{{ $assessment->totalNegativeFeedbacks() }}</td>
         </tr>
