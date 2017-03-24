@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="/css/bulma.css" rel="stylesheet">
+    <link href="/css/assessments.css" rel="stylesheet">
     <link href="/css/fa/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/pikaday.css" rel="stylesheet">

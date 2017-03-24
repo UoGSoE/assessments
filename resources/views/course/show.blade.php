@@ -4,12 +4,12 @@
     <h2 class="title is-2">
         Course Details
     </h2>
-    <p>
-        Title : {{ $course->title }}
-    </p>
-    <p>
-        Code : {{ $course->code }}
-    </p>
+    <dl>
+        <dt>Title</dt>
+        <dd>{{ $course->title }}</dd>
+        <dt>Code</dt>
+        <dd>{{ $course->code }}</dd>
+    </dl>
     <hr />
     <div class="columns">
         @if (Auth::user()->isStaff())

@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+            <section class="hero has-text-centered is-light">
+              <div class="hero-body">
+                <div class="container">
+                  <h1 class="title">
+                    School Of Engineering Student Assessments
+                  </h1>
+                  <h2 class="subtitle">
+                    Please log in to continue
+                  </h2>
+                </div>
+              </div>
+            </section>
+    <hr />
     <div class="columns">
         <div class="column"></div>
         <div class="column">

@@ -4,17 +4,20 @@
     <h2 class="title is-2">
         Student Details
     </h2>
-    <p>
-        Name : {{ $student->fullName() }}
-    </p>
-    <p>
-        Courses :
-        @foreach ($student->courses as $course)
-            <a href="{!! route('course.show', $course->id) !!}">
-                {{ $course->code }}
-            </a>
-        @endforeach
-    </p>
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ $student->fullName() }}</dd>
+        <dt>Email</dt>
+        <dd><a href="mailto:{{ $student->email }}">{{ $student->email }}</a></dd>
+        <dt>Courses</dt>
+        <dd>
+            @foreach ($student->courses as $course)
+                <a href="{!! route('course.show', $course->id) !!}">
+                    {{ $course->code }}
+                </a>
+            @endforeach
+        </dd>
+    </dl>
     @if ($student->hasLeftFeedbacks())
         <hr />
         <h3 class="title is-3">

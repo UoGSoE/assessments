@@ -4,20 +4,25 @@
     <h2 class="title is-2">
         Staff Details
     </h2>
-    <p>
-        Name : {{ $staff->fullName() }}
-    </p>
-    <p>
-        Email : <a href="mailto:{{ $staff->email }}">{{ $staff->email }}</a>
-    </p>
-    <p>
-        Courses :
-        @foreach ($staff->courses as $course)
-            <a href="{!! route('course.show', $course->id) !!}">
-                {{ $course->code }}
-            </a>
-        @endforeach
-    </p>
+    <dl>
+        <dt>Name</dt>
+        <dd>
+            {{ $staff->fullName() }}
+            @if (Auth::user()->is_admin)
+                <em>(GUID is '{{ $staff->username }}')</em>
+            @endif
+        </dd>
+        <dt>Email</dt>
+        <dd><a href="mailto:{{ $staff->email }}">{{ $staff->email }}</a></dd>
+        <dt>Courses</dt>
+        <dd>
+            @foreach ($staff->courses as $course)
+                <a href="{!! route('course.show', $course->id) !!}">
+                    {{ $course->code }}
+                </a>
+            @endforeach
+        </dd>
+    </dl>
     <hr />
     <p>
         <p class="control">

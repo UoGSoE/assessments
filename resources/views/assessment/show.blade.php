@@ -42,57 +42,55 @@
         @endif
   </div>
 </nav>
-    <p>
-        Course : 
+    <dl>
+        <dt>Course</dt>
+        <dd>
             <a href="{!! route('course.show', $assessment->course_id) !!}">
                 {{ $assessment->course->code }}
             </a>
             {{ $assessment->course->title}}
-    </p>
-    <p>
-        Set By : {{ $assessment->staff->fullName() }}
-    </p>
-    <p>
-        Assessment Type : {{ $assessment->type }}
-    </p>
-    <p>
-        Deadline : {{ $assessment->deadline->format('d/m/Y H:i') }}
-    </p>
-    <p>
-        Feedback Due : {{ $assessment->feedback_due->format('d/m/Y') }}
-        - {{ $assessment->feedback_due->diffForHumans() }}
-        @if ($assessment->feedbackFrom(Auth::user()))
-                - You reported feedback late on {{ $assessment->feedbackFrom(Auth::user())->created_at->format('d/m/Y') }}
-        @endif
-    </p>
-    <p>
-        Feedback Completed :
-        @if ($assessment->feedback_left)
-            {{ $assessment->feedback_left->format('d/m/Y') }}
-        @else
-            @can('complete_feedback', $assessment)
-            <form method="POST" action="{!! route('feedback.complete', $assessment->id) !!}
-            ">
-                {!! csrf_field() !!}
-                <div class="field has-addons">
-                    <p class="control">
-                        <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
-                    </p>
-                    <p class="control">
-                        <button type="submit" class="button is-info">Save</button>
-                    </p>
-                </div>
-            </form>
+        </dd>
+        <dt>Set By</dt>
+        <dd>{{ $assessment->staff->fullName() }}</dd>
+        <dt>Assessment Type</dt>
+        <dd>{{ $assessment->type }}</dd>
+        <dt>Deadline</dt>
+        <dd>{{ $assessment->deadline->format('d/m/Y H:i') }}</dd>
+        <dt>Feedback Due</dt>
+        <dd>
+            {{ $assessment->feedback_due->format('d/m/Y') }} - {{ $assessment->feedback_due->diffForHumans() }}
+            @if ($assessment->feedbackFrom(Auth::user()))
+                    <em>- You reported feedback late on {{ $assessment->feedbackFrom(Auth::user())->created_at->format('d/m/Y') }}</em>
+            @endif
+        </dd>
+        <dt>Feedback Completed</dt>
+        <dd>
+            @if ($assessment->feedback_left)
+                {{ $assessment->feedback_left->format('d/m/Y') }}
             @else
-                No
-            @endcan
+                @can('complete_feedback', $assessment)
+                <form method="POST" action="{!! route('feedback.complete', $assessment->id) !!}
+                ">
+                    {!! csrf_field() !!}
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
+                        </p>
+                        <p class="control">
+                            <button type="submit" class="button is-info">Save</button>
+                        </p>
+                    </div>
+                </form>
+                @else
+                    No
+                @endcan
+            @endif
+        </dd>
+        @if ($assessment->comment)
+            <dt>Comments</dt>
+            <dd>{{ $assessment->comment }}</dd>
         @endif
-    </p>
-    @if ($assessment->comment)
-        <p>
-            Comments : {{ $assessment->comment }}
-        </p>
-    @endif
+    </dl>
     @can('see_feedbacks', $assessment)
         <hr />
         <h3 class="title is-3">
