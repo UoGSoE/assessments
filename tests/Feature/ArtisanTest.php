@@ -8,12 +8,15 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
 use App\Assessment;
 use App\Wlm\FakeWlmClient;
+use App\Wlm\FakeBrokenWlmClient;
 use App\Course;
+use App\Mail\WlmImportProblem;
 
 class ArtisanTest extends TestCase
 {
@@ -80,5 +83,19 @@ class ArtisanTest extends TestCase
         \Artisan::call('assessments:wlmimport');
 
         $this->assertCount(2, Course::all());
+    }
+
+    /** @test */
+    public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
+    {
+        Mail::fake();
+
+        $this->app->instance('App\Wlm\WlmClientInterface', new FakeBrokenWlmClient);
+
+        \Artisan::call('assessments:wlmimport');
+
+        Mail::assertSent(WlmImportProblem::class, function ($mail) {
+            return $mail->hasTo(config('assessments.sysadmin_email'));
+        });
     }
 }

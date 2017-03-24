@@ -5,6 +5,8 @@ namespace App\Wlm;
 use App\Course;
 use App\User;
 use App\Wlm\WlmClientInterface;
+use App\Mail\WlmImportProblem;
+use Illuminate\Support\Facades\Mail;
 
 class WlmImporter
 {
@@ -21,20 +23,26 @@ class WlmImporter
 
     public function run($maximumCourses = 1000000)
     {
-        $courses = $this->client->getCourses();
-        if ($this->client->statusCode != 200) {
-            throw new \Exception('Failed to get data from the WLM');
-        }
-        $courses->filter(function ($wlmCourse) {
-            if (preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
-                return true;
+        try {
+            $courses = $this->client->getCourses();
+            if ($this->client->statusCode != 200) {
+                throw new \Exception('Failed to get data from the WLM');
             }
+            $courses->filter(function ($wlmCourse) {
+                if (preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
+                    return true;
+                }
+                return false;
+            })->take($maximumCourses)->each(function ($wlmCourse) {
+                $course = $this->courseFromWlm($wlmCourse);
+                $course->staff()->sync($this->staffFromWlm($wlmCourse));
+                $course->students()->sync($this->studentsFromWlm($wlmCourse));
+            });
+        } catch (\Exception $e) {
+            Mail::to(config('assessments.sysadmin_email'))->send(new WlmImportProblem($e->getMessage()));
             return false;
-        })->take($maximumCourses)->each(function ($wlmCourse) {
-            $course = $this->courseFromWlm($wlmCourse);
-            $course->staff()->sync($this->staffFromWlm($wlmCourse));
-            $course->students()->sync($this->studentsFromWlm($wlmCourse));
-        });
+        }
+        return true;
     }
 
     protected function courseFromWlm($wlmCourse)
