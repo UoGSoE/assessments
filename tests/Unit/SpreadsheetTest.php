@@ -14,7 +14,7 @@ class SpreadsheetTest extends TestCase
     /** @test */
     public function importing_a_spreadsheet_returns_correct_data()
     {
-        $data = (new Spreadsheet)->import('./tests/data/coursework.xlsx');
+        $data = (new Spreadsheet)->import('./tests/data/deadlines_tidied.xlsx');
 
         $row = $data[1];
         $this->assertEquals(Carbon::createFromFormat('d/m/Y H:i:s', '22/09/2015 00:00:00'), $row[0]);
