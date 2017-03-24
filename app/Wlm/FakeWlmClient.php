@@ -2,7 +2,7 @@
 
 namespace App\Wlm;
 
-class FakeWlmClient
+class FakeWlmClient implements WlmClientInterface
 {
     public $response;
     public $statusCode;

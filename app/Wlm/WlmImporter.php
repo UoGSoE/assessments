@@ -4,6 +4,7 @@ namespace App\Wlm;
 
 use App\Course;
 use App\User;
+use App\Wlm\WlmClientInterface;
 
 class WlmImporter
 {
@@ -11,7 +12,7 @@ class WlmImporter
     protected $staffList;
     protected $studentList;
 
-    public function __construct($client)
+    public function __construct(WlmClientInterface $client)
     {
         $this->client = $client;
         $this->staffList = collect([]);

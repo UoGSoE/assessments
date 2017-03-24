@@ -4,7 +4,7 @@ namespace App\Wlm;
 
 use GuzzleHttp\Client;
 
-class WlmClient
+class WlmClient implements WlmClientInterface
 {
     public $response;
     public $statusCode;

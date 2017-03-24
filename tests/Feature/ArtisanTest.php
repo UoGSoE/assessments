@@ -12,6 +12,8 @@ use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
 use App\Assessment;
+use App\Wlm\FakeWlmClient;
+use App\Course;
 
 class ArtisanTest extends TestCase
 {
@@ -68,5 +70,15 @@ class ArtisanTest extends TestCase
         \Artisan::call('assessments:autosignoff');
 
         $this->assertEquals(2, Assessment::noAcademicFeedback()->count());
+    }
+
+    /** @test */
+    public function running_the_wlm_import_command_creates_correct_data()
+    {
+        $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
+
+        \Artisan::call('assessments:wlmimport');
+
+        $this->assertCount(2, Course::all());
     }
 }

@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\NotifyNewFeedbacks::class,
         Commands\NotifyOffice::class,
         Commands\AutoSignoffAssessments::class,
+        Commands\WlmImport::class,
     ];
 
     /**
