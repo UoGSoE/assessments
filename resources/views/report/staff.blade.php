@@ -9,7 +9,7 @@
             <tr>
                 <th>Name</th>
                 <th>Assessments</th>
-                <th>Student Complaints</th>
+                <th>Student Feedback</th>
                 <th>Missed Deadlines</th>
             </tr>
         </thead>
