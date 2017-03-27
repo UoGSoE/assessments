@@ -51,11 +51,11 @@ class SheetToDatabase
             return false;
         }
 
-        $this->addTime($deadline, $row[1]);
+        $deadline = $this->addTime($deadline, trim($row[1]));
 
         $course = $this->getCourseFromRow($row);
 
-        $staff = User::findByUsername(strtolower($row[6]));
+        $staff = User::findByUsername(strtolower(trim($row[6])));
         if (!$staff) {
             $this->addError('Invalid GUID');
             return false;
@@ -63,7 +63,7 @@ class SheetToDatabase
 
         return Assessment::create([
             'deadline' => $deadline,
-            'type' => $row[4],
+            'type' => trim($row[4]),
             'course_id' => $course->id,
             'staff_id' => $staff->id,
         ]);
@@ -79,6 +79,8 @@ class SheetToDatabase
         if (preg_match('/[0-9][0-9]:[0-9][0-9]/', $timeString, $matches)) {
             list($hour, $minute) = explode(':', $matches[0]);
             $deadline->hour($hour)->minute($minute);
+        } else {
+            $deadline->hour(16)->minute(0);
         }
         return $deadline;
     }

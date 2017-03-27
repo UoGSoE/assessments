@@ -23,9 +23,21 @@ class SheetToDatabaseTest extends TestCase
         $this->assertEquals(1, Assessment::count());
         $this->assertCount(0, $convertor->errors->all());
         $this->assertEquals($row[0]->format('d/m/Y'), $assessment->deadline->format('d/m/Y'));
-        $this->assertEquals('15:00', $assessment->deadline->format('H:i'));
+        $this->assertEquals($row[1], $assessment->deadline->format('H:i'));
         $this->assertEquals($row[2], $assessment->course->code);
         $this->assertEquals($row[4], $assessment->type);
+    }
+
+    /** @test */
+    public function a_row_with_no_time_specified_defaults_to_4pm()
+    {
+        $convertor = app(SheetToDatabase::class);
+        $row = $this->getRowData();
+        $row[1] = null;
+
+        $assessment = $convertor->rowToAssessment($row);
+
+        $this->assertEquals('16:00', $assessment->deadline->format('H:i'));
     }
 
     /** @test */
@@ -57,7 +69,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function a_row_with_a_date_string_is_correctly_parsed()
+    public function a_row_with_a_date_string_rather_than_a_datetime_object_is_correctly_parsed()
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -71,7 +83,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function when_importing_rows_assessments_with_a_date_in_the_past_are_skipped()
+    public function when_importing_rows_those_with_a_date_in_the_past_are_skipped()
     {
         $convertor = app(SheetToDatabase::class);
         $row1 = $this->getRowData();
