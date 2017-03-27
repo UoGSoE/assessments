@@ -15,7 +15,7 @@ class Spreadsheet
         $rows = [];
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $row) {
-                $rows[] = $row;
+                $rows[] = trim($row);
             }
         }
         $reader->close();
