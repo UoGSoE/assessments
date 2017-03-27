@@ -36,21 +36,24 @@ class SheetToDatabase
 
     public function rowToAssessment($row)
     {
-        if (! $row[0] instanceof \DateTime) {
-            $this->addError('Invalid Date');
+        $deadline = $row[0];
+        if (! $deadline instanceof \DateTime) {
+            try {
+                $deadline = Carbon::parse($deadline);
+            } catch (\Exception $e) {
+                $this->addError('Invalid Date');
+                return false;
+            }
+        }
+
+        if ($this->assessmentIsInThePast($deadline)) {
+            $this->addError('Date is in the past');
             return false;
         }
 
-        if ($this->isInThePast($row[0])) {
-            return false;
-        }
+        $this->addTime($deadline, $row[1]);
 
-        $courseCode = strtoupper($row[2]);
-        $courseTitle = $row[3];
-        $course = Course::findByCode($courseCode);
-        if (!$course) {
-            $course = Course::create(['code' => $courseCode, 'title' => $courseTitle]);
-        }
+        $course = $this->getCourseFromRow($row);
 
         $staff = User::findByUsername(strtolower($row[6]));
         if (!$staff) {
@@ -58,14 +61,12 @@ class SheetToDatabase
             return false;
         }
 
-        $data = [
-            'deadline' => $row[0],
+        return Assessment::create([
+            'deadline' => $deadline,
             'type' => $row[4],
             'course_id' => $course->id,
             'staff_id' => $staff->id,
-        ];
-        $assessment = Assessment::create($data);
-        return $assessment;
+        ]);
     }
 
     protected function addError($message)
@@ -73,11 +74,31 @@ class SheetToDatabase
         $this->errors->add('errors', "Row {$this->currentRow}: {$message}");
     }
 
-    protected function isInThePast($date)
+    protected function addTime($deadline, $timeString)
+    {
+        if (preg_match('/[0-9][0-9]:[0-9][0-9]/', $timeString, $matches)) {
+            list($hour, $minute) = explode(':', $matches[0]);
+            $deadline->hour($hour)->minute($minute);
+        }
+        return $deadline;
+    }
+
+    protected function assessmentIsInThePast($date)
     {
         if ($date->lt(Carbon::now())) {
             return true;
         }
         return false;
+    }
+
+    protected function getCourseFromRow($row)
+    {
+        $courseCode = strtoupper($row[2]);
+        $courseTitle = $row[3];
+        $course = Course::findByCode($courseCode);
+        if (!$course) {
+            $course = Course::create(['code' => $courseCode, 'title' => $courseTitle]);
+        }
+        return $course;
     }
 }

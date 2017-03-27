@@ -89,7 +89,7 @@ class StaffAssessmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Feedbacks');
         $response->assertSee($feedback->student->fullName());
-        $response->assertSee('Feedback Completed :');
+        $response->assertSee('Feedback Completed');
     }
 
     /** @test */

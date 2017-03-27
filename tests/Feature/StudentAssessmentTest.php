@@ -64,7 +64,7 @@ class StudentAssessmentTest extends TestCase
         $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
         $response->assertSee($assessment->staff->fullName());
-        $this->assertRegExp("/Feedback Completed :\s+No/s", $response->content());
+        $this->assertRegExp("/Feedback Completed.+No/s", $response->content());
     }
 
     /** @test */
@@ -79,6 +79,6 @@ class StudentAssessmentTest extends TestCase
         $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
 
         $response->assertStatus(200);
-        $this->assertRegExp("#Feedback Completed :\s+" . $feedbackLeftString . "#s", $response->content());
+        $this->assertRegExp("#Feedback Completed.+" . $feedbackLeftString . "#s", $response->content());
     }
 }

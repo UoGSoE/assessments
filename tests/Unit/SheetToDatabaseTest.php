@@ -23,6 +23,7 @@ class SheetToDatabaseTest extends TestCase
         $this->assertEquals(1, Assessment::count());
         $this->assertCount(0, $convertor->errors->all());
         $this->assertEquals($row[0]->format('d/m/Y'), $assessment->deadline->format('d/m/Y'));
+        $this->assertEquals('15:00', $assessment->deadline->format('H:i'));
         $this->assertEquals($row[2], $assessment->course->code);
         $this->assertEquals($row[4], $assessment->type);
     }
@@ -56,6 +57,20 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
+    public function a_row_with_a_date_string_is_correctly_parsed()
+    {
+        $convertor = app(SheetToDatabase::class);
+        $row = $this->getRowData();
+        $date = Carbon::now()->addDays(3);
+        $row[0] = $date->format('l, F d, Y');
+
+        $convertor->rowToAssessment($row);
+
+        $this->assertEquals(1, Assessment::count());
+        $this->assertEquals($date->format('d/m/Y'), Assessment::first()->deadline->format('d/m/Y'));
+    }
+
+    /** @test */
     public function when_importing_rows_assessments_with_a_date_in_the_past_are_skipped()
     {
         $convertor = app(SheetToDatabase::class);
@@ -73,7 +88,7 @@ class SheetToDatabaseTest extends TestCase
         $staff = $this->createStaff();
         return array_merge([
             Carbon::now()->addWeeks(5),
-            '3pm',
+            '15:00',
             'TEST1234',
             'Some course or other',
             'Homework',
