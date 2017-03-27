@@ -6,6 +6,7 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Carbon\Carbon;
+use App\Spreadsheet\Spreadsheet;
 
 class AdminTest extends DuskTestCase
 {
@@ -21,10 +22,10 @@ class AdminTest extends DuskTestCase
             $course1->students()->sync([$student->id]);
             $course2 = $this->createCourse();
             $course2->students()->sync([$student->id]);
-            $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
-            $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'deadline' => Carbon::now()->subWeeks(4)]);
-            $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'deadline' => Carbon::now()->subWeeks(5)]);
-            $assessment4 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE4', 'deadline' => Carbon::now()->addDays(5)]);
+            $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->startOfWeek()->subWeeks(4)]);
+            $assessment2 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE2', 'deadline' => Carbon::now()->startOfWeek()->subWeeks(4)]);
+            $assessment3 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE3', 'deadline' => Carbon::now()->startOfWeek()->subWeeks(5)]);
+            $assessment4 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE4', 'deadline' => Carbon::now()->startOfWeek()->addDays(3)]);
             $student->recordFeedback($assessment1);
             $browser->loginAs($admin)
                     ->visit('/')
@@ -40,7 +41,7 @@ class AdminTest extends DuskTestCase
                     ->assertSee('Student Details')
                     ->assertSee($student->fullName())
                     ->assertSee('Assessments for')
-                    ->assertSeeIn('.fc-title', $assessment4->title)
+                    ->assertSee($assessment4->title)
                     ->assertSee('Feedbacks Left')
                     ->assertSee($assessment1->title)
                     ->clickLink($assessment1->title)
@@ -216,6 +217,57 @@ class AdminTest extends DuskTestCase
                     ->uncheck('is_admin')
                     ->pause(100);
             $this->assertFalse($staff->fresh()->is_admin);
-     });
+        });
     }
+
+    /** @test */
+    public function admin_can_upload_the_coursework_spreadsheet()
+    {
+        $this->browse(function ($browser) {
+            $admin = $this->createAdmin();
+            $sheet = $this->createSpreadsheet();
+            $browser->loginAs($admin)
+                    ->visit("/")
+                    ->clickLink('Admin')
+                    ->click('#upload-coursework-button')
+                    ->assertSee('Upload Coursework Spreadsheet')
+                    ->attach('sheet', $sheet)
+                    ->press('Upload')
+                    ->assertSee('TEST9999')
+                    ->assertSee('TEST1234')
+                    ->assertSee($this->staff1->fullName())
+                    ->assertSee($this->staff2->fullName());
+        });
+    }
+
+    protected function createSpreadsheet($data = null)
+    {
+        $spreadsheet = new Spreadsheet;
+        $this->staff1 = $this->createStaff();
+        $this->staff2 = $this->createStaff();
+        if (!$data) {
+            $data = [
+                [
+                    Carbon::now()->addDays(2)->format('l, F d, Y'),
+                    '',
+                    'TEST1234',
+                    'Test Course 1',
+                    'Homework',
+                    $this->staff1->fullName(),
+                    $this->staff1->username,
+                ],
+                [
+                    Carbon::now()->addDays(3)->format('l, F d, Y'),
+                    '',
+                    'TEST9999',
+                    'Test Course 2',
+                    'Homework',
+                    $this->staff2->fullName(),
+                    $this->staff2->username,
+                ],
+            ];
+        }
+        return $spreadsheet->generate($data);
+    }
+
 }

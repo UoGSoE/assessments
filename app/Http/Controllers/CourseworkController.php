@@ -18,6 +18,11 @@ class CourseworkController extends Controller
         $this->importer = $importer;
     }
 
+    public function edit()
+    {
+        return view('coursework.import');
+    }
+
     public function update(Request $request)
     {
         if (!$request->hasFile('sheet')) {

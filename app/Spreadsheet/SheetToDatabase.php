@@ -37,6 +37,9 @@ class SheetToDatabase
     public function rowToAssessment($row)
     {
         $deadline = $row[0];
+        if (!$deadline) {
+            return false;
+        }
         if (! $deadline instanceof \DateTime) {
             try {
                 $deadline = Carbon::parse($deadline);
@@ -44,6 +47,8 @@ class SheetToDatabase
                 $this->addError('Invalid Date');
                 return false;
             }
+        } else {
+            $deadline = Carbon::instance($deadline);
         }
 
         if ($this->assessmentIsInThePast($deadline)) {

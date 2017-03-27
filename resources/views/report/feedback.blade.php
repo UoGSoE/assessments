@@ -23,6 +23,13 @@
         </a>
     </div>
     <div class="level-item">
+        <a href="{!! route('coursework.edit') !!}" id="upload-coursework-button" class="button" title="Import Coursework Sheet">
+          <span class="icon">
+            <i class="fa fa-upload"></i>
+          </span>
+        </a>
+    </div>
+    <div class="level-item">
         <a href="{!! route('report.staff') !!}" id="staff-report-button" class="button" title="Staff Report">
           <span class="icon">
             <i class="fa fa-user"></i>

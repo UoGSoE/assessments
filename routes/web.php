@@ -15,7 +15,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
-        
+
         Route::get('report/feedback', 'ReportController@feedback')->name('report.feedback');
         Route::get('report/assessment', 'ReportController@assessments')->name('report.assessment');
         Route::get('report/staff', 'ReportController@staff')->name('report.staff');
@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/assessment/{id}', 'AssessmentController@update')->name('assessment.update');
         Route::delete('/assessment/{id}', 'AssessmentController@destroy')->name('assessment.destroy');
 
+        Route::get('/coursework', 'CourseworkController@edit')->name('coursework.edit');
         Route::post('/coursework', 'CourseworkController@update')->name('coursework.update');
 
         Route::get('/export/assessments', 'ExportController@assessments')->name('export.assessments');
