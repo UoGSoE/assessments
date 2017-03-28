@@ -128,23 +128,7 @@ class User extends Authenticatable
         $data = [];
         foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
             foreach ($course->assessments as $assessment) {
-                $negativeFeedback = $assessment->feedbacks()->where('student_id', $this->id)->first();
-                if ($negativeFeedback) {
-                    $negativeFeedback = true;
-                }
-                $data[] = $this->createEvent($assessment, $course, false);
-                // $data[] = [
-                //     'id' => $assessment->id,
-                //     'title' => $assessment->title,
-                //     'course_code' => $course->code,
-                //     'course_title' => $course->title,
-                //     'start' => $assessment->deadline->toIso8601String(),
-                //     'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-                //     'feedback_due' => $assessment->feedback_due->toIso8601String(),
-                //     'type' => $assessment->type,
-                //     'feedback_missed' => $negativeFeedback,
-                //     'mine' => true,
-                // ];
+                $data[] = $this->getEvent($assessment, $course, false);
             }
         }
         return json_encode($data);
@@ -156,8 +140,8 @@ class User extends Authenticatable
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
             $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
-                $event = $this->createEvent($assessment, $course, $year);
-                $feedbackEvent = $this->createFeedbackEvent($event, $assessment);
+                $event = $this->getEvent($assessment, $course, $year);
+                $feedbackEvent = $this->getFeedbackEvent($event, $assessment);
                 if ($feedbackEvent) {
                     $data[] = $feedbackEvent;
                 }
@@ -167,7 +151,7 @@ class User extends Authenticatable
         return json_encode($data);
     }
 
-    public function createEvent($assessment, $course, $year)
+    public function getEvent($assessment, $course, $year)
     {
         $event = [
             'id' => $assessment->id,
@@ -191,7 +175,7 @@ class User extends Authenticatable
         return $event;
     }
 
-    public function createFeedbackEvent($event, $assessment)
+    public function getFeedbackEvent($event, $assessment)
     {
         if ($this->is_admin) {
             return false;
