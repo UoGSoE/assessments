@@ -36,6 +36,23 @@ class StaffTest extends DuskTestCase
     }
 
     /** @test */
+    public function staff_can_see_assessments_where_feedback_is_coming_up()
+    {
+        $this->browse(function ($browser) {
+            $now = Carbon::now();
+            $course = $this->createCourse();
+            $staff = $this->createStaff();
+            $course->staff()->sync([$staff->id]);
+            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(5)->startOfWeek()]);
+
+            $browser->loginAs($staff)
+                    ->visit("/")
+                    ->assertSee('Your Assessments')
+                    ->assertSee($assessment1->course->code);
+        });
+    }
+
+    /** @test */
     public function staff_can_mark_assessment_feedback_as_having_been_given()
     {
         $this->browse(function ($browser) {

@@ -76,6 +76,23 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
+    public function staff_can_see_assessments_where_feedback_is_due()
+    {
+        $staff = $this->createStaff();
+        $course1 = $this->createCourse();
+        $course1->staff()->sync([$staff->id]);
+        $course2 = $this->createCourse();
+        $course2->staff()->sync([$staff->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course1->id, 'type' => 'TYPE1', 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(5)->startOfWeek()]);
+
+        $response = $this->actingAs($staff)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee($course1->code);
+        $response->assertSee($assessment1->type);
+    }
+
+    /** @test */
     public function staff_can_see_feedbacks_for_assessments_which_are_theirs()
     {
         $staff = $this->createStaff();

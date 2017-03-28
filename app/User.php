@@ -170,6 +170,17 @@ class User extends Authenticatable
                 ];
                 if ($this->can('can_see_assessment', $assessment)) {
                     $event['mine'] = true;
+                    if (!$this->is_admin) {
+                        if (!$assessment->feedback_left) {
+                            $feedbackEvent = $event;
+                            $feedbackEvent['title'] = 'Feedback Due ' . $feedbackEvent['title'];
+                            $feedbackEvent['color'] = 'crimson';
+                            $feedbackEvent['textColor'] = 'white';
+                            $feedbackEvent['start'] = $assessment->feedback_due->toIso8601String();
+                            $feedbackEvent['end'] = $assessment->feedback_due->addHours(1)->toIso8601String();
+                            $data[] = $feedbackEvent;
+                        }
+                    }
                 } else {
                     $event['color'] = 'whitesmoke';
                     $event['textColor'] = 'black';

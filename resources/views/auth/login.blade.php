@@ -32,7 +32,10 @@
                 <p class="control">
                     <input class="input" type="password" name="password" required>
                 </p>
-                <button class="button is-primary is-outlined">Log in</button>
+                <br />
+                <p class="control">
+                    <button class="button is-primary is-outlined">Log in</button>
+                </p>
             </form>
         </div>
         <div class="column"></div>

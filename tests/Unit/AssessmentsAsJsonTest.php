@@ -70,6 +70,7 @@ class AssessmentsAsJsonTest extends TestCase
     public function we_can_fetch_all_assessments_for_a_given_staffmember_as_json()
     {
         $staff = $this->createStaff();
+        // create 100 assessments in total
         $courses = factory(Course::class, 20)->create()->each(function ($course) use ($staff) {
             $course->staff()->attach($staff);
             $assessments = factory(Assessment::class, 5)->create();
@@ -78,7 +79,8 @@ class AssessmentsAsJsonTest extends TestCase
 
         $json = json_decode($staff->assessmentsAsJson(), true);
 
-        $this->assertEquals(100, count($json));
-
+        // this is double the number of created assessments as staff see a copy of each
+        // on the date feedback is due
+        $this->assertEquals(200, count($json));
     }
 }
