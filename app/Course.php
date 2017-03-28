@@ -52,6 +52,5 @@ class Course extends Model
             return false;
         }
         return $match[0];
-        //return substr($this->code, 3, 1);
     }
 }

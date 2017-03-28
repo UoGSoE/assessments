@@ -155,40 +155,57 @@ class User extends Authenticatable
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
             $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
-                $event = [
-                    'id' => $assessment->id,
-                    'title' => $assessment->title,
-                    'course_code' => $course->code,
-                    'course_title' => $course->title,
-                    'start' => $assessment->deadline->toIso8601String(),
-                    'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-                    'feedback_due' => $assessment->feedback_due->toIso8601String(),
-                    'type' => $assessment->type,
-                    'mine' => false,
-                    'color' => 'steelblue',
-                    'year' => $year,
-                ];
-                if ($this->can('can_see_assessment', $assessment)) {
-                    $event['mine'] = true;
-                    if (!$this->is_admin) {
-                        if (!$assessment->feedback_left) {
-                            $feedbackEvent = $event;
-                            $feedbackEvent['title'] = 'Feedback Due ' . $feedbackEvent['title'];
-                            $feedbackEvent['color'] = 'crimson';
-                            $feedbackEvent['textColor'] = 'white';
-                            $feedbackEvent['start'] = $assessment->feedback_due->toIso8601String();
-                            $feedbackEvent['end'] = $assessment->feedback_due->addHours(1)->toIso8601String();
-                            $data[] = $feedbackEvent;
-                        }
-                    }
-                } else {
-                    $event['color'] = 'whitesmoke';
-                    $event['textColor'] = 'black';
+                $event = $this->createEvent($assessment, $course, $year);
+                $feedbackEvent = $this->createFeedbackEvent($event, $assessment);
+                if ($feedbackEvent) {
+                    $data[] = $feedbackEvent;
                 }
                 $data[] = $event;
             }
         }
         return json_encode($data);
+    }
+
+    public function createEvent($assessment, $course, $year)
+    {
+        $event = [
+            'id' => $assessment->id,
+            'title' => $assessment->title,
+            'course_code' => $course->code,
+            'course_title' => $course->title,
+            'start' => $assessment->deadline->toIso8601String(),
+            'end' => $assessment->deadline->addHours(1)->toIso8601String(),
+            'feedback_due' => $assessment->feedback_due->toIso8601String(),
+            'type' => $assessment->type,
+            'mine' => $this->can('can_see_assessment', $assessment),
+            'color' => 'steelblue',
+            'year' => $year,
+        ];
+        if ($this->cannot('can_see_assessment', $assessment)) {
+            $event['color'] = 'whitesmoke';
+            $event['textColor'] = 'black';
+        }
+        return $event;
+    }
+
+    public function createFeedbackEvent($event, $assessment)
+    {
+        if ($this->is_admin) {
+            return false;
+        }
+        if ($assessment->feedback_left) {
+            return false;
+        }
+        if ($this->cannot('can_see_assessment', $assessment)) {
+            return false;
+        }
+        $feedbackEvent = $event;
+        $feedbackEvent['title'] = 'Feedback Due ' . $feedbackEvent['title'];
+        $feedbackEvent['color'] = 'crimson';
+        $feedbackEvent['textColor'] = 'white';
+        $feedbackEvent['start'] = $assessment->feedback_due->toIso8601String();
+        $feedbackEvent['end'] = $assessment->feedback_due->addHours(1)->toIso8601String();
+        return $feedbackEvent;
     }
 
     public function recordFeedback($assessment)
