@@ -153,7 +153,7 @@ class User extends Authenticatable
     {
         $data = [];
         foreach (Course::with('assessments.feedbacks')->get() as $course) {
-            $year = substr($course->code, 3, 1);
+            $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
                 $event = [
                     'id' => $assessment->id,

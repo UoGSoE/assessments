@@ -45,4 +45,13 @@ class Course extends Model
         $course->save();
         return $course;
     }
+
+    public function getYear()
+    {
+        if (!preg_match('/[0-9]/', $this->code, $match)) {
+            return false;
+        }
+        return $match[0];
+        //return substr($this->code, 3, 1);
+    }
 }
