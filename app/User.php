@@ -132,18 +132,19 @@ class User extends Authenticatable
                 if ($negativeFeedback) {
                     $negativeFeedback = true;
                 }
-                $data[] = [
-                    'id' => $assessment->id,
-                    'title' => $assessment->title,
-                    'course_code' => $course->code,
-                    'course_title' => $course->title,
-                    'start' => $assessment->deadline->toIso8601String(),
-                    'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-                    'feedback_due' => $assessment->feedback_due->toIso8601String(),
-                    'type' => $assessment->type,
-                    'feedback_missed' => $negativeFeedback,
-                    'mine' => true,
-                ];
+                $data[] = $this->createEvent($assessment, $course, false);
+                // $data[] = [
+                //     'id' => $assessment->id,
+                //     'title' => $assessment->title,
+                //     'course_code' => $course->code,
+                //     'course_title' => $course->title,
+                //     'start' => $assessment->deadline->toIso8601String(),
+                //     'end' => $assessment->deadline->addHours(1)->toIso8601String(),
+                //     'feedback_due' => $assessment->feedback_due->toIso8601String(),
+                //     'type' => $assessment->type,
+                //     'feedback_missed' => $negativeFeedback,
+                //     'mine' => true,
+                // ];
             }
         }
         return json_encode($data);
@@ -179,8 +180,10 @@ class User extends Authenticatable
             'type' => $assessment->type,
             'mine' => $this->can('can_see_assessment', $assessment),
             'color' => 'steelblue',
-            'year' => $year,
         ];
+        if ($year) {
+            $event['year'] = $year;
+        }
         if ($this->cannot('can_see_assessment', $assessment)) {
             $event['color'] = 'whitesmoke';
             $event['textColor'] = 'black';

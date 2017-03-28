@@ -37,7 +37,6 @@ class StudentAssessmentsAsJsonTest extends TestCase
         $json = $student->assessmentsAsJson();
 
         $this->assertEquals([
-            'feedback_missed' => true,
             'course_code' => $course->code,
             'start' => $assessment->deadline->toIso8601String(),
             'end' => $assessment->deadline->addHours(1)->toIso8601String(),
@@ -47,6 +46,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
             'id' => $assessment->id,
             'title' => $assessment->title,
             'mine' => true,
+            'color' => 'steelblue',
         ], json_decode($json, true)[0]);
     }
 
