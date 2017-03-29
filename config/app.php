@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Student Assessments',
+    'name' => 'Student Assessments Calendar',
 
     /*
     |--------------------------------------------------------------------------

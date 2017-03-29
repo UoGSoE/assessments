@@ -6,7 +6,7 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            School Of Engineering Student Assessments
+            School Of Engineering Student Assessments Calendar
           </h1>
           <h2 class="subtitle">
             Please log in to continue

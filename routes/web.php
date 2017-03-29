@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/coursework', 'CourseworkController@update')->name('coursework.update');
 
         Route::get('/export/assessments', 'ExportController@assessments')->name('export.assessments');
+        Route::get('/export/staff', 'ExportController@staff')->name('export.staff');
 
         Route::delete('/clear', 'OldDataController@destroy')->name('admin.clearold');
     });

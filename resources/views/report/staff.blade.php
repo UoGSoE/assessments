@@ -1,9 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="title is-2">
-        Staff Report
-    </h2>
+    <nav class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h2 class="title is-2">
+              Staff Report
+          </h2>
+        </div>
+        <div class="level-item">
+            <a href="{!! route('export.staff') !!}" id="export-excel-button" class="button" title="Export As Excel">
+              <span class="icon">
+                <i class="fa fa-download"></i>
+              </span>
+            </a>
+        </div>
+      </div>
+    </nav>
     <table class="table is-striped" id="staffTable">
         <thead>
             <tr>
