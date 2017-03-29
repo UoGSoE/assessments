@@ -104,7 +104,7 @@ class FeedbackTest extends TestCase
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
 
-        $this->assertTrue($assessment->canBeSignedOff());
+        $this->assertTrue($assessment->canBeAutoSignedOff());
     }
 
     /** @test */
@@ -113,7 +113,7 @@ class FeedbackTest extends TestCase
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
         $feedback = $this->createFeedback(['assessment_id' => $assessment->id]);
 
-        $this->assertFalse($assessment->canBeSignedOff());
+        $this->assertFalse($assessment->canBeAutoSignedOff());
     }
 
     /** @test */
@@ -121,7 +121,7 @@ class FeedbackTest extends TestCase
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 2)]);
 
-        $this->assertFalse($assessment->canBeSignedOff());
+        $this->assertFalse($assessment->canBeAutoSignedOff());
     }
 
     /** @test */
@@ -129,7 +129,7 @@ class FeedbackTest extends TestCase
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(4)]);
 
-        $assessment->signOff();
+        $assessment->autoSignOff();
 
         $this->assertNotNull($assessment->feedbackWasGiven());
         $this->assertEquals($assessment->feedback_due, $assessment->feedback_left);

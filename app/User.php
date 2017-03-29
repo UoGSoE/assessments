@@ -125,13 +125,18 @@ class User extends Authenticatable
 
     protected function studentAssessmentsAsJson()
     {
-        $data = [];
-        foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
-            foreach ($course->assessments as $assessment) {
-                $data[] = $this->getEvent($assessment, $course, false);
-            }
-        }
-        return json_encode($data);
+        return $this->courses()->with('assessments.feedbacks')->get()->flatMap(function ($course) {
+            return $course->assessments->map(function ($assessment) use ($course) {
+                return $this->getEvent($assessment, $course, false);
+            });
+        })->toJson();
+        // $data = [];
+        // foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
+        //     foreach ($course->assessments as $assessment) {
+        //         $data[] = $this->getEvent($assessment, $course, false);
+        //     }
+        // }
+        // return json_encode($data);
     }
 
     protected function staffAssessmentsAsJson()

@@ -79,6 +79,7 @@ class Assessment extends Model
         }
         return 'No';
     }
+
     public function overdue()
     {
         if ($this->feedback_due->lt(Carbon::now())) {
@@ -87,7 +88,12 @@ class Assessment extends Model
         return false;
     }
 
-    public function canBeSignedOff()
+    public function notOverdue()
+    {
+        return ! $this->overdue();
+    }
+
+    public function canBeAutoSignedOff()
     {
         if ($this->notOverdue()) {
             return false;
@@ -104,7 +110,7 @@ class Assessment extends Model
         return true;
     }
 
-    public function signOff()
+    public function autoSignOff()
     {
         $this->feedback_left = $this->feedback_due;
         $this->save();
@@ -127,11 +133,6 @@ class Assessment extends Model
             return true;
         }
         return $this->feedback_left->gte($this->feedback_due);
-    }
-
-    public function notOverdue()
-    {
-        return ! $this->overdue();
     }
 
     public function addFeedback($student)
