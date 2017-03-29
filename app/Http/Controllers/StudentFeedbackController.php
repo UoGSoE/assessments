@@ -11,7 +11,7 @@ class StudentFeedbackController extends Controller
     public function store(Request $request, $assessmentId)
     {
         $assessment = Assessment::findOrFail($assessmentId);
-        if (Gate::denies('can_leave_feedback', $assessment)) {
+        if (Gate::denies('leave_feedback', $assessment)) {
             return redirect('/');
         }
         $request->user()->recordFeedback($assessment);

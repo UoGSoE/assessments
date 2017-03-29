@@ -32,7 +32,7 @@
                 </button>
             </form>
         @endif
-        @if ($assessment->overdue() and Auth::user()->can('can_leave_feedback', $assessment))
+        @if ($assessment->overdue() and Auth::user()->can('leave_feedback', $assessment))
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
                 {!! csrf_field() !!}
                 <button class="button is-danger is-outlined" type="submit">

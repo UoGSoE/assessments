@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('can_leave_feedback', function ($student, $assessment) {
+        Gate::define('leave_feedback', function ($student, $assessment) {
             if (!$student->is_student) {
                 return false;
             }
@@ -44,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
             }
             return true;
         });
-        Gate::define('can_see_assessment', function ($user, $assessment) {
+        Gate::define('see_assessment', function ($user, $assessment) {
             if ($user->is_admin) {
                 return true;
             }

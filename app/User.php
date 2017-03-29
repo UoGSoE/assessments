@@ -162,13 +162,13 @@ class User extends Authenticatable
             'end' => $assessment->deadline->addHours(1)->toIso8601String(),
             'feedback_due' => $assessment->feedback_due->toIso8601String(),
             'type' => $assessment->type,
-            'mine' => $this->can('can_see_assessment', $assessment),
+            'mine' => $this->can('see_assessment', $assessment),
             'color' => 'steelblue',
         ];
         if ($year) {
             $event['year'] = $year;
         }
-        if ($this->cannot('can_see_assessment', $assessment)) {
+        if ($this->cannot('see_assessment', $assessment)) {
             $event['color'] = 'whitesmoke';
             $event['textColor'] = 'black';
         }
@@ -183,7 +183,7 @@ class User extends Authenticatable
         if ($assessment->feedback_left) {
             return false;
         }
-        if ($this->cannot('can_see_assessment', $assessment)) {
+        if ($this->cannot('see_assessment', $assessment)) {
             return false;
         }
         $feedbackEvent = $event;
