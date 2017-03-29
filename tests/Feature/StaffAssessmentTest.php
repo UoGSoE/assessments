@@ -131,7 +131,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
         $givenDate = $assessment->feedback_due->subDays(2);
 
         $response = $this->actingAs($staff)->post(route('feedback.complete', $assessment->id), ['date' => $givenDate->format('d/m/Y')]);
@@ -179,7 +179,7 @@ class StaffAssessmentTest extends TestCase
         $staff = $this->createStaff();
         $course = $this->createCourse();
         $course->staff()->sync([$staff->id]);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
 
         $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
 

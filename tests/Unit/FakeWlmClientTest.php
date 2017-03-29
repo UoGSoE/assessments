@@ -11,9 +11,9 @@ use App\Wlm\FakeWlmClient;
 class FakeWlmClientTest extends TestCase
 {
     /** @test */
-    public function can_get_a_list_of_all_courses_from_the_fake_wlm()
+    public function can_get_a_list_of_all_courses_from_the_wlm()
     {
-        $client = new FakeWlmClient;
+        $client = $this->getWlmClient();
 
         $courses = $client->getCourses();
 
@@ -22,9 +22,9 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_member_of_staff_from_the_fake_wlm()
+    public function can_get_a_member_of_staff_from_the_wlm()
     {
-        $client = new FakeWlmClient;
+        $client = $this->getWlmClient();
 
         $staff = $client->getStaff('fake1z');
 
@@ -35,7 +35,7 @@ class FakeWlmClientTest extends TestCase
     /** @test */
     public function getting_a_non_existant_member_of_staff_returns_an_error()
     {
-        $client = new FakeWlmClient;
+        $client = $this->getWlmClient();
 
         $staff = $client->getStaff('NONEXISTANT');
 
@@ -46,9 +46,9 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_single_course_from_the_fake_wlm()
+    public function can_get_a_single_course_from_the_wlm()
     {
-        $client = new FakeWlmClient;
+        $client = $this->getWlmClient();
 
         $course = $client->getCourse('TEST1234');
 
@@ -62,7 +62,7 @@ class FakeWlmClientTest extends TestCase
     /** @test */
     public function trying_to_talk_to_the_wlm_if_its_offline_throws_an_exception()
     {
-        $client = new FakeWlmClient;
+        $client = $this->getWlmClient();
         try {
             $staff = $client->getStaff('WLMDOWN');
         } catch (\Exception $e) {
@@ -70,5 +70,10 @@ class FakeWlmClientTest extends TestCase
         }
 
         $this->fail('Talking to the fake wlm while it was offline did not throw an exception');
+    }
+
+    public function getWlmClient()
+    {
+        return new FakeWlmClient;
     }
 }
