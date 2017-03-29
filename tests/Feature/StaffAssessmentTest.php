@@ -200,4 +200,19 @@ class StaffAssessmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertDontSee(route('feedback.complete', $assessment->id));
     }
+
+    /** @test */
+    public function cant_see_the_form_form_feedback_completed_if_assessment_not_passed_its_deadline_yet()
+    {
+        $staff = $this->createStaff();
+        $course = $this->createCourse();
+        $course->staff()->sync([$staff->id]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->addWeeks(10)]);
+
+        $response = $this->actingAs($staff)->get(route('assessment.show', $assessment->id));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Save');
+        $response->assertDontSee(route('feedback.complete', $assessment->id));
+    }
 }

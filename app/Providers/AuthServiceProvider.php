@@ -44,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
             }
             return true;
         });
+
         Gate::define('see_assessment', function ($user, $assessment) {
             if ($user->is_admin) {
                 return true;
@@ -56,6 +57,7 @@ class AuthServiceProvider extends ServiceProvider
             }
             return true;
         });
+
         Gate::define('see_feedbacks', function ($user, $assessment) {
             if ($user->is_admin) {
                 return true;
@@ -65,15 +67,20 @@ class AuthServiceProvider extends ServiceProvider
             }
             return true;
         });
+
         Gate::define('complete_feedback', function ($user, $assessment) {
             if ($user->is_admin) {
                 return true;
+            }
+            if ($assessment->deadline->gte(Carbon::now())) {
+                return false;
             }
             if ($user->id == $assessment->staff_id) {
                 return true;
             }
             return false;
         });
+
         Gate::define('see_course', function ($user, $course) {
             if ($user->is_admin) {
                 return true;
