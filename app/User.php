@@ -72,7 +72,7 @@ class User extends Authenticatable
         }, 0);
     }
 
-    public function unreadFeedbacks()
+    public function newFeedbacks()
     {
         $feedbacks = [];
         foreach ($this->assessments()->with('course', 'feedbacks')->get() as $assessment) {
@@ -130,13 +130,6 @@ class User extends Authenticatable
                 return $this->getEvent($assessment, $course, false);
             });
         })->toJson();
-        // $data = [];
-        // foreach ($this->courses()->with('assessments.feedbacks')->get() as $course) {
-        //     foreach ($course->assessments as $assessment) {
-        //         $data[] = $this->getEvent($assessment, $course, false);
-        //     }
-        // }
-        // return json_encode($data);
     }
 
     protected function staffAssessmentsAsJson()
@@ -228,24 +221,24 @@ class User extends Authenticatable
         return true;
     }
 
-    public function markAllFeedbacksAsRead($feedbacks = [])
+    public function markAllFeedbacksAsNotified($feedbacks = [])
     {
         if (count($feedbacks) == 0) {
-            $feedbacks = $this->unreadFeedbacks();
+            $feedbacks = $this->newFeedbacks();
         }
         foreach ($feedbacks as $feedback) {
-            $feedback->markAsRead();
+            $feedback->markAsNotified();
         }
     }
 
-    public function notifyAboutUnreadFeedback()
+    public function notifyAboutNewFeedback()
     {
-        $unread = $this->unreadFeedbacks();
-        if ($unread->count() == 0) {
+        $newFeedbacks = $this->newFeedbacks();
+        if ($newFeedbacks->count() == 0) {
             return;
         }
-        $this->notify(new OverdueFeedback($unread));
-        $this->markAllFeedbacksAsRead($unread);
+        $this->notify(new OverdueFeedback($newFeedbacks));
+        $this->markAllFeedbacksAsNotified($newFeedbacks);
     }
 
     public function hasLeftFeedbacks()

@@ -37,7 +37,7 @@ class ArtisanTest extends TestCase
         \Artisan::call('assessments:notifystaff');
 
         Notification::assertSentTo($staff, OverdueFeedback::class);
-        $this->assertEquals(0, $staff->unreadFeedbacks()->count());
+        $this->assertEquals(0, $staff->newFeedbacks()->count());
     }
 
     /** @test */

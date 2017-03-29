@@ -78,10 +78,9 @@ class NotificationTest extends TestCase
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
 
-        $staff->notifyAboutUnreadFeedback();
+        $staff->notifyAboutNewFeedback();
 
         Notification::assertSentTo($staff, OverdueFeedback::class);
-        $this->assertEquals(0, $staff->unreadFeedbacks()->count());
-        
+        $this->assertEquals(0, $staff->newFeedbacks()->count());
     }
 }

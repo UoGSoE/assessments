@@ -34,7 +34,7 @@ class AssessmentFeedback extends Model
         return ! $this->staff_notified;
     }
 
-    public function markAsRead()
+    public function markAsNotified()
     {
         $this->staff_notified = true;
         $this->save();

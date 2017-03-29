@@ -26,7 +26,7 @@ class StaffAssessmentTest extends TestCase
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
 
-        $this->assertEquals(2, $staff->unreadFeedbacks()->count());
+        $this->assertEquals(2, $staff->newFeedbacks()->count());
     }
 
     /** @test */
@@ -42,9 +42,9 @@ class StaffAssessmentTest extends TestCase
 
         $student1->recordFeedback($assessment1);
         $student2->recordFeedback($assessment2);
-        $staff->markAllFeedbacksAsRead();
+        $staff->markAllFeedbacksAsNotified();
 
-        $this->assertEquals(0, $staff->unreadFeedbacks()->count());
+        $this->assertEquals(0, $staff->newFeedbacks()->count());
 
     }
 

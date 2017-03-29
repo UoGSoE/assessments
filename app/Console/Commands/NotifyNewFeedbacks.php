@@ -40,7 +40,7 @@ class NotifyNewFeedbacks extends Command
     {
         $staff = User::staff()->get();
         foreach ($staff as $user) {
-            $user->notifyAboutUnreadFeedback();
+            $user->notifyAboutNewFeedback();
         }
     }
 }
