@@ -20,7 +20,7 @@ trait CanConvertAssessmentsToJson
     {
         return $this->courses()->with('assessments.feedbacks')->get()->flatMap(function ($course) {
             return $course->assessments->map(function ($assessment) use ($course) {
-                return $this->getEvent($assessment, $course, false);
+                return $this->getEvent($assessment, $course, null);
             });
         })->toJson();
     }
@@ -51,7 +51,7 @@ trait CanConvertAssessmentsToJson
     /**
      * Generic transform of an assessment to an array for json encoding.
      */
-    public function getEvent($assessment, $course, $year)
+    protected function getEvent($assessment, $course, $year)
     {
         $event = [
             'id' => $assessment->id,
@@ -78,7 +78,7 @@ trait CanConvertAssessmentsToJson
     /**
      * Create a modified Event array for staff for the feedback due deadline
      */
-    public function getFeedbackEvent($event, $assessment)
+    protected function getFeedbackEvent($event, $assessment)
     {
         if ($this->is_admin) {
             return false;
