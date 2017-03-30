@@ -37,6 +37,12 @@ class User extends Authenticatable
         return $this->hasMany(Assessment::class, 'staff_id');
     }
 
+    public function assessmentsWhereFeedbacksDue()
+    {
+        $cutoff = Carbon::now()->subDays(config('assessments.feedback_grace_days'));
+        return $this->assessments()->where('deadline', '<=', $cutoff);
+    }
+
     public function orderedAssessments()
     {
         return $this->hasMany(Assessment::class, 'staff_id')->orderBy('deadline')->get();
@@ -67,10 +73,7 @@ class User extends Authenticatable
 
     public function numberOfMissedDeadlines()
     {
-        $cutoff = Carbon::now()->subDays(config('assessments.feedback_grace_days'));
-        ;
-        return count($this->assessments()->where('deadline', '<=', $cutoff)
-                    ->get()
+        return count($this->assessmentsWhereFeedbacksDue()->get()
                     ->filter
                     ->feedbackWasGivenLate());
     }
@@ -225,25 +228,15 @@ class User extends Authenticatable
         return false;
     }
 
-    public function notOnCourse($courseId)
-    {
-        if (!is_numeric($courseId)) {
-            $courseId = $courseId->id;
-        }
-        if ($this->courses()->where('course_id', $courseId)->first()) {
-            return false;
-        }
-        return true;
-    }
-
     public function markAllFeedbacksAsNotified($feedbacks = [])
     {
+        if (! $feedbacks instanceof \Illuminate\Support\Collection) {
+            $feedbacks = collect($feedbacks);
+        }
         if (count($feedbacks) == 0) {
             $feedbacks = $this->newFeedbacks();
         }
-        foreach ($feedbacks as $feedback) {
-            $feedback->markAsNotified();
-        }
+        $feedbacks->each->markAsNotified();
     }
 
     public function notifyAboutNewFeedback()
@@ -270,6 +263,17 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    public function notOnCourse($courseId)
+    {
+        if (!is_numeric($courseId)) {
+            $courseId = $courseId->id;
+        }
+        if ($this->courses()->where('course_id', $courseId)->first()) {
+            return false;
+        }
+        return true;
     }
 
     public static function findByUsername($username)
