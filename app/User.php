@@ -249,6 +249,19 @@ class User extends Authenticatable
         return true;
     }
 
+    protected function usernameIsMatric($username)
+    {
+        if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function findByUsername($username)
+    {
+        return static::where('username', '=', $username)->first();
+    }
+
     public static function createFromLdap($ldapData)
     {
         $user = new static([
@@ -263,21 +276,10 @@ class User extends Authenticatable
         return $user;
     }
 
-    protected function usernameIsMatric($username)
-    {
-        if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function findByUsername($username)
-    {
-        return static::where('username', '=', $username)->first();
-    }
-
     public static function staffFromWlmData($wlmStaff)
     {
+        $wlmStaff['Username'] = $wlmStaff['GUID'];
+        return static::userFromWlmData($wlmStaff, false);
         $username = $wlmStaff['GUID'];
         $staff = User::findByUsername($username);
         if (!$staff) {
@@ -296,19 +298,25 @@ class User extends Authenticatable
 
     public static function studentFromWlmData($wlmStudent)
     {
-        $username = strtolower($wlmStudent['Matric'] . substr($wlmStudent['Surname'], 0, 1));
-        $student = User::findByUsername($username);
-        if (!$student) {
-            $student = new static([
-                'username' => $username,
-                'email' => "{$username}@student.gla.ac.uk",
+        $wlmStudent['Username'] = strtolower($wlmStudent['Matric'] . substr($wlmStudent['Surname'], 0, 1));
+        $wlmStudent['Email'] = $wlmStudent['Username'] . "@student.gla.ac.uk";
+        return static::userFromWlmData($wlmStudent, true);
+    }
+
+    protected static function userFromWlmData($wlmData, $isStudent = false)
+    {
+        $user = User::findByUsername($wlmData['Username']);
+        if (!$user) {
+            $user = new static([
+                'username' => $wlmData['Username'],
+                'email' => $wlmData['Email'],
             ]);
         }
-        $student->surname = $wlmStudent['Surname'] ?? 'Unknown';
-        $student->forenames = $wlmStudent['Forenames'] ?? 'Unknown';
-        $student->password = bcrypt(str_random(32));
-        $student->is_student = true;
-        $student->save();
-        return $student;
+        $user->surname = $wlmData['Surname'] ?? 'Unknown';
+        $user->forenames = $wlmData['Forenames'] ?? 'Unknown';
+        $user->password = bcrypt(str_random(32));
+        $user->is_student = $isStudent;
+        $user->save();
+        return $user;
     }
 }
