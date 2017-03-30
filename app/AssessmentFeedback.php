@@ -29,9 +29,14 @@ class AssessmentFeedback extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function isUnread()
+    public function staffNotified()
     {
-        return ! $this->staff_notified;
+        return $this->staff_notified;
+    }
+
+    public function staffNotNotified()
+    {
+        return ! $this->staffNotified();
     }
 
     public function markAsNotified()

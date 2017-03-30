@@ -52,37 +52,36 @@ class User extends Authenticatable
         return $this->hasMany(AssessmentFeedback::class, 'student_id');
     }
 
+    public function getAssessmentsWithStudentFeedback()
+    {
+        return $this->assessments()->has('feedbacks')->get();
+    }
+
     public function numberOfStaffFeedbacks()
     {
-        $reportedAssessments = $this->assessments()->has('feedbacks')->get();
-        return $reportedAssessments->reduce(function ($carry, $assessment) {
-            return $carry + $assessment->totalNegativeFeedbacks();
-        }, 0);
+        return $this->getAssessmentsWithStudentFeedback()
+                    ->reduce(function ($carry, $assessment) {
+                        return $carry + $assessment->totalNegativeFeedbacks();
+                    }, 0);
     }
 
     public function numberOfMissedDeadlines()
     {
         $cutoff = Carbon::now()->subDays(config('assessments.feedback_grace_days'));
-        $missed = $this->assessments()->where('deadline', '<=', $cutoff)->get();
-        return $missed->reduce(function ($carry, $assessment) {
-            if ($assessment->feedbackWasGivenLate()) {
-                return $carry + 1;
-            }
-            return $carry;
-        }, 0);
+        ;
+        return count($this->assessments()->where('deadline', '<=', $cutoff)
+                    ->get()
+                    ->filter
+                    ->feedbackWasGivenLate());
     }
 
     public function newFeedbacks()
     {
-        $feedbacks = [];
-        foreach ($this->assessments()->with('course', 'feedbacks')->get() as $assessment) {
-            foreach ($assessment->negativeFeedbacks as $feedback) {
-                if ($feedback->isUnread()) {
-                    $feedbacks[] = $feedback;
-                }
-            }
-        }
-        return collect($feedbacks);
+        return $this->assessments()->with('course', 'feedbacks')
+                    ->get()
+                    ->flatMap(function ($assessment) {
+                        return $assessment->negativeFeedbacks->filter->staffNotNotified();
+                    });
     }
 
     public function getMatricAttribute()
@@ -123,6 +122,10 @@ class User extends Authenticatable
         return $this->studentAssessmentsAsJson();
     }
 
+    /**
+     * Returns a json encoded list of assessments from a student account for use
+     * in the jquery fullcalendar view
+     */
     protected function studentAssessmentsAsJson()
     {
         return $this->courses()->with('assessments.feedbacks')->get()->flatMap(function ($course) {
@@ -132,6 +135,12 @@ class User extends Authenticatable
         })->toJson();
     }
 
+    /**
+     * Rreturns a json encoded list of assessments from a staff account for use
+     * in the jquery fullcalendar view.
+     * Staff get to see a duplicate event for when feedback is due for a given
+     * assessment (the 'feedbackEvent').
+     */
     protected function staffAssessmentsAsJson()
     {
         $data = [];
@@ -149,6 +158,9 @@ class User extends Authenticatable
         return json_encode($data);
     }
 
+    /**
+     * Generic transform of an assessment to an array for json encoding.
+     */
     public function getEvent($assessment, $course, $year)
     {
         $event = [
@@ -173,6 +185,9 @@ class User extends Authenticatable
         return $event;
     }
 
+    /**
+     * Create a modified Event array for staff for the feedback due deadline
+     */
     public function getFeedbackEvent($event, $assessment)
     {
         if ($this->is_admin) {
@@ -280,20 +295,6 @@ class User extends Authenticatable
     {
         $wlmStaff['Username'] = $wlmStaff['GUID'];
         return static::userFromWlmData($wlmStaff, false);
-        $username = $wlmStaff['GUID'];
-        $staff = User::findByUsername($username);
-        if (!$staff) {
-            $staff = new static([
-                'username' => $username,
-                'email' => $wlmStaff['Email'],
-            ]);
-        }
-        $staff->surname = $wlmStaff['Surname'] ?? 'Unknown';
-        $staff->forenames = $wlmStaff['Forenames'] ?? 'Unknown';
-        $staff->password = bcrypt(str_random(32));
-        $staff->is_student = false;
-        $staff->save();
-        return $staff;
     }
 
     public static function studentFromWlmData($wlmStudent)

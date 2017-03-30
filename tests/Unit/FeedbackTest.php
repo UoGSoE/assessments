@@ -134,4 +134,15 @@ class FeedbackTest extends TestCase
         $this->assertNotNull($assessment->feedbackWasGiven());
         $this->assertEquals($assessment->feedback_due, $assessment->feedback_left);
     }
+
+    /** @test */
+    public function a_bit_of_feedback_can_be_marked_as_notifying_the_staff_member()
+    {
+        $feedback = $this->createFeedback();
+        $this->assertFalse($feedback->staffNotified());
+
+        $feedback->markAsNotified();
+
+        $this->assertTrue($feedback->staffNotified());
+    }
 }
