@@ -31,10 +31,10 @@ class WlmImporter
                 throw new \Exception('Failed to get data from the WLM');
             }
             $courseIds = $courses->filter(function ($wlmCourse) {
-                if (preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
-                    return true;
+                if (!preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
+                    return false;
                 }
-                return false;
+                return true;
             })->take($maximumCourses)->each(function ($wlmCourse) {
                 $course = $this->courseFromWlm($wlmCourse);
                 $this->courseList[$course->code] = $course;

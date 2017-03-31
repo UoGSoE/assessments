@@ -29,9 +29,9 @@ class User extends Authenticatable
     public function courses()
     {
         if ($this->is_student) {
-            return $this->belongsToMany(Course::class, 'course_student', 'student_id');
+            return $this->belongsToMany(Course::class, 'course_student', 'student_id')->active();
         }
-        return $this->belongsToMany(Course::class, 'course_staff', 'staff_id');
+        return $this->belongsToMany(Course::class, 'course_staff', 'staff_id')->active();
     }
 
     public function assessments()

@@ -26,7 +26,7 @@ trait CanConvertAssessmentsToJson
     }
 
     /**
-     * Rreturns a json encoded list of assessments from a staff account for use
+     * Returns a json encoded list of assessments from a staff account for use
      * in the jquery fullcalendar view.
      * Staff get to see a duplicate event for when feedback is due for a given
      * assessment (the 'feedbackEvent').
@@ -34,7 +34,7 @@ trait CanConvertAssessmentsToJson
     protected function staffAssessmentsAsJson()
     {
         $data = [];
-        foreach (Course::with('assessments.feedbacks')->get() as $course) {
+        foreach (Course::active()->with('assessments.feedbacks')->get() as $course) {
             $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
                 $event = $this->getEvent($assessment, $course, $year);

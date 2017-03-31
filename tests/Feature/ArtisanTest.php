@@ -76,13 +76,15 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_wlm_import_command_creates_correct_data()
+    public function running_the_wlm_import_command_creates_correct_data_and_preserves_local_data()
     {
+        $assessment = $this->createAssessment();
         $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
 
         \Artisan::call('assessments:wlmimport');
 
-        $this->assertCount(2, Course::all());
+        $this->assertCount(3, Course::all());
+        $this->assertDatabaseHas('assessments', ['id' => $assessment->id]);
     }
 
     /** @test */

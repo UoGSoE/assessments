@@ -14,17 +14,35 @@ use App\Wlm\WlmImporter;
 class WlmImportTest extends TestCase
 {
     /** @test */
-    public function can_convert_wlm_format_course_to_a_local_one()
+    public function can_convert_wlm_format_course_to_a_local_course_model()
     {
         $wlmCourse = [
             'Code' => 'ENG1234',
-            'Title' => 'A Test Course'
+            'Title' => 'A Test Course',
+            'CurrentFlag' => 'Yes',
         ];
 
         $course = Course::fromWlmData($wlmCourse);
 
         $this->assertEquals('ENG1234', $course->code);
         $this->assertEquals('A Test Course', $course->title);
+        $this->assertTrue($course->is_active);
+    }
+
+    /** @test */
+    public function a_course_marked_as_not_current_on_the_wlm_is_marked_as_not_active_locally()
+    {
+        $wlmCourse = [
+            'Code' => 'ENG1234',
+            'Title' => 'A Test Course',
+            'CurrentFlag' => 'No'
+        ];
+
+        $course = Course::fromWlmData($wlmCourse);
+
+        $this->assertEquals('ENG1234', $course->code);
+        $this->assertEquals('A Test Course', $course->title);
+        $this->assertFalse($course->is_active);
     }
 
     /** @test */

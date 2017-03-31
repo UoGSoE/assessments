@@ -54,15 +54,30 @@ class StudentAssessmentsAsJsonTest extends TestCase
     public function we_can_fetch_all_assessments_for_a_given_student_as_json()
     {
         $student = $this->createStudent();
-        $courses = factory(Course::class, 20)->create()->each(function ($course) use ($student) {
+        $courses = factory(Course::class, 2)->create()->each(function ($course) use ($student) {
             $course->students()->attach($student);
-            $assessments = factory(Assessment::class, 5)->create();
+            $assessments = factory(Assessment::class, 2)->create();
             $course->assessments()->saveMany($assessments);
         });
 
         $json = json_decode($student->assessmentsAsJson(), true);
 
-        $this->assertEquals(100, count($json));
+        $this->assertEquals(4, count($json));
+    }
 
+    /** @test */
+    public function only_assessments_for_courses_marked_as_active_are_returned()
+    {
+        $student = $this->createStudent();
+        $course1 = $this->createCourse(['is_active' => true]);
+        $course2 = $this->createCourse(['is_active' => false]);
+        $course1->students()->sync([$student->id]);
+        $course2->students()->sync([$student->id]);
+        $assessment1 = $this->createAssessment(['course_id' => $course1->id]);
+        $assessment2 = $this->createAssessment(['course_id' => $course2->id]);
+
+        $json = json_decode($student->assessmentsAsJson(), true);
+
+        $this->assertEquals(1, count($json));
     }
 }

@@ -33,6 +33,11 @@ class Course extends Model
         return $this->hasMany(AssessmentFeedback::class);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public static function findByCode($code)
     {
         return static::where('code', '=', $code)->first();
@@ -46,9 +51,21 @@ class Course extends Model
         if (!$course) {
             $course = new static(['code' => $code]);
         }
+        $course->is_active = $course->getWlmStatus($wlmCourse);
         $course->title = $title;
         $course->save();
         return $course;
+    }
+
+    protected function getWlmStatus($wlmCourse)
+    {
+        if (!array_key_exists('CurrentFlag', $wlmCourse)) {
+            return false;
+        }
+        if ($wlmCourse['CurrentFlag'] === 'Yes') {
+            return true;
+        }
+        return false;
     }
 
     public function getYear()
