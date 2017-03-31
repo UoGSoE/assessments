@@ -4,6 +4,9 @@ namespace App;
 
 trait CanBeCreatedFromOutsideSources
 {
+    /**
+     * Create a user record based on data from LDAP
+     */
     public static function createFromLdap($ldapData)
     {
         $user = new static([
@@ -18,12 +21,18 @@ trait CanBeCreatedFromOutsideSources
         return $user;
     }
 
+    /**
+     * Create a staff record based on data from the Workload Model
+     */
     public static function staffFromWlmData($wlmStaff)
     {
         $wlmStaff['Username'] = $wlmStaff['GUID'];
         return static::userFromWlmData($wlmStaff, false);
     }
 
+    /**
+     * Create a student record based on data from the Workload Model
+     */
     public static function studentFromWlmData($wlmStudent)
     {
         $wlmStudent['Username'] = strtolower($wlmStudent['Matric'] . substr($wlmStudent['Surname'], 0, 1));
@@ -31,6 +40,9 @@ trait CanBeCreatedFromOutsideSources
         return static::userFromWlmData($wlmStudent, true);
     }
 
+    /**
+     * Create a user record based on WLM data
+     */
     protected static function userFromWlmData($wlmData, $isStudent = false)
     {
         $user = User::findByUsername($wlmData['Username']);

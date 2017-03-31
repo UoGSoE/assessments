@@ -21,6 +21,15 @@ class Assessment extends Model
         'feedback_left' => 'datetime',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($assessment) {
+            $assessment->feedbacks->each->delete();
+        });
+    }
+
     public function course()
     {
         return $this->belongsTo(Course::class);
@@ -132,7 +141,7 @@ class Assessment extends Model
         if (!$this->feedback_left) {
             return true;
         }
-        return $this->feedback_left->gte($this->feedback_due);
+        return $this->feedback_left->gt($this->feedback_due);
     }
 
     public function addFeedback($student)
@@ -150,9 +159,10 @@ class Assessment extends Model
             throw new AssessmentNotOverdueException;
         }
         $feedback = $this->feedbacks()->where('student_id', $student->id)->first();
-        if (!$feedback) {
-            $feedback = new AssessmentFeedback;
+        if ($feedback) {
+            return;
         }
+        $feedback = new AssessmentFeedback;
         $feedback->course_id = $this->course->id;
         $feedback->student_id = $student->id;
         $feedback->feedback_given = false;
