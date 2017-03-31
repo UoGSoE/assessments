@@ -12,7 +12,7 @@ class WlmImport extends Command
      *
      * @var string
      */
-    protected $signature = 'assessments:wlmimport';
+    protected $signature = 'assessments:wlmimport {--sync : Also remove data not in the WLM}';
 
     /**
      * The console command description.
@@ -38,6 +38,10 @@ class WlmImport extends Command
      */
     public function handle()
     {
-        app(WlmImporter::class)->run();
+        if ($this->option('sync')) {
+            app(WlmImporter::class)->sync();
+        } else {
+            app(WlmImporter::class)->run();
+        }
     }
 }

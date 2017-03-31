@@ -86,6 +86,18 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
+    public function running_the_wlm_import_command_with_the_sync_option_creates_correct_data_and_removes_old_data()
+    {
+        $assessment = $this->createAssessment();
+        $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
+
+        \Artisan::call('assessments:wlmimport', ['--sync' => true]);
+
+        $this->assertCount(2, Course::all());
+        $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);
+    }
+
+    /** @test */
     public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
     {
         Mail::fake();
