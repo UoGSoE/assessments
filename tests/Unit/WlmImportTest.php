@@ -94,6 +94,4 @@ class WlmImportTest extends TestCase
         $course = Course::fromWlmData($wlmCourse);
         $this->assertCount(1, Course::all());
     }
-
-
 }

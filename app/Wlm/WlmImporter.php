@@ -13,12 +13,14 @@ class WlmImporter
     protected $client;
     protected $staffList;
     protected $studentList;
+    protected $courseList;
 
     public function __construct(WlmClientInterface $client)
     {
         $this->client = $client;
         $this->staffList = collect([]);
         $this->studentList = collect([]);
+        $this->courseList = collect([]);
     }
 
     public function run($maximumCourses = 1000000)
@@ -28,13 +30,14 @@ class WlmImporter
             if ($this->client->statusCode != 200) {
                 throw new \Exception('Failed to get data from the WLM');
             }
-            $courses->filter(function ($wlmCourse) {
+            $courseIds = $courses->filter(function ($wlmCourse) {
                 if (preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
                     return true;
                 }
                 return false;
             })->take($maximumCourses)->each(function ($wlmCourse) {
                 $course = $this->courseFromWlm($wlmCourse);
+                $this->courseList[$course->code] = $course;
                 $course->staff()->sync($this->staffFromWlm($wlmCourse));
                 $course->students()->sync($this->studentsFromWlm($wlmCourse));
             });
@@ -43,6 +46,28 @@ class WlmImporter
             return false;
         }
         return true;
+    }
+
+    public function sync($maximumCourses = 1000000)
+    {
+        $importResult = $this->run($maximumCourses);
+        if ($importResult) {
+            $this->removeDataNotInWlm();
+        }
+        return $importResult;
+    }
+
+    protected function removeDataNotInWlm()
+    {
+        User::staff()->whereNotIn('id', $this->staffList->pluck('id'))->each(function ($staff) {
+            $staff->delete();
+        });
+        User::student()->whereNotIn('id', $this->studentList->pluck('id'))->each(function ($student) {
+            $student->delete();
+        });
+        Course::whereNotIn('id', $this->courseList->pluck('id'))->each(function ($course) {
+            $course->delete();
+        });
     }
 
     protected function courseFromWlm($wlmCourse)

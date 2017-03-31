@@ -26,6 +26,21 @@ class User extends Authenticatable
         'is_admin' => 'boolean'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            if ($user->isStaff()) {
+                $user->assessments->each->delete();
+            }
+            if ($user->isStudent()) {
+                $user->feedbacks->each->delete();
+            }
+            $user->courses()->detach();
+        });
+    }
+
     public function courses()
     {
         if ($this->is_student) {

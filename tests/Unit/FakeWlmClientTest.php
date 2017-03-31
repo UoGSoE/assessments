@@ -72,6 +72,7 @@ class FakeWlmClientTest extends TestCase
         $this->fail('Talking to the fake wlm while it was offline did not throw an exception');
     }
 
+
     public function getWlmClient()
     {
         return new FakeWlmClient;
