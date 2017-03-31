@@ -68,7 +68,8 @@ class WlmImportTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => $staff->id]);
         $this->assertDatabaseMissing('users', ['id' => $student->id]);
         $this->assertDatabaseMissing('courses', ['id' => $course->id]);
-        $this->assertEquals(0, AssessmentFeedback::count());
+        $this->assertDatabaseMissing('assessment_feedbacks', ['student_id' => $student->id]);
+        //$this->assertEquals(0, AssessmentFeedback::count());
         $this->assertCount(2, Course::all());
         $this->assertCount(3, User::staff()->get());
         $this->assertCount(3, User::student()->get());

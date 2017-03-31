@@ -63,9 +63,10 @@ class WlmImporter
         if ($this->staffList->isEmpty() or $this->studentList->isEmpty() or $this->courseList->isEmpty()) {
             return;
         }
-        User::staff()->whereNotIn('id', $this->staffList->pluck('id'))->each->delete();
-        User::student()->whereNotIn('id', $this->studentList->pluck('id'))->each->delete();
-        Course::whereNotIn('id', $this->courseList->pluck('id'))->each->delete();
+
+        User::staff()->whereNotIn('id', $this->staffList->pluck('id'))->delete();
+        User::student()->whereNotIn('id', $this->studentList->pluck('id'))->delete();
+        Course::whereNotIn('id', $this->courseList->pluck('id'))->delete();
     }
 
     protected function courseFromWlm($wlmCourse)

@@ -8,18 +8,6 @@ class Course extends Model
 {
     protected $fillable = ['code', 'title'];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($course) {
-            $course->assessments->each->delete();
-            $course->feedbacks->each->delete();
-            $course->students()->detach();
-            $course->staff()->detach();
-        });
-    }
-
     public function students()
     {
         return $this->belongsToMany(User::class, 'course_student', 'course_id', 'student_id');

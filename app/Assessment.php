@@ -21,15 +21,6 @@ class Assessment extends Model
         'feedback_left' => 'datetime',
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($assessment) {
-            $assessment->feedbacks->each->delete();
-        });
-    }
-
     public function course()
     {
         return $this->belongsTo(Course::class);
