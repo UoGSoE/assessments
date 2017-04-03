@@ -213,20 +213,24 @@ class Assessment extends Model
         return $this->feedbacks()->where('student_id', '=', $user->id)->first();
     }
 
-    public function updateFromForm($request)
+    public function updateViaForm($request)
     {
         $this->fill($request->only(['comment', 'staff_id', 'type']));
-        $this->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
+        $this->deadline = $this->stringsToCarbon($request->date, $request->time);
         $this->save();
     }
 
-    public static function createFromForm($request)
+    public static function createViaForm($request)
     {
-        $assessment = new static;
-        $assessment->fill($request->only(['comment', 'staff_id', 'type', 'course_id']));
-        $assessment->deadline = Carbon::createFromFormat('d/m/Y H:i', $request->date . ' ' . $request->time);
+        $assessment = new static($request->only(['comment', 'staff_id', 'type', 'course_id']));
+        $assessment->deadline = $assessment->stringsToCarbon($request->date, $request->time);
         $assessment->save();
         return $assessment;
+    }
+
+    protected function stringsToCarbon($date, $time)
+    {
+        return Carbon::createFromFormat('d/m/Y H:i', $date . ' ' . $time);
     }
 
     public function deadlineDate()

@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Spreadsheet\SheetToDatabase;
 use Carbon\Carbon;
-use App\Course;
-use App\Assessment;
-use Auth;
 
 class CourseworkController extends Controller
 {

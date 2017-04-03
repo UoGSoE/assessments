@@ -37,7 +37,7 @@ class AssessmentController extends Controller
             'type' => 'required',
             'course_id' => 'required|integer|exists:courses,id',
         ]);
-        $assessment = Assessment::createFromForm($request);
+        $assessment = Assessment::createViaForm($request);
         return redirect()->route('assessment.show', $assessment->id)->with('success_message', 'Created');
     }
 
@@ -56,7 +56,7 @@ class AssessmentController extends Controller
             'time' => 'required|date_format:H:i',
         ]);
         $assessment = Assessment::findOrFail($id);
-        $assessment->updateFromForm($request);
+        $assessment->updateViaForm($request);
         return redirect()->route('assessment.show', $id)->with('success_message', 'Updated');
     }
 
