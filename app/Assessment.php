@@ -36,7 +36,7 @@ class Assessment extends Model
         return $this->belongsTo(User::class, 'staff_id', 'id');
     }
 
-    public function scopeNoAcademicFeedback($query)
+    public function scopeNotSignedOff($query)
     {
         return $query->whereNull('feedback_left');
     }
@@ -72,7 +72,10 @@ class Assessment extends Model
         return $this->course->code . ' - ' . $this->type;
     }
 
-    public function reportFeedbackLeft()
+    /**
+     * This is just a formatter for some reports
+     */
+    public function reportSignedOff()
     {
         if ($this->feedback_left) {
             return $this->feedback_left->format('Y-m-d');
@@ -149,8 +152,7 @@ class Assessment extends Model
         if ($this->notOverdue()) {
             throw new AssessmentNotOverdueException;
         }
-        $feedback = $this->feedbacks()->where('student_id', $student->id)->first();
-        if ($feedback) {
+        if ($this->hasFeedbackFrom($student)) {
             return;
         }
         $feedback = new AssessmentFeedback;
@@ -203,7 +205,7 @@ class Assessment extends Model
         return config('assessments.office_email');
     }
 
-    public function feedbackFrom($user)
+    public function hasFeedbackFrom($user)
     {
         if (is_numeric($user)) {
             $user = User::findOrFail($user);

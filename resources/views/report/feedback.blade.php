@@ -79,7 +79,7 @@
             </a>
           </td>
           <td>{{ $assessment->feedback_due->format('Y-m-d') }}</td>
-          <td>{{ $assessment->reportFeedbackLeft() }}</td>
+          <td>{{ $assessment->reportSignedOff() }}</td>
           <td>{{ $assessment->totalNegativeFeedbacks() }}</td>
         </tr>
       @endforeach

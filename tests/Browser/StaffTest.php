@@ -43,7 +43,7 @@ class StaffTest extends DuskTestCase
             $course = $this->createCourse();
             $staff = $this->createStaff();
             $course->staff()->sync([$staff->id]);
-            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(5)->startOfWeek()]);
+            $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(3)->startOfWeek()]);
 
             $browser->loginAs($staff)
                     ->visit("/")

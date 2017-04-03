@@ -47,7 +47,7 @@ class ExportController extends Controller
                 $assessment->type,
                 $assessment->staff->fullName(),
                 $assessment->deadline->format('d/m/Y H:i'),
-                $assessment->reportFeedbackLeft(),
+                $assessment->reportSignedOff(),
                 $assessment->totalNegativeFeedbacks()
             ];
             $rows[] = $row;

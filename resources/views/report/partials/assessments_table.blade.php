@@ -26,7 +26,7 @@
                     <td>{{ $assessment->type }}</td>
                     <td>{{ $assessment->deadline->format('Y-m-d H:i') }}</td>
                     <td>{{ $assessment->feedback_due->format('Y-m-d H:i') }}</td>
-                    <td>{{ $assessment->reportFeedbackLeft() }}</td>
+                    <td>{{ $assessment->reportSignedOff() }}</td>
                     <td>
                         {{ $assessment->totalNegativeFeedbacks() }}
                     </td>

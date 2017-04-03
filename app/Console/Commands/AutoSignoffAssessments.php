@@ -38,7 +38,7 @@ class AutoSignoffAssessments extends Command
      */
     public function handle()
     {
-        Assessment::noAcademicFeedback()->get()->each(function ($assessment) {
+        Assessment::notSignedOff()->get()->each(function ($assessment) {
             if ($assessment->canBeAutoSignedOff()) {
                 $assessment->autoSignOff();
             }

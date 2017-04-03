@@ -59,8 +59,8 @@
         <dt>Feedback Due</dt>
         <dd>
             {{ $assessment->feedback_due->format('d/m/Y') }} - {{ $assessment->feedback_due->diffForHumans() }}
-            @if ($assessment->feedbackFrom(Auth::user()))
-                    <em>- You reported feedback late on {{ $assessment->feedbackFrom(Auth::user())->created_at->format('d/m/Y') }}</em>
+            @if ($assessment->hasFeedbackFrom(Auth::user()))
+                    <em>- You reported feedback late on {{ $assessment->hasFeedbackFrom(Auth::user())->created_at->format('d/m/Y') }}</em>
             @endif
         </dd>
         <dt>Feedback Completed</dt>

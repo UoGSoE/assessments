@@ -68,11 +68,11 @@ class ArtisanTest extends TestCase
             'deadline' => Carbon::now()->subWeeks(2)
         ]);
 
-        $this->assertEquals(5, Assessment::noAcademicFeedback()->count());
+        $this->assertEquals(5, Assessment::notSignedOff()->count());
 
         \Artisan::call('assessments:autosignoff');
 
-        $this->assertEquals(2, Assessment::noAcademicFeedback()->count());
+        $this->assertEquals(2, Assessment::notSignedOff()->count());
     }
 
     /** @test */

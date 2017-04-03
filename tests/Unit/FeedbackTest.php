@@ -95,7 +95,7 @@ class FeedbackTest extends TestCase
         factory(Assessment::class, 2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
         factory(Assessment::class, 3)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
 
-        $this->assertEquals(2, Assessment::noAcademicFeedback()->count());
+        $this->assertEquals(2, Assessment::notSignedOff()->count());
 
     }
 
