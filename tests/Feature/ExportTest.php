@@ -61,11 +61,11 @@ class ExportTest extends TestCase
         $row2 = array_shift($data);
         $this->assertEquals($assessment1->staff->fullName(), $row1[0]);
         $this->assertEquals($assessment1->staff->numberOfAssessments(), $row1[1]);
-        $this->assertEquals($assessment1->staff->numberOfStaffFeedbacks(), $row1[2]);
+        $this->assertEquals($assessment1->staff->totalStudentFeedbacks(), $row1[2]);
         $this->assertEquals($assessment1->staff->numberOfMissedDeadlines(), $row1[3]);
         $this->assertEquals($assessment2->staff->fullName(), $row2[0]);
         $this->assertEquals($assessment2->staff->numberOfAssessments(), $row2[1]);
-        $this->assertEquals($assessment2->staff->numberOfStaffFeedbacks(), $row2[2]);
+        $this->assertEquals($assessment2->staff->totalStudentFeedbacks(), $row2[2]);
         $this->assertEquals($assessment2->staff->numberOfMissedDeadlines(), $row2[3]);
     }
 }

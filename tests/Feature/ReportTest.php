@@ -49,7 +49,7 @@ class ReportTest extends TestCase
         foreach ($staff as $user) {
             $response->assertSee($user->fullName());
             $response->assertSee("" . $user->numberOfAssessments());
-            $response->assertSee("" . $user->numberOfStaffFeedbacks());
+            $response->assertSee("" . $user->totalStudentFeedbacks());
             $response->assertSee("" . $user->numberOfMissedDeadlines());
         }
         $response->assertSee("is-admin-{$admin->id}");

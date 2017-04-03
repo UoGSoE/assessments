@@ -40,7 +40,7 @@
                         @endif
                     </td>
                     <td>{{ $user->numberOfAssessments() }}</td>
-                    <td>{{ $user->numberOfStaffFeedbacks() }}</td>
+                    <td>{{ $user->totalStudentFeedbacks() }}</td>
                     <td>{{ $user->numberOfMissedDeadlines() }}</td>
                 </tr>
             @endforeach

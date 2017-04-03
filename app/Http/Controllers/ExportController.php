@@ -70,7 +70,7 @@ class ExportController extends Controller
             $row = [
                 $user->fullName() . ($user->is_admin ? ' (Admin)' : ''),
                 $user->numberOfAssessments(),
-                $user->numberOfStaffFeedbacks(),
+                $user->totalStudentFeedbacks(),
                 $user->numberOfMissedDeadlines(),
             ];
             $rows[] = $row;

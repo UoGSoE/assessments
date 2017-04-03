@@ -65,7 +65,7 @@ class User extends Authenticatable
         return $this->assessments()->has('feedbacks')->get();
     }
 
-    public function numberOfStaffFeedbacks()
+    public function totalStudentFeedbacks()
     {
         return $this->getAssessmentsWithStudentFeedback()
                     ->reduce(function ($carry, $assessment) {

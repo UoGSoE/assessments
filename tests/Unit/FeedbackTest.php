@@ -50,7 +50,7 @@ class FeedbackTest extends TestCase
             $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
         }
 
-        $this->assertEquals(3, $assessment->staff->numberOfStaffFeedbacks());
+        $this->assertEquals(3, $assessment->staff->totalStudentFeedbacks());
     }
 
     /** @test */
