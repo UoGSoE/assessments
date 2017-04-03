@@ -33,10 +33,10 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 10)->states('student')->create();
+        $students = factory(\App\User::class, 3)->states('student')->create();
         $course->students()->sync($students->pluck('id'));
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('report.feedback'));
 
@@ -49,10 +49,10 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 10)->states('student')->create();
+        $students = factory(\App\User::class, 3)->states('student')->create();
         $course->students()->sync($students->pluck('id'));
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('assessment.show', $assessment->id));
 
@@ -71,7 +71,7 @@ class AdminTest extends TestCase
         $student = $this->createStudent();
         $course->students()->sync([$student->id]);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 30)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id, 'student_id' => $student->id]);
+        $feedbacks = factory(\App\AssessmentFeedback::class, 3)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id, 'student_id' => $student->id]);
 
         $response = $this->actingAs($admin)->get(route('student.show', $student->id));
 
@@ -88,9 +88,9 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 5)->states('student')->create();
+        $students = factory(\App\User::class, 2)->states('student')->create();
         $course->students()->sync($students->pluck('id'));
-        $assessments = factory(\App\Assessment::class, 5)->create(['course_id' => $course->id]);
+        $assessments = factory(\App\Assessment::class, 2)->create(['course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('course.show', $course->id));
 
@@ -128,8 +128,8 @@ class AdminTest extends TestCase
     public function admin_can_remove_all_old_data()
     {
         $admin = $this->createAdmin();
-        $assessments = factory(\App\Assessment::class, 5)->create();
-        $feedbacks = factory(\App\AssessmentFeedback::class, 5)->create();
+        $assessments = factory(\App\Assessment::class, 2)->create();
+        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create();
 
         $response = $this->actingAs($admin)->delete(route('admin.clearold'));
 

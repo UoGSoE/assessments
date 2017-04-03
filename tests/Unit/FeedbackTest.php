@@ -78,11 +78,11 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_with_lots_of_negative_feedback_is_flagged()
     {
-        $students = factory(\App\User::class, 10)->states('student')->create();
+        $students = factory(\App\User::class, 5)->states('student')->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        foreach ($students->take(6) as $student) {
+        foreach ($students->take(3) as $student) {
             $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
         }
 
@@ -93,7 +93,7 @@ class FeedbackTest extends TestCase
     public function we_can_get_a_list_of_assessments_with_no_feedback_left_by_academics()
     {
         factory(Assessment::class, 2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
-        factory(Assessment::class, 3)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
+        factory(Assessment::class, 1)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
 
         $this->assertEquals(2, Assessment::notSignedOff()->count());
 

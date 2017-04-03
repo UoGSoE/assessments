@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\ProblematicAssessment;
 use App\Notifications\OverdueFeedback;
 
-class NotificationTest extends TestCase
+class OfficeNotificationTest extends TestCase
 {
     /** @test */
     public function teaching_office_are_notified_when_an_assessment_becomes_problematic()

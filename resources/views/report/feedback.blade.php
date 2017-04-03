@@ -119,8 +119,8 @@ $(document).ready(function () {
         Do you <em>really</em> want to delete all old data?
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-danger" id="modal-confirm">Yes</a>
-      <a class="button is-pulled-right" id="modal-cancel">No</a>
+      <a class="button is-danger" id="modal-confirm" href="#">Yes</a>
+      <a class="button is-pulled-right" id="modal-cancel" href="#">No</a>
     </footer>
   </div>
 </div>

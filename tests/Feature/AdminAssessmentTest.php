@@ -78,8 +78,8 @@ class AdminAssessmentTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHas('success_message');
-        $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);        
-        $this->assertDatabaseMissing('assessment_feedbacks', ['assessment_id' => $assessment->id, 'student_id' => $student->id]);        
+        $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);
+        $this->assertDatabaseMissing('assessment_feedbacks', ['assessment_id' => $assessment->id, 'student_id' => $student->id]);
     }
 
     /** @test */
