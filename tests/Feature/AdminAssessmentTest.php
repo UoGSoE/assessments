@@ -97,6 +97,7 @@ class AdminAssessmentTest extends TestCase
             'comment' => 'I am very happy with my cheese purchase',
             'staff_id' => $staff->id,
             'course_id' => $course->id,
+            'feedback_type' => 'HAPPYEASTER'
         ]);
 
         $response->assertStatus(302);
@@ -107,6 +108,7 @@ class AdminAssessmentTest extends TestCase
             'staff_id' => $staff->id,
             'deadline' => $now->format('Y-m-d H:i:00'),
             'course_id' => $course->id,
+            'feedback_type' => 'HAPPYEASTER',
         ]);
     }
 

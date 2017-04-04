@@ -8,8 +8,8 @@
         {!! csrf_field() !!}
         <label class="label">Spreadsheet</label>
         <div class="box">
-            Format : <pre>Date | Time (HH:MM) | Course Code | Course Title | Type | Staffname | GUID</pre>
-            Eg : <pre>Wednesday, October 02, 2019 | 09:00 | ENG1234 | Lasers | Homework | Jenny Smith | js1x</pre>
+            Format : <pre>Date | Time (HH:MM) | Course Code | Course Title | Type | Staffname | GUID | Feedback Type</pre>
+            Eg : <pre>Wednesday, October 02, 2019 | 09:00 | ENG1234 | Lasers | Homework | Jenny Smith | js1x | In Person</pre>
         </div>
         <p>
             <input name="sheet" type="file">

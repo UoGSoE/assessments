@@ -124,6 +124,7 @@ class SpreadsheetTest extends TestCase
                     'Homework',
                     $this->staff1->fullName(),
                     $this->staff1->username,
+                    'HAPPYEASTER',
                 ],
                 [
                     Carbon::now()->addDays(3)->format('l, F d, Y'),
@@ -133,6 +134,7 @@ class SpreadsheetTest extends TestCase
                     'Homework',
                     $this->staff2->fullName(),
                     $this->staff2->username,
+                    'CADBURYS'
                 ],
             ];
         }

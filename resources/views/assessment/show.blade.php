@@ -54,6 +54,8 @@
         <dd>{{ $assessment->staff->fullName() }}</dd>
         <dt>Assessment Type</dt>
         <dd>{{ $assessment->type }}</dd>
+        <dt>Feedback Will Be</dt>
+        <dd>{{ $assessment->feedback_type }}</dd>
         <dt>Deadline</dt>
         <dd>{{ $assessment->deadline->format('d/m/Y H:i') }}</dd>
         <dt>Feedback Due</dt>

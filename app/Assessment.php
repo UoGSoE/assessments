@@ -14,7 +14,7 @@ class Assessment extends Model
 {
     use Notifiable;
 
-    protected $fillable = ['comment', 'type', 'staff_id', 'course_id', 'type', 'deadline'];
+    protected $fillable = ['comment', 'type', 'staff_id', 'course_id', 'type', 'deadline', 'feedback_type'];
 
     protected $casts = [
         'deadline' => 'datetime',
@@ -215,14 +215,14 @@ class Assessment extends Model
 
     public function updateViaForm($request)
     {
-        $this->fill($request->only(['comment', 'staff_id', 'type']));
+        $this->fill($request->only(['comment', 'staff_id', 'type', 'feedback_type']));
         $this->deadline = $this->stringsToCarbon($request->date, $request->time);
         $this->save();
     }
 
     public static function createViaForm($request)
     {
-        $assessment = new static($request->only(['comment', 'staff_id', 'type', 'course_id']));
+        $assessment = new static($request->only(['comment', 'staff_id', 'type', 'course_id', 'feedback_type']));
         $assessment->deadline = $assessment->stringsToCarbon($request->date, $request->time);
         $assessment->save();
         return $assessment;

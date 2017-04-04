@@ -26,6 +26,7 @@ class SheetToDatabaseTest extends TestCase
         $this->assertEquals($row[1], $assessment->deadline->format('H:i'));
         $this->assertEquals($row[2], $assessment->course->code);
         $this->assertEquals($row[4], $assessment->type);
+        $this->assertEquals($row[7], $assessment->feedback_type);
     }
 
     /** @test */
@@ -106,6 +107,7 @@ class SheetToDatabaseTest extends TestCase
             'Homework',
             $staff->fullName(),
             $staff->username,
+            'One-to-one'
         ], $attribs);
     }
 }

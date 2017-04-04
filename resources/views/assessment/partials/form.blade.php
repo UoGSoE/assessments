@@ -1,5 +1,5 @@
         {!! csrf_field() !!}
-        <label class="label">Type</label>
+        <label class="label">Assessment Type</label>
         <p class="control">
           <span class="select">
             <select name="type">
@@ -9,6 +9,10 @@
               <option value="bikes">bikes</option>
             </select>
           </span>
+        </p>
+        <label class="label">Staff Feedback Type</label>
+        <p class="control">
+            <input class="input" name="feedback_type" type="text" placeholder="">
         </p>
         <label class="label">Staff</label>
         <p class="control">

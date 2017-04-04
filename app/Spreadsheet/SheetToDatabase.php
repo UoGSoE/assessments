@@ -71,6 +71,7 @@ class SheetToDatabase
             'type' => trim($row[4]),
             'course_id' => $course->id,
             'staff_id' => $staff->id,
+            'feedback_type' => trim($row[7]),
         ]);
     }
 

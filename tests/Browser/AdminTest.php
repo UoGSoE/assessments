@@ -79,10 +79,12 @@ class AdminTest extends DuskTestCase
                     ->select('staff_id', "$staff->id")
                     ->type('date', $now->format('d/m/Y'))
                     ->type('time', $now->format('H:i'))
+                    ->type('feedback_type', 'HAPPYEASTER')
                     ->press('Update')
                     ->assertSee('Updated')
                     ->assertSee($staff->fullName())
-                    ->assertSee($now->format('d/m/Y H:i'));
+                    ->assertSee($now->format('d/m/Y H:i'))
+                    ->assertSee('HAPPYEASTER');
         });
     }
 
@@ -103,13 +105,15 @@ class AdminTest extends DuskTestCase
                     ->type('date', $now->format('d/m/Y'))
                     ->type('time', $now->format('H:i'))
                     ->type('comment', 'blah blah blah')
+                    ->type('feedback_type', 'HAPPYEASTER')
                     ->select('course_id', "$course->id")
                     ->press('Create')
                     ->assertSee('Created')
                     ->assertSee($staff->fullName())
                     ->assertSee($now->format('d/m/Y H:i'))
                     ->assertSee($course->title)
-                    ->assertSee('blah blah blah');
+                    ->assertSee('blah blah blah')
+                    ->assertSee('HAPPYEASTER');
         });
     }
 
