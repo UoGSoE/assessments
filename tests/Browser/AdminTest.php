@@ -239,6 +239,7 @@ class AdminTest extends DuskTestCase
                     ->press('Upload')
                     ->assertSee('TEST9999')
                     ->assertSee('TEST1234')
+                    ->assertSee('Feedback Report')
                     ->assertSee($this->staff1->fullName())
                     ->assertSee($this->staff2->fullName());
         });
@@ -259,6 +260,7 @@ class AdminTest extends DuskTestCase
                     'Homework',
                     $this->staff1->fullName(),
                     $this->staff1->username,
+                    'In Person',
                 ],
                 [
                     Carbon::now()->addDays(3)->format('l, F d, Y'),
@@ -268,6 +270,7 @@ class AdminTest extends DuskTestCase
                     'Homework',
                     $this->staff2->fullName(),
                     $this->staff2->username,
+                    'Whole Class',
                 ],
             ];
         }
