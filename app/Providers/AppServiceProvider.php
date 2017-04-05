@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Dusk\DuskServiceProvider;
 use App\Wlm\WlmClientInterface;
 use App\Wlm\WlmClient;
@@ -17,6 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+
         $this->app->bind(WlmClientInterface::class, WlmClient::class);
 
         // this enabled 'proper' foreign key SQL when using SQLite so that
