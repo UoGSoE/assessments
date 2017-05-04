@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Course;
 use Carbon\Carbon;
 use Hashids\Hashids;
+use Storage;
 
 class User extends Authenticatable
 {
@@ -153,5 +154,10 @@ class User extends Authenticatable
     public function icsPath()
     {
         return "eng/{$this->getUuid()}.ics";
+    }
+
+    public function icsUrl()
+    {
+        return url('calendars/' . $this->icsPath());
     }
 }

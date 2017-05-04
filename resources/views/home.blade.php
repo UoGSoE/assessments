@@ -3,7 +3,12 @@
 @section('content')
     <h2 class="title is-2">
         Your Assessments
-    </h2>
+<!--         <a href="{{ Auth::user()->icsUrl() }}" title="Link to your assessments calendar (for iCal/Outlook)">
+          <span class="icon">
+            <i class="fa fa-calendar"></i>
+          </span>
+        </a>
+ -->    </h2>
     @if (Auth::user()->isStaff())
         <p class="control is-pulled-left">
           <span class="select">
