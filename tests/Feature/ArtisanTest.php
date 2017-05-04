@@ -17,6 +17,7 @@ use App\Wlm\FakeWlmClient;
 use App\Wlm\FakeBrokenWlmClient;
 use App\Course;
 use App\Mail\WlmImportProblem;
+use Storage;
 
 class ArtisanTest extends TestCase
 {
@@ -111,5 +112,24 @@ class ArtisanTest extends TestCase
         Mail::assertSent(WlmImportProblem::class, function ($mail) {
             return $mail->hasTo(config('assessments.sysadmin_email'));
         });
+    }
+
+    /** @test */
+    public function running_the_ical_generator_command_creates_the_correct_files()
+    {
+        Storage::fake('calendars');
+        $course = $this->createCourse(['code' => 'ENG1234']);
+        $staff = $this->createStaff();
+        $student = $this->createStudent();
+        $course->students()->attach($student->id);
+        $course->staff()->attach($staff);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id]);
+
+        \Artisan::call('assessments:generateics');
+
+        Storage::disk('calendars')->assertExists("eng/year1.ics");
+        Storage::disk('calendars')->assertExists("eng/all.ics");
+        Storage::disk('calendars')->assertExists("eng/{$staff->getUuid()}.ics");
+        Storage::disk('calendars')->assertExists("eng/{$student->getUuid()}.ics");
     }
 }

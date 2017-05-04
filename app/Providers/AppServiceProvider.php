@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Dusk\DuskServiceProvider;
+use Eluceo\iCal\Component\Calendar;
 use App\Wlm\WlmClientInterface;
 use App\Wlm\WlmClient;
 use DB;
@@ -21,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $this->app->bind(WlmClientInterface::class, WlmClient::class);
+
+        $this->app->bind(Calendar::class, function ($app) {
+            return new Calendar(url('/'));
+        });
 
         // this enabled 'proper' foreign key SQL when using SQLite so that
         // things like ->onDelete('cascade') will work rather than having

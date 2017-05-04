@@ -31,6 +31,24 @@ class Calendar
         return $this;
     }
 
+    public function addAssessment($assessment)
+    {
+        $event = [
+            'start' => $assessment->deadline,
+            'end' => $assessment->deadline->addHours(1),
+            'title' => $assessment->title
+        ];
+        return $this->addEvent($event);
+    }
+
+    public function addAssessments($assessments)
+    {
+        foreach ($assessments as $assessment) {
+            $this->addAssessment($assessment);
+        }
+        return $this;
+    }
+
     public function render()
     {
         return $this->calendar->render();

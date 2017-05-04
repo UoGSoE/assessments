@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Course;
 use Carbon\Carbon;
+use Hashids\Hashids;
 
 class User extends Authenticatable
 {
@@ -141,5 +142,16 @@ class User extends Authenticatable
     public static function findByUsername($username)
     {
         return static::where('username', '=', $username)->first();
+    }
+
+    public function getUuid()
+    {
+        $hasher = new Hashids(config('assessments.hash_seed'), 10);
+        return $this->username . '_' . $hasher->encode($this->id);
+    }
+
+    public function icsPath()
+    {
+        return "eng/{$this->getUuid()}.ics";
     }
 }

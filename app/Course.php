@@ -75,4 +75,9 @@ class Course extends Model
         }
         return $match[0];
     }
+
+    public function isActive()
+    {
+        return !! $this->is_active;
+    }
 }
