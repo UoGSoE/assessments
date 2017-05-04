@@ -46,7 +46,7 @@ class GenerateIcs extends Command
         $cals = [];
         foreach ($courses as $course) {
             $year = $course->getYear();
-            $assessments = $course->assessments();
+            $assessments = $course->assessments;
             if (!array_key_exists($year, $cals)) {
                 $cals[$year] = resolve(Calendar::class);
             }

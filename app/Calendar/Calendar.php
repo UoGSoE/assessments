@@ -26,7 +26,8 @@ class Calendar
         $icalEvent = new Event;
         $icalEvent->setDtStart($event['start'])
             ->setDtEnd($event['end'])
-            ->setSummary($event['title']);
+            ->setSummary($event['title'])
+            ->setDescription($event['comment']);
         $this->calendar->addComponent($icalEvent);
         return $this;
     }
@@ -36,7 +37,8 @@ class Calendar
         $event = [
             'start' => $assessment->deadline,
             'end' => $assessment->deadline->addHours(1),
-            'title' => $assessment->title
+            'title' => $assessment->title,
+            'comment' => $assessment->comment,
         ];
         return $this->addEvent($event);
     }

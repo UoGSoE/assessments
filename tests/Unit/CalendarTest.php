@@ -28,13 +28,14 @@ class CalendarTest extends TestCase
     public function can_add_an_assessment_to_a_calendar()
     {
         $cal = resolve(Calendar::class);
-        $assessment = $this->createAssessment();
+        $assessment = $this->createAssessment(['comment' => 'A COMMENT']);
 
         $cal->addAssessment($assessment);
         $contents = $cal->render();
 
         $this->assertContains($assessment->deadline->format('Ymd\THis\Z'), $contents);
         $this->assertContains($assessment->title, $contents);
+        $this->assertContains($assessment->comment, $contents);
     }
 
     /** @test */
