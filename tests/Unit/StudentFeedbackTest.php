@@ -39,7 +39,7 @@ class StudentFeedbackTest extends TestCase
             return;
         }
 
-        return $this->fail('Student added feedback for an assessment which was not for one of their courses, but no exception thrown');        
+        return $this->fail('Student added feedback for an assessment which was not for one of their courses, but no exception thrown');
     }
 
     /** @test */
@@ -48,7 +48,7 @@ class StudentFeedbackTest extends TestCase
         $student = $this->createStudent();
         $course = $this->createCourse();
         $course->students()->save($student);
-        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => \Carbon\Carbon::now()->subMonths(3)]);
+        $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => \Carbon\Carbon::now()->subMonths(4)]);
 
         try {
             $student->recordFeedback($assessment);
@@ -56,7 +56,7 @@ class StudentFeedbackTest extends TestCase
             return;
         }
 
-        return $this->fail('Student added feedback for an assessment which was way in the past, but no exception thrown');        
+        return $this->fail('Student added feedback for an assessment which was way in the past, but no exception thrown');
     }
 
     /** @test */

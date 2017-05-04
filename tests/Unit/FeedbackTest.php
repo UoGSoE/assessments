@@ -102,7 +102,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_can_be_signed_off_if_there_are_no_negative_feedbacks_and_a_sufficient_amount_of_time_has_passed()
     {
-        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(7)]);
 
         $this->assertTrue($assessment->canBeAutoSignedOff());
     }
@@ -110,7 +110,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_cant_be_signed_off_if_it_has_negative_feedbacks()
     {
-        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 3)]);
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(7)]);
         $feedback = $this->createFeedback(['assessment_id' => $assessment->id]);
 
         $this->assertFalse($assessment->canBeAutoSignedOff());
@@ -119,7 +119,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_cant_be_signed_off_too_soon()
     {
-        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(3 + 2)]);
+        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(5)]);
 
         $this->assertFalse($assessment->canBeAutoSignedOff());
     }

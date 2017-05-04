@@ -63,7 +63,7 @@ class ArtisanTest extends TestCase
     public function running_the_auto_signoff_command_signs_off_appropriate_assessments()
     {
         $canBeSignedOff = factory(Assessment::class, 3)->create([
-            'deadline' => Carbon::now()->subWeeks(6)
+            'deadline' => Carbon::now()->subWeeks(7)
         ]);
         $cantBeSignedOff = factory(Assessment::class, 2)->create([
             'deadline' => Carbon::now()->subWeeks(2)
