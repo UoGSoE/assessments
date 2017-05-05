@@ -35,7 +35,7 @@
         @if ($assessment->overdue() and Auth::user()->can('leave_feedback', $assessment))
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
                 {!! csrf_field() !!}
-                <button class="button is-danger is-outlined" type="submit">
+                <button class="button is-info is-outlined" type="submit">
                     Report assessment feedback as overdue
                 </button>
             </form>
@@ -56,7 +56,7 @@
         <dd>{{ $assessment->type }}</dd>
         <dt>Feedback Will Be</dt>
         <dd>{{ $assessment->feedback_type }}</dd>
-        <dt>Deadline</dt>
+        <dt>Student Submission Date</dt>
         <dd>{{ $assessment->deadline->format('d/m/Y H:i') }}</dd>
         <dt>Feedback Due</dt>
         <dd>
