@@ -25,7 +25,8 @@ ping -c 3 mysql
 composer -q global require "hirak/prestissimo:^0.3"
 
 # Composer install project dependencies
-composer -q install --no-progress --no-interaction
+#composer -q install --no-progress --no-interaction
+composer install --no-interaction
 
 # Copy over testing configuration.
 cp -f .env.gitlab .env
