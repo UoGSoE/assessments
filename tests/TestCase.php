@@ -4,13 +4,15 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Exceptions\Handler;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     //use DatabaseMigrations;
     use DatabaseSetup;
-    
+
     protected function setUp()
     {
         parent::setUp();
@@ -19,7 +21,7 @@ abstract class TestCase extends BaseTestCase
 //        $this->disableExceptionHandling();
     }
 
-    protected function disableExceptionHandling()
+    public function disableExceptionHandling()
     {
         $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
 
