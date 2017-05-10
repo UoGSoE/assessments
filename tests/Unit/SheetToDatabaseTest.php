@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 class SheetToDatabaseTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function can_convert_a_valid_row_to_an_assessment()
     {

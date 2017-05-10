@@ -13,6 +13,8 @@ use App\Exceptions\AssessmentNotOverdueException;
 
 class StudentFeedbackTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function student_can_add_negative_feedback_for_an_assessment()
     {

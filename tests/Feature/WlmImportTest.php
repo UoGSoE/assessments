@@ -17,6 +17,8 @@ use Carbon\Carbon;
 
 class WlmImportTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function can_import_the_data_from_the_fake_wlm()
     {

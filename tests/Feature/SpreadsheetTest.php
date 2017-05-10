@@ -14,6 +14,8 @@ use App\Assessment;
 
 class SpreadsheetTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function test_importing_the_assessments_spreadsheet_works_correctly()
     {

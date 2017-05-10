@@ -11,6 +11,8 @@ use Carbon\Carbon;
 
 class StudentFeedbackTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function test_a_student_can_give_feedback_on_an_assessment()
     {
@@ -46,7 +48,7 @@ class StudentFeedbackTest extends TestCase
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,
-            'user_id' => $student->id,
+            'student_id' => $student->id,
         ]);
 
         // student not on the course the assessment is for
@@ -58,7 +60,7 @@ class StudentFeedbackTest extends TestCase
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,
-            'user_id' => $student->id,
+            'student_id' => $student->id,
         ]);
 
         // assessment is way in the past
@@ -70,7 +72,7 @@ class StudentFeedbackTest extends TestCase
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,
-            'user_id' => $student->id,
+            'student_id' => $student->id,
         ]);
     }
 

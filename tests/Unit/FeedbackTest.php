@@ -11,6 +11,8 @@ use App\Assessment;
 
 class FeedbackTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function we_can_get_the_total_negative_feedback_for_an_assessment()
     {

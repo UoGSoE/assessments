@@ -13,6 +13,8 @@ use App\Wlm\WlmImporter;
 
 class WlmImportTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function can_convert_wlm_format_course_to_a_local_course_model()
     {

@@ -11,6 +11,8 @@ use Carbon\Carbon;
 
 class SpreadsheetTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function importing_a_spreadsheet_returns_correct_data()
     {

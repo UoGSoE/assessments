@@ -11,6 +11,8 @@ use Storage;
 
 class CalendarTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /** @test */
     public function can_render_a_calendar_to_a_string()
     {
