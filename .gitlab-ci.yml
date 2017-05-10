@@ -1,0 +1,28 @@
+# Before Tests
+before_script:
+  - bash gitlab-ci.sh >> /dev/null
+
+# Services
+services:
+  - mysql:latest
+
+# Variables
+variables:
+  WITH_XDEBUG: "1"
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
+
+# Stages
+stages:
+  - test
+
+# PHP 7.0 FPM
+php:7-fpm:
+  image: php:7-fpm
+  stage: test
+  script:
+    - php -v
+    - php vendor/bin/phpunit 
