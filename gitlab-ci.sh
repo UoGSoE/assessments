@@ -12,7 +12,7 @@ apt-get install -y libxml2-dev --no-install-recommends
 rm -rf /var/lib/apt/lists/*
 
 # Compile PHP, include these extensions.
-docker-php-ext-install pdo_mysql zip bcmath xml
+docker-php-ext-install pdo_mysql zip bcmath
 docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
 docker-php-ext-install ldap
 
