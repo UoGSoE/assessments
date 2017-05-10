@@ -13,8 +13,6 @@ use App\AssessmentFeedback;
 
 class AssessmentsAsJsonTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function if_student_has_no_assessments_an_empty_json_array_is_returned()
     {

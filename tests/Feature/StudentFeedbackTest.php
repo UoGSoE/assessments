@@ -11,8 +11,6 @@ use Carbon\Carbon;
 
 class StudentFeedbackTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function test_a_student_can_give_feedback_on_an_assessment()
     {

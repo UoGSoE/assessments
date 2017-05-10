@@ -11,8 +11,6 @@ use Carbon\Carbon;
 
 class AdminTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function admin_can_see_all_assessments()
     {

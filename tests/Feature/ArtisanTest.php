@@ -21,8 +21,6 @@ use Storage;
 
 class ArtisanTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function running_the_staff_notification_command_triggers_notifications()
     {
