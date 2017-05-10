@@ -103,7 +103,7 @@ class ArtisanTest extends TestCase
     /** @test */
     public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
     {
-        $this->disableExceptionHandling();
+        //$this->disableExceptionHandling();
 
         Mail::fake();
 
@@ -112,7 +112,7 @@ class ArtisanTest extends TestCase
         \Artisan::call('assessments:wlmimport');
 
         Mail::assertSent(WlmImportProblem::class, function ($mail) {
-            return $mail->hasTo(config('assessments.sysadmin_email'));
+            return $mail->hasTo('billy@elec.gla.ac.uk');
         });
     }
 
