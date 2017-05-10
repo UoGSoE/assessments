@@ -112,7 +112,7 @@ class ArtisanTest extends TestCase
         \Artisan::call('assessments:wlmimport');
 
         Mail::assertSent(WlmImportProblem::class, function ($mail) {
-            return $mail->hasTo('billy@elec.gla.ac.uk');
+            return $mail->hasTo(config('assessments.sysadmin_email'));
         });
     }
 

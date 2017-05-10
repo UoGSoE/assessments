@@ -30,6 +30,6 @@ class WlmImportProblem extends Mailable
      */
     public function build()
     {
-        return $this->from('billy@elec.gla.ac.uk')->markdown('emails.wlm.error');
+        return $this->from('noreply@eng.gla.ac.uk')->markdown('emails.wlm.error');
     }
 }

@@ -43,7 +43,7 @@ class WlmImporter
             });
         } catch (\Exception $e) {
             //Mail::to('billy@elec.gla.ac.uk')->send(new WlmImportProblem('hello'));
-            Mail::to('billy@elec.gla.ac.uk')->send(new WlmImportProblem($e->getMessage()));
+            Mail::to(config('assessments.sysadmin_email'))->send(new WlmImportProblem($e->getMessage()));
             return false;
         }
         return true;
