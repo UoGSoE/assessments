@@ -67,7 +67,7 @@ class LoginController extends Controller
         if (!$user) {
             $user = User::createFromLdap($ldapUser);
         }
-        Auth::login($user);
+        Auth::login($user, $remember = true);
         return $this->sendLoginResponse($request);
     }
 }

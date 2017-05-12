@@ -1,9 +1,15 @@
 <nav class="nav has-shadow">
 
   <div class="nav-left">
-    <a class="nav-item" href="/">
-      {{ config('app.name') }}
-    </a>
+    @if (Auth::check())
+      <a class="nav-item" href="/home">
+        {{ config('app.name') }}
+      </a>
+    @else
+      <a class="nav-item" href="/">
+        {{ config('app.name') }}
+      </a>
+    @endif
   </div>
 
   <span class="nav-toggle">

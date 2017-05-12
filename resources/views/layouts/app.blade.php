@@ -14,17 +14,13 @@
     <link href="/css/bulma.css" rel="stylesheet">
     <link href="/css/assessments.css" rel="stylesheet">
     <link href="/css/fa/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/pikaday.css" rel="stylesheet">
     <link href="/js/fullcalendar/fullcalendar.min.css" rel="stylesheet">
-    <script src="/js/all.js"></script>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/moment.js"></script>
     <script src="/js/pikaday.js"></script>
     <script src="/js/fullcalendar/fullcalendar.min.js"></script>
     <link rel="shortcut icon" href="/favicon.ico">
-    <script src="/js/dropit/dropit.js"></script>
-    <link href="/js/dropit/dropit.css" rel="stylesheet">
     <!-- Scripts -->
     <script>
         window.Laravel = <?php echo json_encode([
