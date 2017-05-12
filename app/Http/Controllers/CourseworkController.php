@@ -27,6 +27,8 @@ class CourseworkController extends Controller
         }
         $tempFile = $request->file('sheet')->getPathName();
         $this->importer->importSheetData($tempFile);
-        return redirect()->route('report.feedback')->withErrors($this->importer->errors)->with('success_message', 'Imported data');
+        return redirect()->route('report.feedback')
+                ->withErrors($this->importer->errors)
+                ->with('success_message', 'Imported data');
     }
 }
