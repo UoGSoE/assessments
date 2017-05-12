@@ -19,7 +19,6 @@ class HomeController extends Controller
         if (auth()->check()) {
             return redirect('/home');
         }
-        $data = [];
         $assessments = Course::active()->with('assessments')->get()->flatMap(function ($course) {
             $year = $course->getYear();
             return $course->assessments->map->toEvent($course, $year);
