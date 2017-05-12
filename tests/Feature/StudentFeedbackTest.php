@@ -22,7 +22,7 @@ class StudentFeedbackTest extends TestCase
         $response = $this->actingAs($student)->post(route('feedback.store', $assessment->id), []);
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/home');
         $response->assertSessionHas('success_message');
         $this->assertDatabaseHas('assessment_feedbacks', [
             'course_id' => $course->id,
@@ -42,7 +42,7 @@ class StudentFeedbackTest extends TestCase
         $response = $this->actingAs($student)->post(route('feedback.store', $assessment->id), []);
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/home');
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,
@@ -54,7 +54,7 @@ class StudentFeedbackTest extends TestCase
         $response = $this->actingAs($student)->post(route('feedback.store', $assessment->id), []);
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/home');
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,
@@ -66,7 +66,7 @@ class StudentFeedbackTest extends TestCase
         $response = $this->actingAs($student)->post(route('feedback.store', $assessment->id), []);
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/home');
         $response->assertSessionMissing('success_message');
         $this->assertDatabaseMissing('assessment_feedbacks', [
             'course_id' => $course->id,

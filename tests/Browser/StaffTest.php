@@ -12,7 +12,7 @@ class StaffTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function staff_can_see_all_assessments_but_only_click_their_own()
+    public function staff_can_see_all_assessments()
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -23,14 +23,17 @@ class StaffTest extends DuskTestCase
             $assessment2 = $this->createAssessment(['deadline' => Carbon::now()]);
 
             $browser->loginAs($staff)
-                    ->visit("/")
+                    ->visit("/home")
                     ->assertSee('Your Assessments')
                     ->assertSee($assessment1->course->code)
                     ->assertSee($assessment2->course->code)
                     ->clickLink($assessment2->title)
-                    ->assertSee('Your Assessments')
+                    ->assertSee($assessment2->type)
+                    ->assertSee($assessment2->deadline->format('d/m/Y'))
+                    ->visit("/home")
                     ->clickLink($assessment1->title)
                     ->assertSee('Assessment Details')
+                    ->assertSee($assessment1->type)
                     ->assertSee($assessment1->deadline->format('d/m/Y'));
         });
     }
@@ -46,7 +49,7 @@ class StaffTest extends DuskTestCase
             $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(3)->startOfWeek()]);
 
             $browser->loginAs($staff)
-                    ->visit("/")
+                    ->visit("/home")
                     ->assertSee('Your Assessments')
                     ->assertSee($assessment1->course->code);
         });
