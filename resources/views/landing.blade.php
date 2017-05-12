@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+  <p class="subtitle">
+    Below is the list of all Engineering assessments.  If you want to get a personalised
+    view or report feedback as being late, please <a href="/login">log in</a>.
+  </p>
         <p class="control is-pulled-left">
           <span class="select">
             <select id="year-selector" name="year">

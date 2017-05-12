@@ -35,6 +35,9 @@
         .fc-month-view .fc-time{
             display : none;
         }
+        .fc-left h2 {
+            font-size: 1.5em;
+        }
     </style>
 </head>
 <body>
