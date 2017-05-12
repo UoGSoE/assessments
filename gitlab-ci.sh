@@ -7,7 +7,7 @@ set -xe
 
 # Update packages and install composer and PHP dependencies.
 apt-get update -yqq
-apt-get install git zlib1g-dev libldap2-dev -yqq
+apt-get install git zlib1g-dev libldap2-dev libpcre3-dev -yqq
 apt-get install -y libxml2-dev --no-install-recommends
 rm -rf /var/lib/apt/lists/*
 
