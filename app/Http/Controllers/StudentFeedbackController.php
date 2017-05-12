@@ -12,9 +12,9 @@ class StudentFeedbackController extends Controller
     {
         $assessment = Assessment::findOrFail($assessmentId);
         if (Gate::denies('leave_feedback', $assessment)) {
-            return redirect('/');
+            return redirect('/home');
         }
         $request->user()->recordFeedback($assessment);
-        return redirect('/')->with('success_message', 'Feedback recorded');
+        return redirect('/home')->with('success_message', 'Feedback recorded');
     }
 }

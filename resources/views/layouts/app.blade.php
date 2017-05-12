@@ -39,9 +39,7 @@
 </head>
 <body>
     <div id="app">
-        @if (Auth::check())
             @include('partials.navbar')
-        @endif
         <div class="section">
             <div class="container">
                 <noscript>

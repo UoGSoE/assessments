@@ -14,9 +14,6 @@ class AssessmentController extends Controller
     public function show($id)
     {
         $assessment = Assessment::findOrFail($id);
-        if (Gate::denies('see_assessment', $assessment)) {
-            return redirect('/');
-        }
         return view('assessment.show', compact('assessment'));
     }
 

@@ -8,7 +8,7 @@
       <p class="subtitle is-2">
         Assessment Details
       </p>
-      @if (Auth::user()->is_admin)
+      @can('edit_assessments')
         <p>&nbsp;
           <a href="{!! route('assessment.edit', $assessment->id) !!}" id="edit-assessment-button" class="button" title="Edit">
               <span class="icon">
@@ -16,12 +16,12 @@
               </span>
           </a>
         </p>
-        @endif
+      @endcan
     </div>
   </div>
 
   <div class="level-right">
-        @if (Auth::user()->is_admin)
+    @can('edit_assessments')
             <form method="POST" action="" data-href="{!! route('assessment.destroy', $assessment->id) !!}" id="delete-form">
                 {!! csrf_field() !!}
                 <input type="hidden" name="_method" value="DELETE">
@@ -31,15 +31,15 @@
                     </span>
                 </button>
             </form>
-        @endif
-        @if ($assessment->overdue() and Auth::user()->can('leave_feedback', $assessment))
+    @endcan
+    @can('leave_feedback', $assessment)
             <form method="POST" action="{!! route('feedback.store', $assessment->id) !!}" class="is-pulled-right">
                 {!! csrf_field() !!}
                 <button class="button is-info is-outlined" type="submit">
-                    Report assessment feedback as overdue
+                    Report assessment feedback is overdue
                 </button>
             </form>
-        @endif
+    @endcan
   </div>
 </nav>
     <dl>
@@ -61,7 +61,7 @@
         <dt>Feedback Due</dt>
         <dd>
             {{ $assessment->feedback_due->format('d/m/Y') }} - {{ $assessment->feedback_due->diffForHumans() }}
-            @if ($assessment->hasFeedbackFrom(Auth::user()))
+            @if (Auth::check() and $assessment->hasFeedbackFrom(Auth::user()))
                     <em>- You reported feedback late on {{ $assessment->hasFeedbackFrom(Auth::user())->created_at->format('d/m/Y') }}</em>
             @endif
         </dd>
@@ -100,13 +100,13 @@
         </h3>
         @foreach ($assessment->negativeFeedbacks()->get() as $feedback)
             <li>
-                @if (Auth::user()->is_admin)
+                @can('view_students')
                     <a href="{!! route('student.show', $feedback->student->id) !!}">
                         {{ $feedback->student->fullName() }}
                     </a>
                 @else
                     {{ $feedback->student->fullName() }}
-                @endif
+                @endcan
                 on {{ $feedback->created_at->format('d/m/Y H:i') }}
                 ({{ $feedback->created_at->diffForHumans($assessment->feedback_due) }} due date)
             </li>

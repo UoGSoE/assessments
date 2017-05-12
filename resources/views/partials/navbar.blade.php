@@ -24,5 +24,11 @@
         <button class="button">Log out</button>
       </form>
     </div>
+  @else
+    <div class="nav-right nav-menu">
+      <div class="nav-item">
+        <a href="/login" class="button is-outlined is-info">Log In</a>
+      </div>
+    </div>
   @endif
 </nav>

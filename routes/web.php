@@ -4,20 +4,16 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/home', function () {
-    // "somewhere" in the login/redirect code it *sometimes* redirects to /home
-    // so this is here to catch that. Funz... :-/
-    return redirect('/');
-});
-
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@landing')->name('landing');
 
     Route::get('/assessment/{id}', 'AssessmentController@show')->name('assessment.show');
+    Route::get('course/{id}', 'CourseController@show')->name('course.show');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+
     Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
     Route::post('/assessment/{id}/feedback_complete', 'StaffFeedbackController@store')->name('feedback.complete');
 
-    Route::get('course/{id}', 'CourseController@show')->name('course.show');
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
 

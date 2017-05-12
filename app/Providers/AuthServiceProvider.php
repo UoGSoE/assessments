@@ -26,6 +26,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('edit_assessments', function ($user) {
+            if ($user->is_admin) {
+                return true;
+            }
+            return false;
+        });
+
         Gate::define('leave_feedback', function ($student, $assessment) {
             if (!$student->is_student) {
                 return false;
@@ -86,6 +93,13 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
             if ($user->notOnCourse($course)) {
+                return false;
+            }
+            return true;
+        });
+
+        Gate::define('view_students', function ($user) {
+            if ($user->is_student) {
                 return false;
             }
             return true;

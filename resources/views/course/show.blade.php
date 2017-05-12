@@ -12,7 +12,7 @@
     </dl>
     <hr />
     <div class="columns">
-        @if (Auth::user()->isStaff())
+        @if (Auth::check() and Auth::user()->isStaff())
             <div class="column">
                 <h3 class="title is-3">
                     Students
