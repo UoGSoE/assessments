@@ -26,3 +26,5 @@ php:7-fpm:
   script:
     - php -v
     - php vendor/bin/phpunit 
+    - php phpcs.phar --standard=PSR2 app
+
