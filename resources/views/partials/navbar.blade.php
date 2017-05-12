@@ -25,10 +25,12 @@
       </form>
     </div>
   @else
-    <div class="nav-right nav-menu">
-      <div class="nav-item">
-        <a href="/login" class="button is-outlined is-info">Log In</a>
+    @if (Route::current()->getName() != 'login')
+      <div class="nav-right nav-menu">
+        <div class="nav-item">
+          <a href="/login" class="button is-info">Log In</a>
+        </div>
       </div>
-    </div>
+    @endif
   @endif
 </nav>
