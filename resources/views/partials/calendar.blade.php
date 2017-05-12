@@ -5,10 +5,7 @@
             $('#calendar').fullCalendar({
                 events: {!! $assessments !!},
                 eventClick: function(calEvent, jsEvent, view) {
-                    if (calEvent.mine) {
-                        window.location.replace("/assessment/" + calEvent.id);
-                    }
-                    console.log(calEvent);
+                    window.location.replace("/assessment/" + calEvent.id);
                 },
                 eventRender: function eventRender( event, element, view ) {
                     var year = $('#year-selector').val();

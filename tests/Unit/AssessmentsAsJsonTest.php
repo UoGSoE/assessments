@@ -92,29 +92,4 @@ class AssessmentsAsJsonTest extends TestCase
         // on the date feedback is due
         $this->assertEquals(2, count($json));
     }
-
-    /** @test */
-    public function if_negative_feedback_given_json_has_feedback_missed_flagged()
-    {
-        $student = $this->createStudent();
-        $course = $this->createCourse();
-        $course->students()->save($student);
-        $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedback = $this->createFeedback(['course_id' => $course->id, 'assessment_id' => $assessment->id, 'student_id' => $student->id, 'feedback_given' => false]);
-
-        $json = $student->assessmentsAsJson();
-
-        $this->assertEquals([
-            'course_code' => $course->code,
-            'start' => $assessment->deadline->toIso8601String(),
-            'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-            'feedback_due' => $assessment->feedback_due->toIso8601String(),
-            'type' => $assessment->type,
-            'course_title' => $course->title,
-            'id' => $assessment->id,
-            'title' => $assessment->title,
-            'mine' => true,
-            'color' => 'steelblue',
-        ], json_decode($json, true)[0]);
-    }
 }

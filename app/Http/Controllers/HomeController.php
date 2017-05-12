@@ -20,34 +20,10 @@ class HomeController extends Controller
             return redirect('/home');
         }
         $data = [];
-        foreach (Course::active()->with('assessments')->get() as $course) {
+        $assessments = Course::active()->with('assessments')->get()->flatMap(function ($course) {
             $year = $course->getYear();
-            foreach ($course->assessments as $assessment) {
-                $event = $this->getEvent($assessment, $course, $year);
-                $data[] = $event;
-            }
-        }
-        return view('landing', ['assessments' => json_encode($data)]);
-    }
-
-    protected function getEvent($assessment, $course, $year)
-    {
-        $event = [
-            'id' => $assessment->id,
-            'title' => $assessment->title,
-            'course_code' => $course->code,
-            'course_title' => $course->title,
-            'start' => $assessment->deadline->toIso8601String(),
-            'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-            'feedback_due' => $assessment->feedback_due->toIso8601String(),
-            'type' => $assessment->type,
-            'color' => 'whitesmoke',
-            'textColor' => 'black',
-            'mine' => true
-        ];
-        if ($year) {
-            $event['year'] = $year;
-        }
-        return $event;
+            return $course->assessments->map->toEvent($course, $year);
+        })->toJson();
+        return view('landing', compact('assessments'));
     }
 }

@@ -248,4 +248,32 @@ class Assessment extends Model
         }
         return $this->deadline->format('H:i');
     }
+
+    public function toEvent($course = null, $year = false)
+    {
+        if (!$course) {
+            $course = $this->course;
+        }
+        $event = [
+            'id' => $this->id,
+            'title' => $this->title,
+            'course_code' => $course->code,
+            'course_title' => $course->title,
+            'start' => $this->deadline->toIso8601String(),
+            'end' => $this->deadline->addHours(1)->toIso8601String(),
+            'feedback_due' => $this->feedback_due->toIso8601String(),
+            'type' => $this->type,
+            'mine' => true,
+            'color' => 'whitesmoke',
+            'textColor' => 'black'
+        ];
+        if ($year) {
+            $event['year'] = $year;
+        }
+        if (auth()->id() == $this->staff_id) {
+            $event['color'] = 'steelblue';
+            $event['textColor'] = 'white';
+        }
+        return $event;
+    }
 }

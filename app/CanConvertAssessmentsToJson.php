@@ -18,9 +18,9 @@ trait CanConvertAssessmentsToJson
      */
     protected function studentAssessmentsAsJson()
     {
-        return $this->courses()->with('assessments.feedbacks')->get()->flatMap(function ($course) {
+        return $this->courses()->with('assessments')->get()->flatMap(function ($course) {
             return $course->assessments->map(function ($assessment) use ($course) {
-                return $this->getEvent($assessment, $course, null);
+                return $assessment->toEvent($course, null);
             });
         })->toJson();
     }
@@ -34,10 +34,10 @@ trait CanConvertAssessmentsToJson
     protected function staffAssessmentsAsJson()
     {
         $data = [];
-        foreach (Course::active()->with('assessments.feedbacks')->get() as $course) {
+        foreach (Course::active()->with('assessments')->get() as $course) {
             $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
-                $event = $this->getEvent($assessment, $course, $year);
+                $event = $assessment->toEvent($course, $year);
                 $feedbackEvent = $this->getFeedbackEvent($event, $assessment);
                 if ($feedbackEvent) {
                     $data[] = $feedbackEvent;
@@ -46,33 +46,6 @@ trait CanConvertAssessmentsToJson
             }
         }
         return json_encode($data);
-    }
-
-    /**
-     * Generic transform of an assessment to an array for json encoding.
-     */
-    protected function getEvent($assessment, $course, $year)
-    {
-        $event = [
-            'id' => $assessment->id,
-            'title' => $assessment->title,
-            'course_code' => $course->code,
-            'course_title' => $course->title,
-            'start' => $assessment->deadline->toIso8601String(),
-            'end' => $assessment->deadline->addHours(1)->toIso8601String(),
-            'feedback_due' => $assessment->feedback_due->toIso8601String(),
-            'type' => $assessment->type,
-            'mine' => true,
-            'color' => 'steelblue',
-        ];
-        if ($year) {
-            $event['year'] = $year;
-        }
-        if ($this->cannot('see_assessment', $assessment)) {
-            $event['color'] = 'whitesmoke';
-            $event['textColor'] = 'black';
-        }
-        return $event;
     }
 
     /**
