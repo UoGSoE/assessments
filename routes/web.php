@@ -14,6 +14,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/assessment/{id}/feedback', 'StudentFeedbackController@store')->name('feedback.store');
     Route::post('/assessment/{id}/feedback_complete', 'StaffFeedbackController@store')->name('feedback.complete');
 
+        Route::get('student/{id}', 'StudentController@show')->name('student.show');
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
 
@@ -21,7 +22,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('report/assessment', 'ReportController@assessments')->name('report.assessment');
         Route::get('report/staff', 'ReportController@staff')->name('report.staff');
 
-        Route::get('student/{id}', 'StudentController@show')->name('student.show');
         Route::get('staff/{id}', 'StaffController@show')->name('staff.show');
         Route::post('staff/{id}/admin', 'StaffController@toggleAdmin')->name('staff.toggle_admin');
 

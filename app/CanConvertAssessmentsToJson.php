@@ -62,7 +62,7 @@ trait CanConvertAssessmentsToJson
             'end' => $assessment->deadline->addHours(1)->toIso8601String(),
             'feedback_due' => $assessment->feedback_due->toIso8601String(),
             'type' => $assessment->type,
-            'mine' => $this->can('see_assessment', $assessment),
+            'mine' => true,
             'color' => 'steelblue',
         ];
         if ($year) {
