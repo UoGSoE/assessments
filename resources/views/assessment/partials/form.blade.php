@@ -1,4 +1,5 @@
         {!! csrf_field() !!}
+      <div class="field">
         <label class="label">Assessment Type</label>
         <p class="control">
           <span class="select">
@@ -10,10 +11,14 @@
             </select>
           </span>
         </p>
+      </div>
+      <div class="field">
         <label class="label">Staff Feedback Type</label>
         <p class="control">
             <input class="input" name="feedback_type" type="text" placeholder="">
         </p>
+      </div>
+      <div class="field">
         <label class="label">Staff</label>
         <p class="control">
           <span class="select">
@@ -24,7 +29,9 @@
             </select>
           </span>
         </p>
+      </div>
         @if (!$assessment->id)
+      <div class="field">
           <label class="label">Course</label>
           <p class="control">
             <span class="select">
@@ -35,22 +42,29 @@
               </select>
             </span>
           </p>
+      </div>
         @endif
+      <div class="field">
         <label class="label">Deadline Date</label>
         <p class="control">
             <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy" value="{{ $assessment->deadlineDate() }}">
         </p>
+      </div>
+      <div class="field">
         <label class="label">Time</label>
         <p class="control">
             <input class="input" name="time" type="text" placeholder="hh:mm" value="{{ $assessment->deadlineTime() }}">
         </p>
+      </div>
+      <div class="field">
         <label class="label">Comment</label>
         <p class="control">
           <textarea class="textarea" name="comment">{{ $assessment->comment }}</textarea>
         </p>
+      </div>
 <script>
 $(document).ready(function () {
-    var picker = new Pikaday({ 
+    var picker = new Pikaday({
         field: document.getElementById('datepicker'),
         format: 'DD/MM/YYYY',
     });
