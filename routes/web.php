@@ -2,7 +2,6 @@
 
 // public routes
 
-Route::get('/', 'HomeController@landing')->name('landing');
 
 Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
@@ -14,6 +13,8 @@ Route::get('/course/{id}', 'CourseController@show')->name('course.show');
 // authenticated routes
 
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/', 'HomeController@landing')->name('landing');
 
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/student/{id}', 'StudentController@show')->name('student.show');
