@@ -79,7 +79,6 @@ class AdminTest extends DuskTestCase
                     ->select('staff_id', "$staff->id")
                     ->type('date', $now->format('d/m/Y'))
                     ->type('time', $now->format('H:i'))
-                    ->assertSee($assessment->feedback_type)
                     ->type('feedback_type', 'HAPPYEASTER')
                     ->press('Update')
                     ->assertSee('Updated')
