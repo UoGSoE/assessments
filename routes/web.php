@@ -48,3 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/clear', 'OldDataController@destroy')->name('admin.clearold');
     });
 });
+
+// API routes
+
+Route::get('/api/assessments', 'ApiController@assessmentsAsJson');

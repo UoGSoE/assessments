@@ -21,6 +21,8 @@ class Assessment extends Model
         'feedback_left' => 'datetime',
     ];
 
+    protected $hidden = ['created_at', 'updated_at', 'office_notified', 'course_id', 'staff_id'];
+
     public function course()
     {
         return $this->belongsTo(Course::class);

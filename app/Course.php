@@ -8,6 +8,8 @@ class Course extends Model
 {
     protected $fillable = ['code', 'title'];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function students()
     {
         return $this->belongsToMany(User::class, 'course_student', 'course_id', 'student_id');

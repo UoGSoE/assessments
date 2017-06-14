@@ -10,6 +10,8 @@ class CourseworkController extends Controller
 {
     protected $importer;
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function __construct(SheetToDatabase $importer)
     {
         $this->importer = $importer;
