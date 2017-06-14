@@ -249,6 +249,9 @@ class Assessment extends Model
         return $this->deadline->format('H:i');
     }
 
+    /**
+     * Used for generating the JSON encoded data for the javascript calendar
+     */
     public function toEvent($course = null, $year = false)
     {
         if (!$course) {
@@ -277,6 +280,10 @@ class Assessment extends Model
         return $event;
     }
 
+    /**
+     * Gets a list of unique feedback types - used to populate the type-ahead when
+     * admins are manually create/editing an assessment
+     */
     public static function getFeedbackTypes()
     {
         return static::select('feedback_type')->distinct()->orderBy('feedback_type')->get()->pluck('feedback_type');

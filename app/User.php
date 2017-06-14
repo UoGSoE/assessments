@@ -82,6 +82,10 @@ class User extends Authenticatable
                     ->feedbackWasGivenLate());
     }
 
+    /**
+     * Used to build a list of student feedbacks where the member of staff has not been
+     * notified/emailed.
+     */
     public function newFeedbacks()
     {
         return $this->assessments()->with('course', 'feedbacks')
@@ -145,6 +149,9 @@ class User extends Authenticatable
         return static::where('username', '=', $username)->first();
     }
 
+    /**
+     * Used to generate a unique filename for the users ical file
+     */
     public function getUuid()
     {
         $hasher = new Hashids(config('assessments.hash_seed'), 10);
