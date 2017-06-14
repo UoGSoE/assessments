@@ -14,8 +14,7 @@ class AddFeedbackTypeToAssessmentsTable extends Migration
     public function up()
     {
         Schema::table('assessments', function (Blueprint $table) {
-            $table->unsignedInteger('feedback_type_id')->nullable();
-            $table->foreign('feedback_type_id')->references('id')->on('feedback_types');
+            $table->string('feedback_type')->nullable();
         });
     }
 
@@ -27,7 +26,6 @@ class AddFeedbackTypeToAssessmentsTable extends Migration
     public function down()
     {
         Schema::table('assessments', function (Blueprint $table) {
-            $table->dropForeign(['feedback_type_id']);
             $table->dropColumn('feedback_type');
         });
     }

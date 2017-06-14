@@ -22,7 +22,8 @@ class AssessmentController extends Controller
         $assessment = new Assessment(['deadline' => Carbon::now()->hour(16)->minute(0)]);
         $staff = User::staff()->orderBy('surname')->get();
         $courses = Course::orderBy('code')->get();
-        return view('assessment.create', compact('assessment', 'staff', 'courses'));
+        $feedbackTypes = Assessment::getFeedbackTypes();
+        return view('assessment.create', compact('assessment', 'staff', 'courses', 'feedbackTypes'));
     }
 
     public function store(Request $request)
@@ -42,7 +43,8 @@ class AssessmentController extends Controller
     {
         $assessment = Assessment::findOrFail($id);
         $staff = User::staff()->orderBy('surname')->get();
-        return view('assessment.edit', compact('assessment', 'staff'));
+        $feedbackTypes = Assessment::getFeedbackTypes();
+        return view('assessment.edit', compact('assessment', 'staff', 'feedbackTypes'));
     }
 
     public function update(Request $request, $id)

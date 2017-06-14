@@ -15,7 +15,12 @@
       <div class="field">
         <label class="label">Staff Feedback Type</label>
         <p class="control">
-            <input class="input" name="feedback_type" type="text" placeholder="">
+            <input class="input" name="feedback_type" type="text" list="types" placeholder="">
+            <datalist id="types">
+              @foreach ($feedbackTypes as $type)
+                <option value="{{ $type }}">
+              @endforeach
+            </datalist>
         </p>
       </div>
       <div class="field">

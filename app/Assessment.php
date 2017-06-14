@@ -276,4 +276,9 @@ class Assessment extends Model
         }
         return $event;
     }
+
+    public static function getFeedbackTypes()
+    {
+        return static::select('feedback_type')->distinct()->orderBy('feedback_type')->get()->pluck('feedback_type');
+    }
 }

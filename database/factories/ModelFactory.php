@@ -74,6 +74,7 @@ $factory->define(App\Assessment::class, function (Faker\Generator $faker) {
             return factory(App\User::class)->states('staff')->create()->id;
         },
         'feedback_left' => null,
+        'feedback_type' => $faker->sentence(),
     ];
 });
 
