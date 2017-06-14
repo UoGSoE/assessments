@@ -46,7 +46,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
             'id' => $assessment->id,
             'title' => $assessment->title,
             'mine' => true,
-            'color' => 'whiteSmoke',
+            'color' => 'black',
         ], json_decode($json, true)[0]);
     }
 

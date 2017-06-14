@@ -15,6 +15,7 @@ class CreateFeedbackTypesTable extends Migration
     {
         Schema::create('feedback_types', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->timestamps();
         });
     }
