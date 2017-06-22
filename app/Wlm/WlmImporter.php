@@ -42,7 +42,6 @@ class WlmImporter
                 $course->students()->sync($this->studentsFromWlm($wlmCourse));
             });
         } catch (\Exception $e) {
-            //Mail::to('billy@elec.gla.ac.uk')->send(new WlmImportProblem('hello'));
             Mail::to(config('assessments.sysadmin_email'))->send(new WlmImportProblem($e->getMessage()));
             return false;
         }
