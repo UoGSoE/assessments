@@ -20,12 +20,14 @@ class WlmImportTest extends TestCase
             'Code' => 'ENG1234',
             'Title' => 'A Test Course',
             'CurrentFlag' => 'Yes',
+            'Discipline' => 'Electronics'
         ];
 
         $course = Course::fromWlmData($wlmCourse);
 
         $this->assertEquals('ENG1234', $course->code);
         $this->assertEquals('A Test Course', $course->title);
+        $this->assertEquals('Electronics', $course->discipline);
         $this->assertTrue($course->is_active);
     }
 
@@ -35,13 +37,12 @@ class WlmImportTest extends TestCase
         $wlmCourse = [
             'Code' => 'ENG1234',
             'Title' => 'A Test Course',
-            'CurrentFlag' => 'No'
+            'CurrentFlag' => 'No',
+            'Discipline' => 'Electronics'
         ];
 
         $course = Course::fromWlmData($wlmCourse);
 
-        $this->assertEquals('ENG1234', $course->code);
-        $this->assertEquals('A Test Course', $course->title);
         $this->assertFalse($course->is_active);
     }
 
@@ -106,7 +107,8 @@ class WlmImportTest extends TestCase
 
         $wlmCourse = [
             'Code' => 'ENG1234',
-            'Title' => 'A Test Course'
+            'Title' => 'A Test Course',
+            'Discipline' => 'Electronics'
         ];
         $course = Course::fromWlmData($wlmCourse);
         $course = Course::fromWlmData($wlmCourse);

@@ -49,12 +49,14 @@ class Course extends Model
     {
         $code = $wlmCourse['Code'];
         $title = $wlmCourse['Title'];
+        $discipline = $wlmCourse['Discipline'];
         $course = static::findByCode($code);
         if (!$course) {
             $course = new static(['code' => $code]);
         }
         $course->is_active = $course->getWlmStatus($wlmCourse);
         $course->title = $title;
+        $course->discipline = $discipline;
         $course->save();
         return $course;
     }

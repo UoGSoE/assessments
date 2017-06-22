@@ -269,6 +269,7 @@ class Assessment extends Model
             'feedback_due' => $this->feedback_due->toIso8601String(),
             'type' => $this->type,
             'mine' => true,
+            'discipline' => $course->discipline,
             'color' => 'whitesmoke',
             'textColor' => 'black'
         ];

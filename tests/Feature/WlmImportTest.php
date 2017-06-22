@@ -34,6 +34,10 @@ class WlmImportTest extends TestCase
         User::staff()->get()->each(function ($staff) {
             $this->assertEquals("{$staff->username}@glasgow.ac.uk", $staff->email);
         });
+        $courseA = Course::first();
+        $this->assertEquals('TEST1234', $courseA->code);
+        $this->assertEquals('Fake Course 1234', $courseA->title);
+        $this->assertEquals('Electronics', $courseA->discipline);
     }
 
     /** @test */

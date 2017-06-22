@@ -49,6 +49,7 @@ $factory->define(App\Course::class, function (Faker\Generator $faker) {
         'code' => 'ENG' . $faker->unique()->numberBetween(1000, 5999),
         'title' => $faker->sentence,
         'is_active' => true,
+        'discipline' => 'Electronics'
     ];
 });
 

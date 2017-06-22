@@ -60,6 +60,7 @@ class FakeWlmClient implements WlmClientInterface
             'Code' => 'TEST1234',
             'Title' => "Fake Course 1234",
             'ActiveFlag' => 'Yes',
+            'Discipline' => 'Electronics',
             'Students' => [
                 '1234567' => [
                     'Matric' => '1234567',
@@ -93,6 +94,7 @@ class FakeWlmClient implements WlmClientInterface
             'Code' => 'TEST4321',
             'Title' => "Fake Course 4321",
             'ActiveFlag' => 'Yes',
+            'Discipline' => 'Aero',
             'Students' => [
                 '9999999' => [
                     'Matric' => '9999999',

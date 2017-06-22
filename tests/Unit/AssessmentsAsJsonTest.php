@@ -38,7 +38,6 @@ class AssessmentsAsJsonTest extends TestCase
         $json = json_decode($student->assessmentsAsJson(), true);
 
         $this->assertEquals(6, count($json));
-
     }
 
     /** @test */

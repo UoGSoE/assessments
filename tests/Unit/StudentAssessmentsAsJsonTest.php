@@ -48,6 +48,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
             'mine' => true,
             'color' => 'whitesmoke',
             'textColor' => 'black',
+            'discipline' => 'Electronics'
         ], json_decode($json, true)[0]);
     }
 
