@@ -12,47 +12,63 @@ use Carbon\Carbon;
 
 class SheetToDatabaseTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->setupDatabase();
+        $this->createStaff([
+            'email' => "angela.busse@glasgow.ac.uk",
+        ]);
+        $this->createCourse(['code' => 'ENG4037']);
+    }
+
+
     /** @test */
     public function can_convert_a_valid_row_to_an_assessment()
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
 
-        $assessment = $convertor->rowToAssessment($row);
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(1, $row),
+            $row);
 
         $this->assertEquals(1, Assessment::count());
         $this->assertCount(0, $convertor->errors->all());
-        $this->assertEquals($row[0]->format('d/m/Y'), $assessment->deadline->format('d/m/Y'));
-        $this->assertEquals($row[1], $assessment->deadline->format('H:i'));
-        $this->assertEquals($row[2], $assessment->course->code);
-        $this->assertEquals($row[4], $assessment->type);
-        $this->assertEquals($row[7], $assessment->feedback_type);
+        $this->assertEquals($row[15]->format('d/m/Y'), $assessment->deadline->format('d/m/Y'));
+        $this->assertEquals($row[2] . $row[3], $assessment->course->code);
+        $this->assertEquals($row[13] . ' / ' . $row[14], $assessment->type);
+        $this->assertEquals($row[18] . '. Graded', $assessment->feedback_type);
     }
 
     /** @test */
-    public function a_row_with_no_time_specified_defaults_to_4pm()
+    public function assessment_date_defaults_to_4pm()
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
         $row[1] = null;
 
-        $assessment = $convertor->rowToAssessment($row);
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(1, $row),
+            $row);
 
         $this->assertEquals('16:00', $assessment->deadline->format('H:i'));
     }
 
     /** @test */
-    public function a_row_with_invalid_staff_guid_is_skipped()
+    public function a_row_with_invalid_staff_email_is_skipped()
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
-        $row[6] = 'INVALIDUSERNAME';
+        $row[12] = 'INVALIDEMAIL';
 
-        $convertor->rowToAssessment($row);
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(1, $row),
+            $row);
 
         $this->assertEquals(0, Assessment::count());
         $this->assertCount(1, $convertor->errors->all());
-        $this->assertEquals('Row 1: Invalid GUID', $convertor->errors->first());
+        $this->assertEquals('Row 1: Unknown staff email : invalidemail', $convertor->errors->first());
     }
 
     /** @test */
@@ -60,27 +76,29 @@ class SheetToDatabaseTest extends TestCase
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
-        $row[0] = 'NOTADATE';
+        $row[15] = 'NOTADATE';
 
-        $convertor->rowToAssessment($row);
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(1, $row),
+            $row);
 
         $this->assertEquals(0, Assessment::count());
-        $this->assertCount(1, $convertor->errors->all());
-        $this->assertEquals('Row 1: Invalid Date', $convertor->errors->first());
     }
 
     /** @test */
-    public function a_row_with_a_date_string_rather_than_a_datetime_object_is_correctly_parsed()
+    public function a_row_with_a_date_in_the_past_is_skipped()
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
-        $date = Carbon::now()->addDays(3);
-        $row[0] = $date->format('l, F d, Y');
+        $row[15] = (new \DateTime)->sub(new \DateInterval('P10D'));
 
-        $convertor->rowToAssessment($row);
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(1, $row),
+            $row);
 
-        $this->assertEquals(1, Assessment::count());
-        $this->assertEquals($date->format('d/m/Y'), Assessment::first()->deadline->format('d/m/Y'));
+        $this->assertEquals(0, Assessment::count());
+        $this->assertCount(1, $convertor->errors->all());
+        $this->assertRegExp('/Row 1: Assessment date is in the past/', $convertor->errors->first());
     }
 
     /** @test */
@@ -89,7 +107,7 @@ class SheetToDatabaseTest extends TestCase
         $convertor = app(SheetToDatabase::class);
         $row1 = $this->getRowData();
         $row2 = $this->getRowData();
-        $row2[0] = Carbon::now()->subWeeks(3);
+        $row2[13] = Carbon::now()->subWeeks(3);
 
         $assessments = $convertor->rowsToAssessments([$row1, $row2]);
 
@@ -100,14 +118,25 @@ class SheetToDatabaseTest extends TestCase
     {
         $staff = $this->createStaff();
         return array_merge([
-            Carbon::now()->addWeeks(5),
-            '15:00',
-            'TEST1234',
-            'Some course or other',
-            'Homework',
-            $staff->fullName(),
-            $staff->username,
-            'One-to-one'
+            0 => "2017",
+            1 => "S2",
+            2 => "ENG",
+            3 => "4037",
+            4 => "UG",
+            5 => "Computational Fluid Dynamics 4",
+            6 => "ENG4037 Computational Fluid Dynamics 4",
+            7 => "A",
+            8 => "30",
+            9 => "2105713",
+            10 => "Busse",
+            11 => "Angela",
+            12 => "Angela.Busse@glasgow.ac.uk",
+            13 => "CFD project",
+            14 => "Moodle",
+            15 => (new \DateTime)->add(new \DateInterval('P10D')),
+            16 => new \DateTime,
+            17 => "YES",
+            18 => "Written on submitted work",
         ], $attribs);
     }
 }
