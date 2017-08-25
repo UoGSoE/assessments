@@ -2,25 +2,13 @@
       <div class="field">
         <label class="label">Assessment Type</label>
         <p class="control">
-          <span class="select">
-            <select name="type">
-              <option value="something">something</option>
-              <option value="blah">blah</option>
-              <option value="carrots">carrots</option>
-              <option value="bikes">bikes</option>
-            </select>
-          </span>
+            <input class="input" name="type" type="text" placeholder="" value="{{ $assessment->type }}">
         </p>
       </div>
       <div class="field">
         <label class="label">Staff Feedback Type</label>
         <p class="control">
-            <input class="input" name="feedback_type" type="text" list="types" placeholder="">
-            <datalist id="types">
-              @foreach ($feedbackTypes as $type)
-                <option value="{{ $type }}">
-              @endforeach
-            </datalist>
+            <input class="input" name="feedback_type" type="text" placeholder="" value="{{ $assessment->feedback_type }}">
         </p>
       </div>
       <div class="field">

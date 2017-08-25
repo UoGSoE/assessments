@@ -77,56 +77,82 @@ class SheetToDatabase
 
     public function rowToAssessment($row)
     {
-        $ass1 = [
+        if (!array_key_exists(13, $row)) {
+            return false;
+        }
+        foreach (range(1, 4) as $assessmentNumber) {
+            $ass = $this->extractAssessment($assessmentNumber, $row);
+            if (!$ass) {
+                return false;
+            }
+
+            if (!$ass['submission_date'] instanceof \DateTime) {
+                return false;
+            }
+
+            $ass['submission_date'] = Carbon::instance($ass['submission_date'])->hour(16)->minute(0);
+            if ($this->assessmentIsInThePast($ass['submission_date'])) {
+                $this->addError('Assessment ' . $assessmentNumber . ' date is in the past : ' . $ass['submission_date']->format('d/M/Y'));
+                return false;
+            }
+
+            $staff = User::findByEmail($ass['staff_email']);
+            if (!$staff) {
+                $this->addError('Unknown staff email : ' . $ass['staff_email']);
+                return false;
+            }
+
+            $course = Course::findByCode($ass['course_code']);
+            if (!$course) {
+                $this->addError('Unknown course code : ' . $ass['course_code']);
+                return false;
+            }
+
+            $assessment = Assessment::updateOrCreate(
+                [
+                    'course_id' => $course->id,
+                    'staff_id' => $staff->id,
+                    'deadline' => $ass['submission_date']
+                ],
+                [
+                    'type' => $ass['submission_title'] . ' / ' . $ass['submission_method'],
+                    'feedback_type' => $ass['feedback_method'] . '. ' . $ass['is_graded'],
+                    'comment' => $ass['comments'],
+                ]
+            );
+        }
+
+        return true;
+    }
+
+    protected function extractAssessment($assessmentNumber, $row)
+    {
+        $spreadsheetColumnOffsets = [
+            1 => 13,
+            2 => 19,
+            3 => 25,
+            4 => 31,
+        ];
+        if (!array_key_exists($assessmentNumber, $spreadsheetColumnOffsets)) {
+            return false;
+        }
+        $offset = $spreadsheetColumnOffsets[$assessmentNumber];
+        if (!array_key_exists($offset, $row)) {
+            return false;
+        }
+        return [
             'course_code' => $row[2] . $row[3],
             'course_title' => $row[5],
-            'submission_title' => $row[13],
-            'submission_method' => $row[14],
-            'submission_date' => $row[15],
-            'feedback_method' => $row[18],
-            'is_graded' => preg_match('/y/i', $row[17]) ? 'Graded' : 'Not Graded',
+            'submission_title' => $row[$offset + 0],
+            'submission_method' => $row[$offset + 1],
+            'submission_date' => $row[$offset + 2],
+            'feedback_method' => $row[$offset + 5],
+            'is_graded' => preg_match('/y/i', $row[$offset + 4]) ? 'Graded' : 'Not Graded',
             'staff_email' => strtolower($row[12]),
             'staff_surname' => $row[10],
             'staff_forenames' => $row[11],
             'comments' => array_key_exists(38, $row) ? $row[38] : '',
         ];
-
-        if (!$ass1['submission_date'] instanceof \DateTime) {
-            return false;
-        }
-
-        $ass1['submission_date'] = Carbon::instance($ass1['submission_date'])->hour(16)->minute(0);
-        if ($this->assessmentIsInThePast($ass1['submission_date'])) {
-            $this->addError('Date is in the past');
-            return false;
-        }
-
-        $staff = User::findByEmail($ass1['staff_email']);
-        if (!$staff) {
-            $this->addError('Unknown staff email');
-            return false;
-        }
-
-        $course = Course::findByCode($ass1['course_code']);
-        if (!$course) {
-            $this->addError('Unknown course code');
-            return false;
-        }
-
-        $assessment = Assessment::updateOrCreate(
-            [
-                'course_id' => $course->id,
-                'staff_id' => $staff->id,
-                'deadline' => $ass1['submission_date']
-            ],
-            [
-                'type' => $ass1['submission_title'] . ' / ' . $ass1['submission_method'],
-                'feedback_type' => $ass1['feedback_method'] . '. ' . $ass1['is_graded'],
-                'comment' => $ass1['comments'],
-            ]
-        );
-
-        return true;
     }
 
     protected function addError($message)
@@ -140,16 +166,5 @@ class SheetToDatabase
             return true;
         }
         return false;
-    }
-
-    protected function getCourseFromRow($row)
-    {
-        $courseCode = strtoupper($row[2]);
-        $courseTitle = $row[3];
-        $course = Course::findByCode($courseCode);
-        if (!$course) {
-            $course = Course::create(['code' => $courseCode, 'title' => $courseTitle]);
-        }
-        return $course;
     }
 }
