@@ -77,72 +77,61 @@ class SheetToDatabase
 
     public function rowToAssessment($row)
     {
-        $course = $row[6];
-        $staffEmail = strtolower($row[12]);
         $ass1 = [
-            'title' => $row[13],
+            'course_code' => $row[2] . $row[3],
+            'course_title' => $row[5],
+            'submission_title' => $row[13],
             'submission_method' => $row[14],
             'submission_date' => $row[15],
             'feedback_method' => $row[18],
-            'is_graded' => $row[17],
+            'is_graded' => preg_match('/y/i', $row[17]) ? 'Graded' : 'Not Graded',
+            'staff_email' => strtolower($row[12]),
+            'staff_surname' => $row[10],
+            'staff_forenames' => $row[11],
+            'comments' => array_key_exists(38, $row) ? $row[38] : '',
         ];
-        if (!$date) {
+
+        if (!$ass1['submission_date'] instanceof \DateTime) {
             return false;
-        }
-        dd($ass1);
-        $deadline = $row[0];
-        if (!$deadline) {
-            return false;
-        }
-        if (! $deadline instanceof \DateTime) {
-            try {
-                $deadline = Carbon::parse($deadline);
-            } catch (\Exception $e) {
-                $this->addError('Invalid Date');
-                return false;
-            }
-        } else {
-            $deadline = Carbon::instance($deadline);
         }
 
-        if ($this->assessmentIsInThePast($deadline)) {
+        $ass1['submission_date'] = Carbon::instance($ass1['submission_date'])->hour(16)->minute(0);
+        if ($this->assessmentIsInThePast($ass1['submission_date'])) {
             $this->addError('Date is in the past');
             return false;
         }
 
-        $deadline = $this->addTime($deadline, trim($row[1]));
-
-        $course = $this->getCourseFromRow($row);
-
-        $staff = User::findByUsername(strtolower(trim($row[6])));
+        $staff = User::findByEmail($ass1['staff_email']);
         if (!$staff) {
-            $this->addError('Invalid GUID');
+            $this->addError('Unknown staff email');
             return false;
         }
 
-        return Assessment::create([
-            'deadline' => $deadline,
-            'type' => trim($row[4]),
-            'course_id' => $course->id,
-            'staff_id' => $staff->id,
-            'feedback_type' => trim($row[7]),
-        ]);
+        $course = Course::findByCode($ass1['course_code']);
+        if (!$course) {
+            $this->addError('Unknown course code');
+            return false;
+        }
+
+        $assessment = Assessment::updateOrCreate(
+            [
+                'course_id' => $course->id,
+                'staff_id' => $staff->id,
+                'deadline' => $ass1['submission_date']
+            ],
+            [
+                'type' => $ass1['submission_title'] . ' / ' . $ass1['submission_method'],
+                'feedback_type' => $ass1['feedback_method'] . '. ' . $ass1['is_graded'],
+                'comment' => $ass1['comments'],
+            ]
+        );
+
+        return true;
     }
 
     protected function addError($message)
     {
         $this->errors->add('errors', "Row {$this->currentRow}: {$message}");
-    }
-
-    protected function addTime($deadline, $timeString)
-    {
-        if (preg_match('/[0-9][0-9]:[0-9][0-9]/', $timeString, $matches)) {
-            list($hour, $minute) = explode(':', $matches[0]);
-            $deadline->hour($hour)->minute($minute);
-        } else {
-            $deadline->hour(16)->minute(0);
-        }
-        return $deadline;
     }
 
     protected function assessmentIsInThePast($date)

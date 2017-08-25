@@ -149,6 +149,11 @@ class User extends Authenticatable
         return static::where('username', '=', $username)->first();
     }
 
+    public static function findByEmail($email)
+    {
+        return static::where('email', '=', $email)->first();
+    }
+
     /**
      * Used to generate a unique filename for the users ical file
      */
