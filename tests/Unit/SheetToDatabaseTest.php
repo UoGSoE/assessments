@@ -42,6 +42,24 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
+    public function can_convert_a_valid_row_with_a_second_assessment()
+    {
+        $convertor = app(SheetToDatabase::class);
+        $row = $this->getRowData();
+
+        $assessment = $convertor->spreadsheetDataToAssessment(
+            $convertor->extractAssessment(2, $row),
+            $row);
+
+        $this->assertEquals(1, Assessment::count());
+        $this->assertCount(0, $convertor->errors->all());
+        $this->assertEquals($row[21]->format('d/m/Y'), $assessment->deadline->format('d/m/Y'));
+        $this->assertEquals($row[2] . $row[3], $assessment->course->code);
+        $this->assertEquals($row[19] . ' / ' . $row[20], $assessment->type);
+        $this->assertEquals($row[24] . '. Not Graded', $assessment->feedback_type);
+    }
+
+    /** @test */
     public function assessment_date_defaults_to_4pm()
     {
         $convertor = app(SheetToDatabase::class);
@@ -137,6 +155,12 @@ class SheetToDatabaseTest extends TestCase
             16 => new \DateTime,
             17 => "YES",
             18 => "Written on submitted work",
+            19 => "Other project",
+            20 => "Moodle",
+            21 => (new \DateTime)->add(new \DateInterval('P10D')),
+            22 => new \DateTime,
+            23 => "NO",
+            24 => "Written on submitted work",
         ], $attribs);
     }
 }
