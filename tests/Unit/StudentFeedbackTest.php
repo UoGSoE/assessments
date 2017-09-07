@@ -33,13 +33,9 @@ class StudentFeedbackTest extends TestCase
         $course = $this->createCourse();
         $assessment = $this->createAssessment(['course_id' => $course->id]);
 
-        try {
-            $student->recordFeedback($assessment);
-        } catch (NotYourCourseException $e) {
-            return;
-        }
+        $this->expectException(NotYourCourseException::class);
 
-        return $this->fail('Student added feedback for an assessment which was not for one of their courses, but no exception thrown');
+        $student->recordFeedback($assessment);
     }
 
     /** @test */
@@ -50,13 +46,9 @@ class StudentFeedbackTest extends TestCase
         $course->students()->save($student);
         $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => \Carbon\Carbon::now()->subMonths(4)]);
 
-        try {
-            $student->recordFeedback($assessment);
-        } catch (TooMuchTimePassedException $e) {
-            return;
-        }
+        $this->expectException(TooMuchTimePassedException::class);
 
-        return $this->fail('Student added feedback for an assessment which was way in the past, but no exception thrown');
+        $student->recordFeedback($assessment);
     }
 
     /** @test */
@@ -81,13 +73,9 @@ class StudentFeedbackTest extends TestCase
         $course->students()->save($student);
         $assessment = $this->createAssessment(['course_id' => $course->id, 'deadline' => Carbon::now()->subWeeks(2)]);
 
-        try {
-            $student->recordFeedback($assessment);
-        } catch (AssessmentNotOverdueException $e) {
-            return;
-        }
+        $this->expectException(AssessmentNotOverdueException::class);
 
-        $this->fail('Student added feedback to an assessment which was not overdue, but no exception was thrown');
+        $student->recordFeedback($assessment);
     }
 
     /** @test */

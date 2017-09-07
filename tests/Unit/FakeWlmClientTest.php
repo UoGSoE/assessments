@@ -63,13 +63,10 @@ class FakeWlmClientTest extends TestCase
     public function trying_to_talk_to_the_wlm_if_its_offline_throws_an_exception()
     {
         $client = $this->getWlmClient();
-        try {
-            $staff = $client->getStaff('WLMDOWN');
-        } catch (\Exception $e) {
-            return;
-        }
 
-        $this->fail('Talking to the fake wlm while it was offline did not throw an exception');
+        $this->expectException(\Exception::class);
+
+        $staff = $client->getStaff('WLMDOWN');
     }
 
 
