@@ -31,8 +31,9 @@ class AppServiceProvider extends ServiceProvider
         // things like ->onDelete('cascade') will work rather than having
         // to rely on model events firing or doing it by hand
         // if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
-        //    DB::statement(DB::raw('PRAGMA foreign_keys=1'));
-        // }
+        if ($this->app->environment('testing')) {
+            DB::statement(DB::raw('PRAGMA foreign_keys=1'));
+        }
     }
 
     /**
