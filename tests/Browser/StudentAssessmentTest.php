@@ -6,6 +6,7 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Carbon\Carbon;
+use Laravel\Dusk\Browser;
 
 class StudentAssessmentTest extends DuskTestCase
 {
@@ -14,7 +15,7 @@ class StudentAssessmentTest extends DuskTestCase
     /** @test */
     public function student_can_see_and_interact_with_their_assessments()
     {
-        $this->browse(function ($browser) {
+        $this->browse(function (Browser $browser) {
             $student = $this->createStudent();
             $course1 = $this->createCourse();
             $course1->students()->sync([$student->id]);

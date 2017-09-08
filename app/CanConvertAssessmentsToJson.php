@@ -18,7 +18,7 @@ trait CanConvertAssessmentsToJson
      */
     protected function studentAssessmentsAsJson()
     {
-        return $this->courses()->with('assessments')->get()->flatMap(function ($course) {
+        return $this->courses()->with('assessments.course')->get()->flatMap(function ($course) {
             return $course->assessments->map(function ($assessment) use ($course) {
                 return $assessment->toEvent($course, null);
             });
@@ -34,7 +34,7 @@ trait CanConvertAssessmentsToJson
     protected function staffAssessmentsAsJson()
     {
         $data = [];
-        foreach (Course::active()->with('assessments')->get() as $course) {
+        foreach (Course::active()->with('assessments.course')->get() as $course) {
             $year = $course->getYear();
             foreach ($course->assessments as $assessment) {
                 $event = $assessment->toEvent($course, $year);
