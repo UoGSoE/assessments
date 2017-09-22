@@ -55,14 +55,16 @@ class Ldap
             return false;
         }
         $info = ldap_get_entries($ldapconn, $search);
-        // $ldapbind = @ldap_bind($ldapconn, $info[0]['dn'], $password);
-        // if (!$ldapbind) {
-        //     ldap_unbind($ldapconn);
-        //     Log::error("Could not bind to LDAP as {$username} with supplied password");
-        //     return false;
-        // }
-        // $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
-        // $info = ldap_get_entries($ldapconn, $search);
+        if (config('ldap.password_bypass') == false) {
+            $ldapbind = @ldap_bind($ldapconn, $info[0]['dn'], $password);
+            if (!$ldapbind) {
+                ldap_unbind($ldapconn);
+                Log::error("Could not bind to LDAP as {$username} with supplied password");
+                return false;
+            }
+            $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
+            $info = ldap_get_entries($ldapconn, $search);
+        }
         $result = array(
             'username' => $username,
             'surname' => $info[0]['sn'][0],
