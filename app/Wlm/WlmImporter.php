@@ -2,6 +2,7 @@
 
 namespace App\Wlm;
 
+use Illuminate\Support\Facades\Log;
 use App\Course;
 use App\User;
 use App\Wlm\WlmClientInterface;
@@ -88,16 +89,32 @@ class WlmImporter
         })->pluck('id');
     }
 
+    /**
+     * This tries to extract the student info from the original WLM 'Students'
+     * array.  It's a little nasty as once in a while there is a student matric
+     * which is encoded in a weird way (not utf8 or ascii - probably an excel-ism)
+     * so that's why there is some unpleasant reject() and try/catch stuff in
+     * here... :: sadface ::
+     */
     protected function studentsFromWlm($wlmCourse)
     {
         if (!array_key_exists('Students', $wlmCourse)) {
             return collect([]);
         }
-        return collect($wlmCourse['Students'])->map(function ($wlmStudent) {
+        return collect($wlmCourse['Students'])->reject(function ($wlmStudent) {
+            return preg_match('/^[0-9]{7}$/u', $wlmStudent['Matric']) !== 1;
+        })->map(function ($wlmStudent) use ($wlmCourse) {
             if (!$this->studentList->has($wlmStudent['Matric'])) {
-                $this->studentList[$wlmStudent['Matric']] = User::studentFromWlmData($wlmStudent);
+                try {
+                    $this->studentList[$wlmStudent['Matric']] = User::studentFromWlmData($wlmStudent);
+                } catch (\Exception $e) {
+                    Log::info('WLM Import - Failed to insert student with matric ' . $wlmStudent['Matric']);
+                    return false;
+                }
             }
             return $this->studentList[$wlmStudent['Matric']];
+        })->reject(function ($student) {
+            return (bool) !$student;
         })->pluck('id');
     }
 
