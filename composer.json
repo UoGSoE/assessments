@@ -12,7 +12,6 @@
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "~6.0",
         "hashids/hashids": "^2.0",
-        "laravel/dusk": "^2.0",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0"
     },
@@ -21,6 +20,7 @@
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
+        "laravel/dusk": "^2.0",
         "phpunit/phpunit": "~6.0"
     },
     "autoload": {
