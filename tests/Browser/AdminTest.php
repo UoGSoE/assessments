@@ -211,7 +211,7 @@ class AdminTest extends DuskTestCase
                     ->clickLink($staff->fullName())
                     ->assertSee('Staff Details')
                     ->check('is_admin')
-                    ->pause(100);
+                    ->pause(300);
             $this->assertTrue($staff->fresh()->is_admin);
             $browser->loginAs($admin)
                     ->visit("/")
@@ -219,7 +219,7 @@ class AdminTest extends DuskTestCase
                     ->clickLink($staff->fullName())
                     ->assertSee('Staff Details')
                     ->uncheck('is_admin')
-                    ->pause(100);
+                    ->pause(300);
             $this->assertFalse($staff->fresh()->is_admin);
         });
     }
