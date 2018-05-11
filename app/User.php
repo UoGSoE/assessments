@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public function numberOfAssessments()
     {
-        return (int) $this->assessments()->count();
+        return (int) $this->assessments->count();
     }
 
     public function feedbacks()
@@ -62,9 +62,14 @@ class User extends Authenticatable
         return $this->hasMany(AssessmentFeedback::class, 'student_id');
     }
 
+    public function assessmentsWithFeedbacks()
+    {
+        return $this->assessments()->has('feedbacks');
+    }
+
     public function getAssessmentsWithStudentFeedback()
     {
-        return $this->assessments()->has('feedbacks')->get();
+        return $this->assessmentsWithFeedbacks;
     }
 
     public function totalStudentFeedbacks()
@@ -77,7 +82,7 @@ class User extends Authenticatable
 
     public function numberOfMissedDeadlines()
     {
-        return count($this->assessmentsWhereFeedbacksDue()->get()
+        return count($this->assessmentsWhereFeedbacksDue
                     ->filter
                     ->feedbackWasGivenLate());
     }

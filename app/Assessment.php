@@ -50,18 +50,18 @@ class Assessment extends Model
 
     public function totalNegativeFeedbacks()
     {
-        return $this->negativeFeedbacks()->count();
+        return $this->negativeFeedbacks->count();
     }
 
     public function percentageNegativeFeedbacks()
     {
-        if ($this->course->students()->count() == 0) {
+        if ($this->course->students->count() == 0) {
             return 0;
         }
         if ($this->totalNegativeFeedbacks() == 0) {
             return 0;
         }
-        return 100.0 / ($this->course->students()->count() / $this->totalNegativeFeedbacks());
+        return 100.0 / ($this->course->students->count() / $this->totalNegativeFeedbacks());
     }
 
     public function getFeedbackDueAttribute()

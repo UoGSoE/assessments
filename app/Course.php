@@ -27,7 +27,7 @@ class Course extends Model
 
     public function orderedAssessments()
     {
-        return $this->assessments()->orderBy('deadline')->get();
+        return $this->assessments->sortBy('deadline');
     }
 
     public function feedbacks()

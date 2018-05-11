@@ -16,13 +16,13 @@ class ReportController extends Controller
 
     public function feedback()
     {
-        $assessments = Assessment::with('course', 'feedbacks')->orderBy('staff_id')->get();
+        $assessments = Assessment::with('course.students', 'feedbacks', 'negativeFeedbacks', 'staff')->orderBy('staff_id')->get();
         return view('report.feedback', compact('assessments'));
     }
 
     public function staff()
     {
-        $staff = User::staff()->with('assessments.feedbacks')->orderBy('surname')->get();
+        $staff = User::staff()->with('assessments.feedbacks', 'assessmentsWithFeedbacks', 'assessmentsWhereFeedbacksDue')->orderBy('surname')->get();
         return view('report.staff', compact('staff'));
     }
 }
