@@ -37,7 +37,7 @@ class Ldap
             return false;
         }
 
-        if (! ldap_start_tls($ldapconn)) {
+        if (!ldap_start_tls($ldapconn)) {
             Log::error("Could not start TLS on ldap binding");
             return false;
         }
@@ -47,7 +47,7 @@ class Ldap
 
     private function findUser($username, $password, $ldapOrg, $ldapconn)
     {
-        $ldapbind = @ldap_bind($ldapconn);
+        $ldapbind = @ldap_bind($ldapconn, config('ldap.username'), config('ldap.password'));
         $search = ldap_search($ldapconn, $ldapOrg, "uid={$username}");
         if (ldap_count_entries($ldapconn, $search) != 1) {
             ldap_unbind($ldapconn);
