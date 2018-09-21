@@ -7,10 +7,12 @@ services:
 
 # Variables
 variables:
-  MYSQL_DATABASE: homestead
+  WITH_XDEBUG: "1"
   MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
   MYSQL_USER: homestead
   MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
 
 # This is a basic example for a gem or script which doesn't use
 # services such as redis or postgres
