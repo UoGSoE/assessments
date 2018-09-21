@@ -3,19 +3,22 @@
 
 namespace Tests\Unit;
 
+use Carbon\Carbon;
+use App\Assessment;
 use Tests\TestCase;
+use App\Spreadsheet\SheetToDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Spreadsheet\SheetToDatabase;
-use App\Assessment;
-use Carbon\Carbon;
 
 class SheetToDatabaseTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp()
     {
         parent::setUp();
-        $this->setupDatabase();
+        // $this->setupDatabase();
         $this->createStaff([
             'email' => "angela.busse@glasgow.ac.uk",
         ]);
