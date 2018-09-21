@@ -3,16 +3,14 @@ image: uogsoe/soe-php-apache:7.2-ci
 
 # Services
 services:
-  - mysql:latest
+  - mysql:5.7
 
 # Variables
 variables:
-  WITH_XDEBUG: "1"
-  MYSQL_ROOT_PASSWORD: secret
   MYSQL_DATABASE: homestead
+  MYSQL_ROOT_PASSWORD: secret
   MYSQL_USER: homestead
   MYSQL_PASSWORD: secret
-  COMPOSER_HOME: /cache/composer
 
 # This is a basic example for a gem or script which doesn't use
 # services such as redis or postgres
