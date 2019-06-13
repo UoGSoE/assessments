@@ -1,39 +1,64 @@
-# This file is a template, and might need editing before it works on your project.
-image: uogsoe/soe-php-apache:7.2-ci
+stages:
+  - build-qa
+  - test
+  - build-prod
 
-# Services
-services:
-  - mysql:5.7
-
-# Variables
 variables:
-  WITH_XDEBUG: "1"
-  MYSQL_ROOT_PASSWORD: secret
-  MYSQL_DATABASE: homestead
-  MYSQL_USER: homestead
-  MYSQL_PASSWORD: secret
-  COMPOSER_HOME: /cache/composer
+  QA_IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH:qa-$CI_COMMIT_SHA
+  PROD_IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH:prod-$CI_COMMIT_SHA
 
-# This is a basic example for a gem or script which doesn't use
-# services such as redis or postgres
-before_script:
-
-  # Copy over testing configuration.
-  # Don't forget to set the database config in .env.testing correctly
-  - cp .env.gitlab .env
-  - cp phpunit.xml.gitlab phpunit.xml
-
-  # Install Composer and project dependencies.
-  - composer install
-
-  # Generate an application key.
-  - php artisan key:generate
-  - php artisan config:clear
-
-  # Run database migrations.
-  - php artisan migrate:fresh
+# This folder is cached between builds
+# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
+cache:
+  paths:
+  # - vendor/
+  # - node_modules/
 
 test:
+  image: $QA_IMAGE_NAME
+
+  services:
+  - mysql:5.7
+  - redis:5.0.4
+
+  variables:
+    MYSQL_DATABASE: homestead
+    MYSQL_ROOT_PASSWORD: secret
+    MYSQL_USER: homestead
+    MYSQL_PASSWORD: secret
+
+  # If you need Node.js
+  #- curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  #- apt-get install -y nodejs
+  #- npm install
+  #- npm run dev
+
   script:
-  # run laravel tests
-  - php vendor/bin/phpunit --coverage-text --colors=never
+  # - php vendor/bin/phpunit --coverage-text --colors=never
+  - cd /var/www/html
+  - mkdir -p /run/secrets
+  - cp -f .env.gitlab /run/secrets/.env
+  - export APP_ENV=testing
+  - php artisan key:generate
+  - php artisan config:clear
+  - php artisan migrate:fresh
+  - cat .env
+  - php vendor/bin/phpunit --colors=never
+
+build-qa-tagged:
+  stage: build-qa
+  image: docker:stable
+  script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - DOCKER_BUILDKIT=1 docker build --build-arg PHP_VERSION=${PHP_VERSION} --target=ci --build-arg PHP_VERSION=${PHP_VERSION} -t $QA_IMAGE_NAME .
+  - docker push $QA_IMAGE_NAME
+
+build-prod-tagged:
+  stage: build-prod
+  image: docker:stable
+  only:
+  - master
+  script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - DOCKER_BUILDKIT=1 docker build --build-arg PHP_VERSION=${PHP_VERSION} --target=prod --build-arg PHP_VERSION=${PHP_VERSION} -t $PROD_IMAGE_NAME .
+  - docker push $PROD_IMAGE_NAME
