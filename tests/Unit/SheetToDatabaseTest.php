@@ -3,19 +3,29 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Spreadsheet\SheetToDatabase;
-use App\Assessment;
 use Carbon\Carbon;
+use App\Assessment;
+use Tests\TestCase;
+use Tests\CreatesApplication;
+use Illuminate\Support\Facades\DB;
+use App\Spreadsheet\SheetToDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class SheetToDatabaseTest extends TestCase
 {
+    use CreatesApplication;
+    use RefreshDatabase;
+
     protected function setUp() : void
     {
         parent::setUp();
-        $this->setupDatabase();
+
+        // Enable foreign key support for SQLITE databases
+        if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
+            DB::statement(DB::raw('PRAGMA foreign_keys=on'));
+        }
+
         $this->createStaff([
             'email' => "angela.busse@glasgow.ac.uk",
         ]);

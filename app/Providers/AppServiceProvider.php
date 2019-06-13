@@ -26,14 +26,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Calendar::class, function ($app) {
             return new Calendar(url('/'));
         });
-
-        // this enabled 'proper' foreign key SQL when using SQLite so that
-        // things like ->onDelete('cascade') will work rather than having
-        // to rely on model events firing or doing it by hand
-        // if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
-        if ($this->app->environment('testing')) {
-            DB::statement(DB::raw('PRAGMA foreign_keys=1'));
-        }
     }
 
     /**
