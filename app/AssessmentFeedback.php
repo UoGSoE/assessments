@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AssessmentFeedback extends Model
 {
+    protected $table = 'assessment_feedbacks';
+
     protected $fillable = [
         'student_id', 'course_id', 'assessment_id', 'feedback_given'
     ];

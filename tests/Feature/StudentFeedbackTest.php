@@ -14,6 +14,7 @@ class StudentFeedbackTest extends TestCase
     /** @test */
     public function test_a_student_can_give_feedback_on_an_assessment()
     {
+        $this->withoutExceptionHandling();
         $student = $this->createStudent();
         $course = $this->createCourse();
         $course->students()->sync([$student->id]);

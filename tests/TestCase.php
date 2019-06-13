@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     //use DatabaseMigrations;
     use DatabaseSetup;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->setupDatabase();
