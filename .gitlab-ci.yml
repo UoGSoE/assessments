@@ -1,30 +1,64 @@
-# Before Tests
-before_script:
-  - bash gitlab-ci.sh >> /dev/null
-
-# Services
-services:
-  - mysql:latest
-
-# Variables
-variables:
-  WITH_XDEBUG: "1"
-  MYSQL_ROOT_PASSWORD: secret
-  MYSQL_DATABASE: homestead
-  MYSQL_USER: homestead
-  MYSQL_PASSWORD: secret
-  COMPOSER_HOME: /cache/composer
-
-# Stages
 stages:
+  - build-qa
   - test
+  - build-prod
 
-# PHP 7.0 FPM
-php:7-fpm:
-  image: php:7-fpm
-  stage: test
+variables:
+  QA_IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH:qa-$CI_COMMIT_SHA
+  PROD_IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH:prod-$CI_COMMIT_SHA
+
+# This folder is cached between builds
+# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
+cache:
+  paths:
+  # - vendor/
+  # - node_modules/
+
+test:
+  image: $QA_IMAGE_NAME
+
+  services:
+  - mysql:5.7
+  - redis:5.0.4
+
+  variables:
+    MYSQL_DATABASE: homestead
+    MYSQL_ROOT_PASSWORD: secret
+    MYSQL_USER: homestead
+    MYSQL_PASSWORD: secret
+
+  # If you need Node.js
+  #- curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  #- apt-get install -y nodejs
+  #- npm install
+  #- npm run dev
+
   script:
-    - php -v
-    - php vendor/bin/phpunit 
-    - php phpcs.phar --standard=PSR2 app
+  # - php vendor/bin/phpunit --coverage-text --colors=never
+  - cd /var/www/html
+  - mkdir -p /run/secrets
+  - cp -f .env.gitlab /run/secrets/.env
+  - export APP_ENV=testing
+  - php artisan key:generate
+  - php artisan config:clear
+  - php artisan migrate:fresh
+  - cat .env
+  - php vendor/bin/phpunit --colors=never
 
+build-qa-tagged:
+  stage: build-qa
+  image: docker:stable
+  script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - DOCKER_BUILDKIT=1 docker build --build-arg PHP_VERSION=${PHP_VERSION} --target=ci --build-arg PHP_VERSION=${PHP_VERSION} -t $QA_IMAGE_NAME .
+  - docker push $QA_IMAGE_NAME
+
+build-prod-tagged:
+  stage: build-prod
+  image: docker:stable
+  only:
+  - master
+  script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - DOCKER_BUILDKIT=1 docker build --build-arg PHP_VERSION=${PHP_VERSION} --target=prod --build-arg PHP_VERSION=${PHP_VERSION} -t $PROD_IMAGE_NAME .
+  - docker push $PROD_IMAGE_NAME

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
 trait CanBeCreatedFromOutsideSources
 {
     /**
@@ -14,7 +16,7 @@ trait CanBeCreatedFromOutsideSources
             'surname' => $ldapData['surname'],
             'forenames' => $ldapData['forenames'],
             'email' => $ldapData['email'],
-            'password' => bcrypt(str_random(64))
+            'password' => bcrypt(Str::random(64))
         ]);
         $user->is_student = $user->usernameIsMatric($ldapData['username']);
         $user->save();
@@ -54,7 +56,7 @@ trait CanBeCreatedFromOutsideSources
         }
         $user->surname = $wlmData['Surname'] ?? 'Unknown';
         $user->forenames = $wlmData['Forenames'] ?? 'Unknown';
-        $user->password = bcrypt(str_random(32));
+        $user->password = bcrypt(Str::random(32));
         $user->is_student = $isStudent;
         $user->save();
         return $user;

@@ -90,7 +90,7 @@ class SpreadsheetTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.assessments'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="assessments.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=assessments.xlsx');
         $file = $response->getFile();
         $data = (new Spreadsheet)->import($file->getPathname());
         $headings = array_shift($data);
@@ -119,7 +119,7 @@ class SpreadsheetTest extends TestCase
         $response = $this->actingAs($admin)->get(route('export.staff'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-disposition', 'attachment; filename="staff.xlsx"');
+        $response->assertHeader('content-disposition', 'attachment; filename=staff.xlsx');
         $file = $response->getFile();
         $data = (new Spreadsheet)->import($file->getPathname());
         $headers = array_shift($data);
