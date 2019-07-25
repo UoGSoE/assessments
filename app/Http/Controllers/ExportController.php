@@ -34,6 +34,7 @@ class ExportController extends Controller
         $rows = [
             [
                 'Course',
+                'Level',
                 'Assessment Type',
                 'Staff',
                 'Feedback Deadline',
@@ -44,6 +45,7 @@ class ExportController extends Controller
         foreach ($assessments as $assessment) {
             $row = [
                 $assessment->course->code,
+                $assessment->course->level,
                 $assessment->type,
                 $assessment->staff->fullName(),
                 $assessment->deadline->format('d/m/Y H:i'),

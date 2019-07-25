@@ -97,9 +97,9 @@ class SpreadsheetTest extends TestCase
         $row1 = array_shift($data);
         $row2 = array_shift($data);
         $this->assertEquals($assessment1->course->code, $row1[0]);
-        $this->assertEquals($assessment1->totalNegativeFeedbacks(), $row1[5]);
+        $this->assertEquals($assessment1->totalNegativeFeedbacks(), $row1[6]);
         $this->assertEquals($assessment2->course->code, $row2[0]);
-        $this->assertEquals($assessment2->totalNegativeFeedbacks(), $row2[5]);
+        $this->assertEquals($assessment2->totalNegativeFeedbacks(), $row2[6]);
     }
 
     /** @test */

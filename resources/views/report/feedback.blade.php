@@ -57,6 +57,7 @@
       <thead>
         <tr>
           <th>Course</th>
+          <th>Level</th>
           <th>Type</th>
           <th>Staff</th>
           <th>Feedback Deadline</th>
@@ -71,6 +72,9 @@
             <a href="{!! route('assessment.show', $assessment->id) !!}">
                 {{ $assessment->course->code }}
             </a>
+          </td>
+          <td>
+            {{ $assessment->course->level }}
           </td>
           <td>{{ $assessment->type }}</td>
           <td>

@@ -84,4 +84,13 @@ class Course extends Model
     {
         return !! $this->is_active;
     }
+
+    public function getLevelAttribute()
+    {
+        $result = preg_match("/^[^\d]*(\d)/", $this->code, $matches);
+        if ($result === 0) {
+            return 'Unknown';
+        }
+        return $matches[1];
+    }
 }
