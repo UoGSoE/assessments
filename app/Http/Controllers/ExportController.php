@@ -36,7 +36,9 @@ class ExportController extends Controller
                 'Course',
                 'Level',
                 'Assessment Type',
+                'Feedback Type',
                 'Staff',
+                'Submission Date',
                 'Feedback Deadline',
                 'Given',
                 'Student Complaints'
@@ -47,7 +49,9 @@ class ExportController extends Controller
                 $assessment->course->code,
                 $assessment->course->level,
                 $assessment->type,
+                $assessment->feedback_type,
                 $assessment->staff->fullName(),
+                $assessment->deadline->format('d/m/Y H:i'),
                 $assessment->deadline->format('d/m/Y H:i'),
                 $assessment->reportSignedOff(),
                 $assessment->totalNegativeFeedbacks()
