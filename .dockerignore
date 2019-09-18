@@ -4,6 +4,3 @@ vendor/
 npm-debug
 Dockerfile
 stack.yml
-public/js
-public/css
-**/mix-manifest.json
