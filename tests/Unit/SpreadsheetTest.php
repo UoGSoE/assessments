@@ -14,12 +14,12 @@ class SpreadsheetTest extends TestCase
     /** @test */
     public function importing_a_spreadsheet_returns_correct_data()
     {
-        $data = (new Spreadsheet)->import('./tests/data/deadlines_tidied.xlsx');
+        $data = (new Spreadsheet)->import('./tests/data/assessments_2019_09_18.xlsx');
 
         $row = $data[1];
-        $this->assertEquals(Carbon::createFromFormat('d/m/Y H:i:s', '22/09/2015 00:00:00'), $row[0]);
-        $this->assertEquals('5pm', $row[1]);
-        $this->assertEquals('ENG4020', $row[2]);
+        $this->assertEquals('01/08/2017 16:00', $row[6]);
+        $this->assertEquals('nritchie@example.org', $row[5]);
+        $this->assertEquals('ENG1002', $row[0]);
     }
 
     /** @test */

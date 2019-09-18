@@ -38,10 +38,12 @@ class ExportController extends Controller
                 'Assessment Type',
                 'Feedback Type',
                 'Staff',
+                'Staff Email',
                 'Submission Date',
                 'Feedback Deadline',
                 'Given',
-                'Student Complaints'
+                'Student Complaints',
+                'Other Comments',
             ]
         ];
         foreach ($assessments as $assessment) {
@@ -51,10 +53,12 @@ class ExportController extends Controller
                 $assessment->type,
                 $assessment->feedback_type,
                 $assessment->staff->fullName(),
+                $assessment->staff->email,
                 $assessment->deadline->format('d/m/Y H:i'),
                 $assessment->deadline->format('d/m/Y H:i'),
                 $assessment->reportSignedOff(),
-                $assessment->totalNegativeFeedbacks()
+                $assessment->totalNegativeFeedbacks(),
+                $assessment->comment,
             ];
             $rows[] = $row;
         }

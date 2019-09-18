@@ -7,47 +7,6 @@ use App\Assessment;
 use App\User;
 use Carbon\Carbon;
 
-/**
-    0 => "Term"
-    1 => "Session"
-    2 => "Subject"
-    3 => "Catalog"
-    4 => "Career"
-    5 => "Descr"
-    6 => "course"
-    7 => "Class Stat"
-    8 => "Cap Enrl"
-    9 => "ID"
-    10 => "Last"
-    11 => "First Name"
-    12 => "email"
-    13 => "assignment 1 - title"
-    14 => "assignment 1 - method of submission"
-    15 => "assignment 1 - date of submission"
-    16 => "assignment 1 - date feedback due"
-    17 => "Graded feedback_1"
-    18 => "Method of feedback_1"
-    19 => "assignment 2 - title"
-    20 => "assignment 2 - method of submission"
-    21 => "assignment 2 - date of submission"
-    22 => "assignment 2 - date feedback due"
-    23 => "Graded feedback_2"
-    24 => "Method of feedback_2"
-    25 => "assignment 3 - title"
-    26 => "assignment 3 - method of submission"
-    27 => "assignment 3 - date of submission"
-    28 => "assignment 3 - date feedback due"
-    29 => "Graded feedback_3"
-    30 => "Method of feedback_3"
-    31 => "assignment 4 - title"
-    32 => "assignment 4 - method of submission"
-    33 => "assignment 4 - date of submission"
-    34 => "assignment 4 - date feedback due"
-    35 => "Graded"
-    36 => "feedback_4"
-    37 => "Method of feedback_4"
-    38 => "Additional comments"
-*/
 class SheetToDatabase
 {
     public $errors;
@@ -70,47 +29,54 @@ class SheetToDatabase
     {
         $this->currentRow = 1;
         foreach ($rows as $row) {
-            $this->rowToAssessments($row);
+            $this->rowToAssessment($row);
             $this->currentRow++;
         }
     }
 
-    public function rowToAssessments($row)
+    public function rowToAssessment($row)
     {
-        foreach (range(1, 4) as $assessmentNumber) {
-            $assessment = $this->spreadsheetDataToAssessment(
-                $this->extractAssessment($assessmentNumber, $row),
-                $row
-            );
-        }
-    }
+        $columns = [
+            'course' => 0,
+            'level' => 1,
+            'assessment_type' => 2,
+            'feedback_type' => 3,
+            'staff' => 4,
+            'staff_email' => 5,
+            'submission_deadline' => 6,
+            'feedback_deadline' => 7,
+            'given' => 8,
+            'student_complaints' => 9,
+            'comments' => 10,
+        ];
 
-    public function spreadsheetDataToAssessment($ass, $row)
-    {
-        if (!$ass) {
-            return false;
-        }
-
-        if (!$ass['submission_date'] instanceof \DateTime) {
-            //dd($ass);
-            return false;
-        }
-
-        $ass['submission_date'] = Carbon::instance($ass['submission_date'])->hour(16)->minute(0);
-        if ($this->assessmentIsInThePast($ass['submission_date'])) {
-            $this->addError('Assessment date is in the past : ' . $ass['submission_date']->format('d/M/Y'));
-            return false;
-        }
-
-        $staff = User::findByEmail($ass['staff_email']);
-        if (!$staff) {
-            $this->addError('Unknown staff email : ' . $ass['staff_email']);
-            return false;
-        }
-
-        $course = Course::findByCode($ass['course_code']);
+        $course = Course::findByCode($row[$columns['course']]);
         if (!$course) {
-            $this->addError('Unknown course code : ' . $ass['course_code']);
+            $this->addError('Unknown course code : ' . $row[$columns['course']]);
+            return false;
+        }
+
+        $staff = User::findByEmail($row[$columns['staff_email']]);
+        if (!$staff) {
+            $this->addError('Unknown staff email : ' . $row[$columns['staff_email']]);
+            return false;
+        }
+
+        try {
+            // depeding on what Excel has done - 'date' columns are parsed differently...
+            if ($row[$columns['submission_deadline']] instanceof \DateTime) {
+                $submissionDate = Carbon::instance($row[$columns['submission_deadline']]);
+            } else {
+                $submissionDate = Carbon::createFromFormat('d/m/Y H:i', $row[$columns['submission_deadline']]);
+            }
+            $submissionDate->hour(16)
+                ->minute(0);
+        } catch (\Exception $e) {
+            $this->addError('Could not parse date : ' . $row[$columns['submission_deadline']]);
+            return false;
+        }
+        if ($this->assessmentIsInThePast($submissionDate)) {
+            $this->addError('Assessment date is in the past : ' . $submissionDate->format('d/M/Y'));
             return false;
         }
 
@@ -118,46 +84,16 @@ class SheetToDatabase
             [
                 'course_id' => $course->id,
                 'staff_id' => $staff->id,
-                'deadline' => $ass['submission_date']
+                'deadline' => $submissionDate,
             ],
             [
-                'type' => $ass['submission_title'] . ' / ' . $ass['submission_method'],
-                'feedback_type' => $ass['feedback_method'] . '. ' . $ass['is_graded'],
-                'comment' => $ass['comments'],
+                'type' => $row[$columns['assessment_type']],
+                'feedback_type' => $row[$columns['feedback_type']],
+                'comment' => $row[$columns['comments']],
             ]
         );
 
         return $assessment;
-    }
-
-    public function extractAssessment($assessmentNumber, $row)
-    {
-        $spreadsheetColumnOffsets = [
-            1 => 13,
-            2 => 19,
-            3 => 25,
-            4 => 31,
-        ];
-        if (!array_key_exists($assessmentNumber, $spreadsheetColumnOffsets)) {
-            return false;
-        }
-        $offset = $spreadsheetColumnOffsets[$assessmentNumber];
-        foreach (range($offset, 38) as $index) {
-            $row[$index] = array_key_exists($index, $row) ? $row[$index] : '';
-        }
-        return [
-            'course_code' => $row[2] . $row[3],
-            'course_title' => $row[5],
-            'submission_title' => $row[$offset + 0],
-            'submission_method' => $row[$offset + 1],
-            'submission_date' => $row[$offset + 2],
-            'feedback_method' => $row[$offset + 5],
-            'is_graded' => preg_match('/y/i', $row[$offset + 4]) ? 'Graded' : 'Not Graded',
-            'staff_email' => strtolower($row[12]),
-            'staff_surname' => $row[10],
-            'staff_forenames' => $row[11],
-            'comments' => array_key_exists(38, $row) ? $row[38] : '',
-        ];
     }
 
     protected function addError($message)

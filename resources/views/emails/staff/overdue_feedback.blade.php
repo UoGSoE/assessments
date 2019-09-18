@@ -12,6 +12,6 @@ being overdue.  The details are :
 @endforeach
 @endcomponent
 
-If you believe these to be inaccurate, please email someone or other.
+If you believe these to be inaccurate, please email the teaching office.
 
 @endcomponent
