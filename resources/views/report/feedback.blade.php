@@ -8,28 +8,22 @@
         Feedback Report
       </h2>
     </div>
-    <div class="level-item">
+    <div class="level-item field is-grouped">
       <a href="{!! route('assessment.create') !!}" id="add-assessment-button" class="button" title="Add new assessment" aria-label="Add new assessment">
         <span class="icon">
           <i class="fa fa-plus"></i>
         </span>
       </a>
-    </div>
-    <div class="level-item">
       <a href="{!! route('export.assessments') !!}" id="export-excel-button" class="button" title="Export As Excel" aria-label="Export as Excel">
         <span class="icon">
           <i class="fa fa-download"></i>
         </span>
       </a>
-    </div>
-    <div class="level-item">
       <a href="{!! route('coursework.edit') !!}" id="upload-coursework-button" class="button" title="Import Coursework Sheet" aria-label="Import coursework sheet">
         <span class="icon">
           <i class="fa fa-upload"></i>
         </span>
       </a>
-    </div>
-    <div class="level-item">
       <a href="{!! route('report.staff') !!}" id="staff-report-button" class="button" title="Staff Report" aria-label="Staff Report">
         <span class="icon">
           <i class="fa fa-user"></i>
@@ -43,7 +37,7 @@
       <form method="POST" action="" data-href="{!! route('admin.clearold') !!}" id="delete-form" class="is-pulled-right">
         {!! csrf_field() !!}
         <input type="hidden" name="_method" value="DELETE">
-        <button id="delete-button" class="button is-danger is-pulled-right" title="Delete ALL Old Data" aria-label="Delete ALL old data">
+        <button id="delete-button" class="button is-danger" title="Delete ALL Old Data" aria-label="Delete ALL old data">
           <span class="icon">
             <i class="fa fa-trash"></i>
           </span>
