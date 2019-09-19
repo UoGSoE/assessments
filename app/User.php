@@ -146,6 +146,7 @@ class User extends Authenticatable
         if ($this->courses->where('course_id', $courseId)->first()) {
             return false;
         }
+        dd($this->courses);
         return true;
     }
 

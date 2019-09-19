@@ -271,7 +271,8 @@ class Assessment extends Model
             'mine' => true,
             'discipline' => $course->discipline,
             'color' => 'whitesmoke',
-            'textColor' => 'black'
+            'textColor' => 'black',
+            'url' => route('assessment.show', $this->id),
         ];
         if ($year) {
             $event['year'] = $year;

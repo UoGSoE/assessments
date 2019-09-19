@@ -1,24 +1,30 @@
     <div id="calendar">
     </div>
     <script>
-        $(document).ready(function () {
-            $('#calendar').fullCalendar({
-                events: {!! $assessments !!},
-                eventClick: function(calEvent, jsEvent, view) {
-                    window.location.replace("/assessment/" + calEvent.id);
-                },
-                eventRender: function eventRender( event, element, view ) {
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['dayGrid'],
+                events: {!!$assessments!!},
+                eventRender: function eventRender(info) {
                     var year = $('#year-selector').val();
-                    return ['all', event.year].indexOf(year) >= 0
+                    return ['all', info.event.extendedProps.year].indexOf(year) >= 0
                 },
-                weekends: false
+                weekends: false,
+                displayEventTime: false
             });
-            $('#year-selector').on('change',function(){
+
+            calendar.render();
+
+            $('#year-selector').on('change', function() {
                 if (history.pushState) {
                     var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?year=' + this.value;
-                    window.history.pushState({path:newurl},'',newurl);
+                    window.history.pushState({
+                        path: newurl
+                    }, '', newurl);
                 }
-                $('#calendar').fullCalendar('rerenderEvents');
+                calendar.rerenderEvents();
             })
         });
     </script>

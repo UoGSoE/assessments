@@ -12,6 +12,7 @@
     @if (Auth::user()->isStaff())
         <p class="control is-pulled-left">
           <span class="select">
+            <label class="label sr-only" for="year-selector">Filter by year</label>
             <select id="year-selector" name="year">
               <option value="all">All Years</option>
               <option value="1">1st</option>
