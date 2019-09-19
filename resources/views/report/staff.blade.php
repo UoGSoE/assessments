@@ -9,7 +9,7 @@
           </h2>
         </div>
         <div class="level-item">
-            <a href="{!! route('export.staff') !!}" id="export-excel-button" class="button" title="Export As Excel">
+            <a href="{!! route('export.staff') !!}" id="export-excel-button" class="button" title="Export As Excel" aria-label="Export as Excel">
               <span class="icon">
                 <i class="fa fa-download"></i>
               </span>

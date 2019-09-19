@@ -143,7 +143,7 @@ class User extends Authenticatable
         if (!is_numeric($courseId)) {
             $courseId = $courseId->id;
         }
-        if ($this->courses()->where('course_id', $courseId)->first()) {
+        if ($this->courses->where('course_id', $courseId)->first()) {
             return false;
         }
         return true;
