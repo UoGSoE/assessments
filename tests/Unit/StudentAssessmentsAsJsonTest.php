@@ -48,7 +48,8 @@ class StudentAssessmentsAsJsonTest extends TestCase
             'mine' => true,
             'color' => 'whitesmoke',
             'textColor' => 'black',
-            'discipline' => 'Electronics'
+            'discipline' => 'Electronics',
+            'url' => route('assessment.show', $assessment->id),
         ], json_decode($json, true)[0]);
     }
 
