@@ -89,7 +89,7 @@ class SheetToDatabase
             [
                 'type' => $row[$columns['assessment_type']],
                 'feedback_type' => $row[$columns['feedback_type']],
-                'comment' => $row[$columns['comments']],
+                'comment' => $row[$columns['comments']] ?? '',
             ]
         );
 

@@ -101,6 +101,20 @@ class SheetToDatabaseTest extends TestCase
         $this->assertRegExp('/Row 1: Assessment date is in the past/', $convertor->errors->first());
     }
 
+    /** @test */
+    public function a_row_without_comments_gets_an_empty_string_as_the_comment_db_column()
+    {
+        $convertor = app(SheetToDatabase::class);
+        $row = $this->getRowData();
+        unset($row[10]);
+
+        $assessment = $convertor->rowToAssessment($row);
+
+        $this->assertEquals(1, Assessment::count());
+        $this->assertCount(0, $convertor->errors->all());
+        $this->assertEquals('', $assessment->comment);
+    }
+
     protected function getRowData($attribs = [])
     {
         $staff = $this->createStaff();
