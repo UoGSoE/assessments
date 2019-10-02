@@ -10,7 +10,7 @@
       </p>
       @can('edit_assessments')
         <p>&nbsp;
-          <a href="{!! route('assessment.edit', $assessment->id) !!}" id="edit-assessment-button" class="button" title="Edit">
+          <a href="{!! route('assessment.edit', $assessment->id) !!}" id="edit-assessment-button" class="button" title="Edit" aria-label="Edit this assessment">
               <span class="icon">
                 <i class="fa fa-edit"></i>
               </span>
@@ -76,6 +76,7 @@
                     {!! csrf_field() !!}
                     <div class="field has-addons">
                         <p class="control">
+                            <label for="datepicker" class="label sr-only">Date feedback was given</label>
                             <input class="input" id="datepicker" name="date" type="text" placeholder="dd/mm/yyyy">
                         </p>
                         <p class="control">
@@ -114,7 +115,7 @@
     @endcan
 <script>
 $(document).ready(function () {
-    var picker = new Pikaday({ 
+    var picker = new Pikaday({
         field: document.getElementById('datepicker'),
         format: 'DD/MM/YYYY',
     });
