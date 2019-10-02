@@ -8,18 +8,24 @@
             <form method="POST" action="{{ url('/login') }}">
                 {{ csrf_field() }}
 
-                <label>Username (your GUID)</label>
-                <p class="control">
-                    <input class="input" type="text" name="username" required autofocus>
-                </p>
-                <label>Password</label>
-                <p class="control">
-                    <input class="input" type="password" name="password" required>
-                </p>
+                <div class="field">
+                    <label class="label" for="username">Username (your GUID)</label>
+                    <p class="control">
+                        <input class="input" type="text" id="username" name="username" required autofocus>
+                    </p>
+                </div>
+                <div class="field">
+                    <label class="label" for="password">Password</label>
+                    <p class="control">
+                        <input class="input" type="password" id="password" name="password" required>
+                    </p>
+                </div>
                 <br />
-                <p class="control">
-                    <button class="button is-primary is-outlined">Log in</button>
-                </p>
+                <div class="field">
+                    <p class="control">
+                        <button class="button">Log in</button>
+                    </p>
+                </div>
             </form>
         </div>
         <div class="column"></div>

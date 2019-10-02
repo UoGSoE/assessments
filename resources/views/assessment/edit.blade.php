@@ -7,7 +7,7 @@
     <form method="POST" action="{!! route('assessment.update', $assessment->id) !!}">
         @include('assessment.partials.form')
         <p class="control">
-            <button type="submit" class="button is-primary is-outlined">Update</button>
+            <button type="submit" class="button">Update</button>
         </p>
     </form>
 @endsection

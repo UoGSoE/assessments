@@ -12,7 +12,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/bulma.css" rel="stylesheet">
+    <link href="/css/bulma-0.7.5.css" rel="stylesheet">
     <link href="/css/assessments.css" rel="stylesheet">
     <link href="/css/fa/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/pikaday.css" rel="stylesheet">
