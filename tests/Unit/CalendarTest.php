@@ -18,10 +18,9 @@ class CalendarTest extends TestCase
 
         $contents = $cal->render();
 
-        $this->assertContains('BEGIN:VCALENDAR', $contents);
-        $this->assertContains('PRODID', $contents);
-        $this->assertContains('X-PUBLISHED-TTL', $contents);
-        $this->assertContains('END:VCALENDAR', $contents);
+        $this->assertStringContainsString('BEGIN:VCALENDAR', $contents);
+        $this->assertStringContainsString('PRODID', $contents);
+        $this->assertStringContainsString('END:VCALENDAR', $contents);
     }
 
     /** @test */
@@ -33,9 +32,9 @@ class CalendarTest extends TestCase
         $cal->addAssessment($assessment);
         $contents = $cal->render();
 
-        $this->assertContains($assessment->deadline->format('Ymd\THis\Z'), $contents);
-        $this->assertContains($assessment->title, $contents);
-        $this->assertContains($assessment->comment, $contents);
+        $this->assertStringContainsString($assessment->deadline->format('Ymd\THis\Z'), $contents);
+        $this->assertStringContainsString($assessment->title, $contents);
+        $this->assertStringContainsString($assessment->comment, $contents);
     }
 
     /** @test */
@@ -48,10 +47,10 @@ class CalendarTest extends TestCase
         $cal->addAssessments([$assessment1, $assessment2]);
         $contents = $cal->render();
 
-        $this->assertContains($assessment1->deadline->format('Ymd\THis\Z'), $contents);
-        $this->assertContains($assessment1->title, $contents);
-        $this->assertContains($assessment2->deadline->format('Ymd\THis\Z'), $contents);
-        $this->assertContains($assessment2->title, $contents);
+        $this->assertStringContainsString($assessment1->deadline->format('Ymd\THis\Z'), $contents);
+        $this->assertStringContainsString($assessment1->title, $contents);
+        $this->assertStringContainsString($assessment2->deadline->format('Ymd\THis\Z'), $contents);
+        $this->assertStringContainsString($assessment2->title, $contents);
     }
 
     /** @test */
@@ -63,9 +62,8 @@ class CalendarTest extends TestCase
 
         $contents = Storage::disk('calendars')->get('__test.ics');
         Storage::disk('calendars')->delete('__test.ics');
-        $this->assertContains('BEGIN:VCALENDAR', $contents);
-        $this->assertContains('PRODID', $contents);
-        $this->assertContains('X-PUBLISHED-TTL', $contents);
-        $this->assertContains('END:VCALENDAR', $contents);
+        $this->assertStringContainsString('BEGIN:VCALENDAR', $contents);
+        $this->assertStringContainsString('PRODID', $contents);
+        $this->assertStringContainsString('END:VCALENDAR', $contents);
     }
 }

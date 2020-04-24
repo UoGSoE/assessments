@@ -127,8 +127,6 @@ class AdminTest extends TestCase
     /** @test */
     public function admin_can_remove_all_old_data()
     {
-        $this->disableExceptionHandling();
-
         $admin = $this->createAdmin();
         $assessments = factory(\App\Assessment::class, 2)->create();
         $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create();

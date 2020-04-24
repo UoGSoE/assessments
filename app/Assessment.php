@@ -2,13 +2,14 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\Exceptions\NotYourCourseException;
+use App\Notifications\ProblematicAssessment;
 use App\Exceptions\TooMuchTimePassedException;
 use App\Exceptions\AssessmentNotOverdueException;
-use App\Notifications\ProblematicAssessment;
-use Carbon\Carbon;
 
 class Assessment extends Model
 {
@@ -22,6 +23,12 @@ class Assessment extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'office_notified', 'course_id', 'staff_id'];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
 
     public function course()
     {

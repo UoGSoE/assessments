@@ -103,8 +103,6 @@ class ArtisanTest extends TestCase
     /** @test */
     public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
     {
-        //$this->disableExceptionHandling();
-
         Mail::fake();
 
         $this->app->instance('App\Wlm\WlmClientInterface', new FakeBrokenWlmClient);
