@@ -96,7 +96,7 @@ COPY . /var/www/html
 RUN rm -fr /var/www/html/bootstrap/cache/*.php
 
 #- If horizon is installed force it to rebuild it's public assets
-RUN if grep -q horizon composer.json; then php /var/www/html/artisan horizon:publish; fi
+RUN if grep -q horizon composer.json; then php /var/www/html/artisan horizon:publish ; fi
 
 #- Symlink the docker secret to the local .env so Laravel can see it
 RUN ln -sf /run/secrets/.env /var/www/html/.env
@@ -128,3 +128,4 @@ RUN curl -o /usr/local/bin/security-checker https://get.sensiolabs.org/security-
     curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
+
