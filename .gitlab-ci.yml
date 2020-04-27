@@ -1,6 +1,7 @@
 #
 # Variables which should be set in the gitlab project or group :
 #
+# PHP_VERSION (eg '7.2')
 # STACK_NAME (eg, 'amazingapp' - as in 'docker stack deploy $STACK_NAME')
 # TRAEFIK_BACKEND (eg 'amazingapp-web' - label for traefik dashboard)
 # TRAEFIK_QA_HOSTNAME (eg, amazing.qa-domain.ac.uk - hostname your app will be available on)
@@ -34,7 +35,9 @@ cache:
   # - vendor/
   # - node_modules/
 
-test:
+unit-tests:
+  stage: test
+
   image: $QA_IMAGE_NAME
 
   services:
@@ -63,8 +66,44 @@ test:
   - php artisan migrate:fresh
   - cat .env
   - php vendor/bin/phpunit --colors=never --testdox
-  - if [[ -f /usr/local/bin/security-checker ]]; then php /usr/local/bin/security-checker security:check ./composer.lock ; fi
+  - egrep -r '[^a-zA-Z](dd\(|dump\()' app && exit 1
   - if [[ -f /usr/local/bin/phpcs ]]; then php /usr/local/bin/phpcs --config-set ignore_warnings_on_exit 1 ; php /usr/local/bin/phpcs --standard=PSR2 app ; fi
+
+php-security-scan:
+  stage: test
+  image: $QA_IMAGE_NAME
+  script:
+    - if [[ -f /usr/local/bin/security-checker ]]; then php /usr/local/bin/security-checker security:check ./composer.lock ; fi
+
+os-security-scan:
+  stage: test
+  image: docker:stable
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    # See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - apk add --no-cache curl
+    - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    - echo $VERSION
+    - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
+    - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
+  allow_failure: true
+  script:
+    # Build report
+    - ./trivy --exit-code 0 --cache-dir .trivycache/ --no-progress --format template --template "@contrib/gitlab.tpl" -o gl-container-scanning-report.json $QA_IMAGE_NAME
+    # Print report
+    - ./trivy --exit-code 0 --cache-dir .trivycache/ --no-progress --severity HIGH $QA_IMAGE_NAME
+    # Fail on high and critical vulnerabilities
+    - ./trivy --exit-code 1 --cache-dir .trivycache/ --severity CRITICAL --no-progress $QA_IMAGE_NAME
+  cache:
+    paths:
+      - .trivycache/
 
 build-qa-tagged:
   stage: build-qa
@@ -90,7 +129,7 @@ deploy_to_qa:
   environment: qa
   image: docker:stable
   script:
-  - apk add -qU openssh
+  - apk add -qU openssh curl
   - eval $(ssh-agent -s)
   - export IMAGE_NAME=$LOCAL_QA_IMAGE_NAME
   - export TRAEFIK_BACKEND=$TRAEFIK_BACKEND
@@ -104,7 +143,8 @@ deploy_to_qa:
   - chmod 644 ~/.ssh/known_hosts
   - echo "${QA_DOTENV}" | docker -H ssh://deployer@${QA_SERVER} secret create ${DOTENV_NAME} -
   - echo "Deploying stack ${STACK_NAME} image ${IMAGE_NAME} with secret ${DOTENV_NAME}"
-  - docker -H ssh://deployer@${QA_SERVER} stack deploy -c qa-stack.yml ${STACK_NAME}
+  - docker -H ssh://deployer@${QA_SERVER} stack deploy -c qa-stack.yml --prune ${STACK_NAME}
+  - if [ ! -z "${SLACK_WEBHOOK}" ]; then curl -X POST -H 'Content-type:application/json' --data "{\"username\":\"gitlab\", \"text\":\"Deployed QA ${STACK_NAME}\", \"channel\":\"#deployments\", \"icon_emoji\":\":ghost:\"}" ${SLACK_WEBHOOK}; fi
 
 deploy_to_prod:
   stage: deploy
@@ -114,7 +154,7 @@ deploy_to_prod:
   environment: prod
   image: docker:stable
   script:
-  - apk add -qU openssh
+  - apk add -qU openssh curl
   - eval $(ssh-agent -s)
   - export IMAGE_NAME=$LOCAL_PROD_IMAGE_NAME
   - export TRAEFIK_BACKEND=$TRAEFIK_BACKEND
@@ -128,4 +168,7 @@ deploy_to_prod:
   - chmod 644 ~/.ssh/known_hosts
   - echo "${PROD_DOTENV}" | docker -H ssh://deployer@${PROD_SERVER} secret create ${DOTENV_NAME} -
   - echo "Deploying stack ${STACK_NAME} image ${IMAGE_NAME} with secret ${DOTENV_NAME}"
-  - docker -H ssh://deployer@${PROD_SERVER} stack deploy -c prod-stack.yml ${STACK_NAME}
+  - docker -H ssh://deployer@${PROD_SERVER} stack deploy -c prod-stack.yml --prune ${STACK_NAME}
+  - DOCKER_HOST=ssh://deployer@${PROD_SERVER} docker/docker-stack-wait.sh ${STACK_NAME}
+
+  - if [ ! -z "${SLACK_WEBHOOK}" ]; then curl -X POST -H 'Content-type:application/json' --data "{\"username\":\"gitlab\", \"text\":\"Deployed Production ${STACK_NAME}\", \"channel\":\"#deployments\", \"icon_emoji\":\":ghost:\"}" ${SLACK_WEBHOOK}; fi

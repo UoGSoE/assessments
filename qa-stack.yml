@@ -6,6 +6,17 @@ x-logging:
     max-size: '12m'
     max-file: '5'
   driver: json-file
+x-deploy:
+  &default-deploy
+  replicas: 1
+  labels:
+    - "traefik.enable=false"
+  update_config:
+    parallelism: 1
+    failure_action: rollback
+    order: start-first
+  limits:
+    cpus: "1"
 
 services:
   app:
@@ -28,8 +39,13 @@ services:
     expose:
       - "80"
     deploy:
+      update_config:
+        parallelism: 1
+        failure_action: rollback
+        order: start-first
       replicas: 1
       labels:
+        # note: this assumes traefik v1
         - "traefik.backend=${TRAEFIK_BACKEND}"
         - "traefik.docker.network=proxy"
         - "traefik.frontend.rule=Host:${TRAEFIK_HOSTNAME}"
@@ -40,13 +56,11 @@ services:
   scheduler:
     image: ${IMAGE_NAME}
     logging: *default-logging
+    deploy: *default-deploy
     environment:
       CONTAINER_ROLE: scheduler
     depends_on:
       - app
-    deploy:
-      labels:
-        - "traefik.enable=false"
     networks:
       - private
     secrets:
@@ -56,15 +70,12 @@ services:
   queue:
     image: ${IMAGE_NAME}
     logging: *default-logging
+    deploy: *default-deploy
     stop_grace_period: 30s
     environment:
       CONTAINER_ROLE: queue
     depends_on:
       - app
-    deploy:
-      replicas: 1
-      labels:
-        - "traefik.enable=false"
     networks:
       - private
     secrets:
@@ -74,35 +85,30 @@ services:
   migrations:
     image: ${IMAGE_NAME}
     logging: *default-logging
+    deploy: *default-deploy
     networks:
       - private
     environment:
       CONTAINER_ROLE: migrations
     depends_on:
       - app
-    deploy:
-      replicas: 1
-      labels:
-        - "traefik.enable=false"
     secrets:
       - source: dotenv
         target: .env
 
   redis:
     image: redis:5.0.5
-    deploy:
-      labels:
-        - "traefik.enable=false"
+    deploy: *default-deploy
     networks:
       - private
     volumes:
       - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
 
   mysql:
     image: mysql:5.7
-    deploy:
-      labels:
-        - "traefik.enable=false"
+    deploy: *default-deploy
     networks:
       - private
     volumes:
