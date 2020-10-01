@@ -150,9 +150,9 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessments = factory(\App\Assessment::class, 5)->create();
+            $assessments = \App\Assessment::factory()->count(5)->create();
             $firstAssessment = $assessments->first();
-            $feedbacks = factory(\App\AssessmentFeedback::class, 5)->create();
+            $feedbacks = \App\AssessmentFeedback::factory()->count(5)->create();
             $browser->loginAs($admin)
                     ->visit("/admin/report/feedback")
                     ->assertSee($firstAssessment->course->code)
@@ -180,10 +180,10 @@ class AdminTest extends DuskTestCase
             $staff2 = $this->createStaff();
             $course = $this->createCourse();
             $course->staff()->sync([$staff1->id]);
-            $assessments = factory(\App\Assessment::class, 5)->create(['staff_id' => $staff1->id]);
-            $assessments = factory(\App\Assessment::class, 7)->create(['staff_id' => $staff2->id]);
+            $assessments = \App\Assessment::factory()->count(5)->create(['staff_id' => $staff1->id]);
+            $assessments = \App\Assessment::factory()->count(7)->create(['staff_id' => $staff2->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = factory(\App\AssessmentFeedback::class, rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
             $browser->loginAs($admin)
                     ->visit("/")
@@ -202,7 +202,7 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessment = factory(\App\Assessment::class)->create();
+            $assessment = \App\Assessment::factory()->create();
             $staff = $assessment->staff;
 
             $browser->loginAs($admin)
@@ -276,5 +276,4 @@ class AdminTest extends DuskTestCase
         }
         return $spreadsheet->generate($data);
     }
-
 }
