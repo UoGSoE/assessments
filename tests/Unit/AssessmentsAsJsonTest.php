@@ -29,9 +29,9 @@ class AssessmentsAsJsonTest extends TestCase
     public function we_can_fetch_all_assessments_for_a_given_student_as_json()
     {
         $student = $this->createStudent();
-        $courses = factory(Course::class, 2)->create()->each(function ($course) use ($student) {
+        $courses = Course::factory()->count(2)->create()->each(function ($course) use ($student) {
             $course->students()->attach($student);
-            $assessments = factory(Assessment::class, 3)->create();
+            $assessments = Assessment::factory()->count(3)->create();
             $course->assessments()->saveMany($assessments);
         });
 
@@ -61,9 +61,9 @@ class AssessmentsAsJsonTest extends TestCase
     {
         $staff = $this->createStaff();
         // create 6 assessments in total
-        $courses = factory(Course::class, 2)->create()->each(function ($course) use ($staff) {
+        $courses = Course::factory()->count(2)->create()->each(function ($course) use ($staff) {
             $course->staff()->attach($staff);
-            $assessments = factory(Assessment::class, 3)->create();
+            $assessments = Assessment::factory()->count(3)->create();
             $course->assessments()->saveMany($assessments);
         });
 

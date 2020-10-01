@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AssessmentFeedback extends Model
 {
+    use HasFactory;
+
     protected $table = 'assessment_feedbacks';
 
     protected $fillable = [

@@ -3,11 +3,13 @@
 
 namespace Tests\Feature;
 
+use App\User;
+use Carbon\Carbon;
+use App\Assessment;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
 
 class AdminTest extends TestCase
 {
@@ -33,10 +35,10 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 3)->states('student')->create();
+        $students = \App\User::factory()->count(3)->student()->create();
         $course->students()->sync($students->pluck('id'));
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+        $feedbacks = \App\AssessmentFeedback::factory()->count(2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('report.feedback'));
 
@@ -49,10 +51,10 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 3)->states('student')->create();
+        $students = \App\User::factory()->count(3)->student()->create();
         $course->students()->sync($students->pluck('id'));
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
+        $feedbacks = \App\AssessmentFeedback::factory()->count(2)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('assessment.show', $assessment->id));
 
@@ -71,7 +73,7 @@ class AdminTest extends TestCase
         $student = $this->createStudent();
         $course->students()->sync([$student->id]);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
-        $feedbacks = factory(\App\AssessmentFeedback::class, 3)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id, 'student_id' => $student->id]);
+        $feedbacks = \App\AssessmentFeedback::factory()->count(3)->create(['assessment_id' => $assessment->id, 'course_id' => $course->id, 'student_id' => $student->id]);
 
         $response = $this->actingAs($admin)->get(route('student.show', $student->id));
 
@@ -88,9 +90,9 @@ class AdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
-        $students = factory(\App\User::class, 2)->states('student')->create();
+        $students = User::factory()->student()->count(2)->create();
         $course->students()->sync($students->pluck('id'));
-        $assessments = factory(\App\Assessment::class, 2)->create(['course_id' => $course->id]);
+        $assessments = Assessment::factory()->count(2)->create(['course_id' => $course->id]);
 
         $response = $this->actingAs($admin)->get(route('course.show', $course->id));
 
@@ -128,8 +130,8 @@ class AdminTest extends TestCase
     public function admin_can_remove_all_old_data()
     {
         $admin = $this->createAdmin();
-        $assessments = factory(\App\Assessment::class, 2)->create();
-        $feedbacks = factory(\App\AssessmentFeedback::class, 2)->create();
+        $assessments = \App\Assessment::factory()->count(2)->create();
+        $feedbacks = \App\AssessmentFeedback::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->delete(route('admin.clearold'));
 
@@ -150,8 +152,8 @@ class AdminTest extends TestCase
         $course3 = $this->createCourse();
         $course1->staff()->sync([$staff->id]);
         $course2->staff()->sync([$staff->id]);
-        $assessments = factory(\App\Assessment::class, 2)->create(['staff_id' => $staff->id, 'course_id' => $course1->id]);
-        $assessments = factory(\App\Assessment::class, 3)->create(['staff_id' => $staff->id, 'course_id' => $course2->id]);
+        $assessments = \App\Assessment::factory()->count(2)->create(['staff_id' => $staff->id, 'course_id' => $course1->id]);
+        $assessments = \App\Assessment::factory()->count(3)->create(['staff_id' => $staff->id, 'course_id' => $course2->id]);
 
         $response = $this->actingAs($admin)->get(route('staff.show', $staff->id));
 

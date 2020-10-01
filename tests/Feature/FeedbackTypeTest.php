@@ -14,7 +14,7 @@ class FeedbackTypeTest extends TestCase
     /** @test */
     public function can_get_a_list_of_unique_feedback_types()
     {
-        $assessments = factory(Assessment::class, 3)->create();
+        $assessments = Assessment::factory()->count(3)->create();
 
         $types = Assessment::getFeedbackTypes();
 

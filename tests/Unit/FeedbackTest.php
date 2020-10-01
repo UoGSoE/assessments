@@ -28,7 +28,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function we_can_get_the_percantage_of_negative_feedback_for_an_assessment()
     {
-        $students = factory(\App\User::class, 10)->states('student')->create();
+        $students = \App\User::factory()->count(10)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
@@ -42,7 +42,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function we_can_get_the_number_of_feedbacks_left_for_a_member_of_staff()
     {
-        $students = factory(\App\User::class, 3)->states('student')->create();
+        $students = \App\User::factory()->count(3)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
@@ -78,7 +78,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_with_lots_of_negative_feedback_is_flagged()
     {
-        $students = factory(\App\User::class, 5)->states('student')->create();
+        $students = \App\User::factory()->count(5)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
@@ -92,11 +92,10 @@ class FeedbackTest extends TestCase
     /** @test */
     public function we_can_get_a_list_of_assessments_with_no_feedback_left_by_academics()
     {
-        factory(Assessment::class, 2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
-        factory(Assessment::class, 1)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
+        Assessment::factory()->count(2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
+        Assessment::factory()->count(1)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
 
         $this->assertEquals(2, Assessment::notSignedOff()->count());
-
     }
 
     /** @test */

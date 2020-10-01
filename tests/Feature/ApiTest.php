@@ -14,8 +14,8 @@ class ApiTest extends TestCase
     /** @test */
     public function we_can_get_a_json_feed_of_assessments()
     {
-        $assessment1 = factory(Assessment::class)->create();
-        $assessment2 = factory(Assessment::class)->create();
+        $assessment1 = Assessment::factory()->create();
+        $assessment2 = Assessment::factory()->create();
 
         $response = $this->json('GET', '/api/assessments');
 

@@ -10,10 +10,12 @@ use App\Exceptions\NotYourCourseException;
 use App\Notifications\ProblematicAssessment;
 use App\Exceptions\TooMuchTimePassedException;
 use App\Exceptions\AssessmentNotOverdueException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Assessment extends Model
 {
     use Notifiable;
+    use HasFactory;
 
     protected $fillable = ['comment', 'type', 'staff_id', 'course_id', 'type', 'deadline', 'feedback_type'];
 

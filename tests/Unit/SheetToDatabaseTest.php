@@ -98,7 +98,7 @@ class SheetToDatabaseTest extends TestCase
 
         $this->assertEquals(0, Assessment::count());
         $this->assertCount(1, $convertor->errors->all());
-        $this->assertRegExp('/Row 1: Assessment date is in the past/', $convertor->errors->first());
+        $this->assertMatchesRegularExpression('/Row 1: Assessment date is in the past/', $convertor->errors->first());
     }
 
     /** @test */

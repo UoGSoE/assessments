@@ -15,7 +15,7 @@ class ReportTest extends TestCase
     public function admin_can_view_the_overall_feedback_report()
     {
         $admin = $this->createAdmin();
-        $assessments = factory(\App\Assessment::class, 2)->create();
+        $assessments = \App\Assessment::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->get(route('report.feedback'));
 
@@ -35,10 +35,10 @@ class ReportTest extends TestCase
     public function admin_can_view_the_staff_report()
     {
         $admin = $this->createAdmin();
-        $staff = factory(User::class, 2)->states('staff')->create()->each(function ($user) {
-            $assessments = factory(\App\Assessment::class, 2)->create(['staff_id' => $user->id]);
+        $staff = User::factory()->count(2)->staff()->create()->each(function ($user) {
+            $assessments = \App\Assessment::factory()->count(2)->create(['staff_id' => $user->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = factory(\App\AssessmentFeedback::class, rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
         });
 

@@ -2,12 +2,13 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Storage;
 use App\Course;
 use Carbon\Carbon;
 use Hashids\Hashids;
-use Storage;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -15,6 +16,7 @@ class User extends Authenticatable
     use CanConvertAssessmentsToJson;
     use CanBeCreatedFromOutsideSources;
     use InteractsWithFeedbacks;
+    use HasFactory;
 
     protected $fillable = [
         'username', 'email', 'password', 'surname', 'forenames', 'is_student'
