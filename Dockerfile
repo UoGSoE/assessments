@@ -44,7 +44,7 @@ USER nobody
 #- make paths that the laravel composer.json expects to exist
 RUN mkdir -p database
 #- copy the seeds and factories so that composer generates autoload entries for them
-COPY database/seeds database/seeds
+COPY database/seeders database/seeders
 COPY database/factories database/factories
 
 
@@ -128,4 +128,3 @@ RUN curl -o /usr/local/bin/security-checker https://get.sensiolabs.org/security-
     curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
-
