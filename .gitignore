@@ -11,4 +11,5 @@ Homestead.yaml
 .env
 .env.dusk.local
 .DS_Store
+.phpunit.result.cache
 
