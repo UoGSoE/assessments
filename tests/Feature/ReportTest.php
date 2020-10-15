@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class ReportTest extends TestCase
 {
@@ -15,7 +16,7 @@ class ReportTest extends TestCase
     public function admin_can_view_the_overall_feedback_report()
     {
         $admin = $this->createAdmin();
-        $assessments = \App\Assessment::factory()->count(2)->create();
+        $assessments = \App\Models\Assessment::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->get(route('report.feedback'));
 
@@ -27,7 +28,7 @@ class ReportTest extends TestCase
             $response->assertSee($assessment->type);
             $response->assertSee($assessment->feedback_due->format('Y-m-d'));
             $response->assertSee($assessment->reportSignedOff());
-            $response->assertSee("" . $assessment->totalNegativeFeedbacks());
+            $response->assertSee(''.$assessment->totalNegativeFeedbacks());
         }
     }
 
@@ -36,9 +37,9 @@ class ReportTest extends TestCase
     {
         $admin = $this->createAdmin();
         $staff = User::factory()->count(2)->staff()->create()->each(function ($user) {
-            $assessments = \App\Assessment::factory()->count(2)->create(['staff_id' => $user->id]);
+            $assessments = \App\Models\Assessment::factory()->count(2)->create(['staff_id' => $user->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\Models\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
         });
 
@@ -48,9 +49,9 @@ class ReportTest extends TestCase
         $response->assertSee('Staff Report');
         foreach ($staff as $user) {
             $response->assertSee($user->fullName());
-            $response->assertSee("" . $user->numberOfAssessments());
-            $response->assertSee("" . $user->totalStudentFeedbacks());
-            $response->assertSee("" . $user->numberOfMissedDeadlines());
+            $response->assertSee(''.$user->numberOfAssessments());
+            $response->assertSee(''.$user->totalStudentFeedbacks());
+            $response->assertSee(''.$user->numberOfMissedDeadlines());
         }
         $response->assertSee("is-admin-{$admin->id}");
     }

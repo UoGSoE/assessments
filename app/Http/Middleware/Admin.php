@@ -18,6 +18,7 @@ class Admin
         if (! $request->user()->is_admin) {
             return redirect('/');
         }
+
         return $next($request);
     }
 }

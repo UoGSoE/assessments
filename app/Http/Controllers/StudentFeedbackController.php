@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
+use App\Models\Assessment;
 use Illuminate\Http\Request;
-use App\Assessment;
+use Illuminate\Support\Facades\Gate;
 
 class StudentFeedbackController extends Controller
 {
@@ -15,6 +15,7 @@ class StudentFeedbackController extends Controller
             return redirect('/home');
         }
         $request->user()->recordFeedback($assessment);
+
         return redirect('/home')->with('success_message', 'Feedback recorded');
     }
 }

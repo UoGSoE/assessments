@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Assessment;
 use Illuminate\Console\Command;
-use App\Assessment;
 
 class AutoSignoffAssessments extends Command
 {

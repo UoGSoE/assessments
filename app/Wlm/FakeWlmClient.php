@@ -23,12 +23,14 @@ class FakeWlmClient implements WlmClientInterface
     public function getCourses()
     {
         $this->statusCode = 200;
+
         return collect(['TEST1234' => $this->getCourse1(), 'TEST4321' => $this->getCourse2()]);
     }
 
     public function getCourse($code)
     {
         $this->statusCode = 200;
+
         return $this->getCourse1();
     }
 
@@ -38,19 +40,21 @@ class FakeWlmClient implements WlmClientInterface
         if ($guid == 'NONEXISTANT') {
             $this->responseCode = -1;
             $this->responseMessage = 'No such GUID';
+
             return collect([]);
         }
         if ($guid == 'WLMDOWN') {
             throw new \Exception('WLM Error');
         }
-        if (!$this->wlmStaff->has($guid)) {
+        if (! $this->wlmStaff->has($guid)) {
             $this->wlmStaff[$guid] = collect([
                 'GUID' => $guid,
                 'Email' => "{$guid}@glasgow.ac.uk",
                 'Surname' => 'McFake',
-                'Forenames' => 'Jake'
+                'Forenames' => 'Jake',
             ]);
         }
+
         return $this->wlmStaff[$guid];
     }
 
@@ -58,31 +62,31 @@ class FakeWlmClient implements WlmClientInterface
     {
         return [
             'Code' => 'TEST1234',
-            'Title' => "Fake Course 1234",
+            'Title' => 'Fake Course 1234',
             'ActiveFlag' => 'Yes',
             'Discipline' => 'Electronics',
             'Students' => [
                 '1234567' => [
                     'Matric' => '1234567',
                     'Surname' => 'McFake',
-                    'Forenames' => 'Fakey'
+                    'Forenames' => 'Fakey',
                 ],
                 '7654321' => [
                     'Matric' => '7654321',
                     'Surname' => 'Smith',
-                    'Forenames' => 'Jenny'
+                    'Forenames' => 'Jenny',
                 ],
             ],
             'Staff' => [
                 'fake1x' => [
                     'GUID' => 'fake1x',
                     'Surname' => 'Faker',
-                    'Forenames' => 'Prof'
+                    'Forenames' => 'Prof',
                 ],
                 'blah2y' => [
                     'GUID' => 'blah2y',
                     'Surname' => 'McManus',
-                    'Forenames' => 'Mark'
+                    'Forenames' => 'Mark',
                 ],
             ],
         ];
@@ -92,31 +96,31 @@ class FakeWlmClient implements WlmClientInterface
     {
         return [
             'Code' => 'TEST4321',
-            'Title' => "Fake Course 4321",
+            'Title' => 'Fake Course 4321',
             'ActiveFlag' => 'Yes',
             'Discipline' => 'Aero',
             'Students' => [
                 '9999999' => [
                     'Matric' => '9999999',
                     'Surname' => 'Goldie',
-                    'Forenames' => 'Debbie'
+                    'Forenames' => 'Debbie',
                 ],
                 '7654321' => [
                     'Matric' => '7654321',
                     'Surname' => 'Smith',
-                    'Forenames' => 'Jenny'
+                    'Forenames' => 'Jenny',
                 ],
             ],
             'Staff' => [
                 'doc2w' => [
                     'GUID' => 'doc2w',
                     'Surname' => 'Baker',
-                    'Forenames' => 'Tom'
+                    'Forenames' => 'Tom',
                 ],
                 'blah2y' => [
                     'GUID' => 'blah2y',
                     'Surname' => 'McManus',
-                    'Forenames' => 'Mark'
+                    'Forenames' => 'Mark',
                 ],
             ],
         ];

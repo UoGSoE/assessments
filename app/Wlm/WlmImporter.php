@@ -2,11 +2,11 @@
 
 namespace App\Wlm;
 
-use Illuminate\Support\Facades\Log;
-use App\Course;
-use App\User;
-use App\Wlm\WlmClientInterface;
+use App\Models\Course;
 use App\Mail\WlmImportProblem;
+use App\Models\User;
+use App\Wlm\WlmClientInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class WlmImporter
@@ -32,9 +32,10 @@ class WlmImporter
                 throw new \Exception('Failed to get data from the WLM');
             }
             $courseIds = $courses->filter(function ($wlmCourse) {
-                if (!preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
+                if (! preg_match('/^(ENG|TEST)/', $wlmCourse['Code'])) {
                     return false;
                 }
+
                 return true;
             })->take($maximumCourses)->each(function ($wlmCourse) {
                 $course = $this->courseFromWlm($wlmCourse);
@@ -44,8 +45,10 @@ class WlmImporter
             });
         } catch (\Exception $e) {
             Mail::to(config('assessments.sysadmin_email'))->send(new WlmImportProblem($e->getMessage()));
+
             return false;
         }
+
         return true;
     }
 
@@ -55,6 +58,7 @@ class WlmImporter
         if ($importResult) {
             $this->removeDataNotInWlm();
         }
+
         return $importResult;
     }
 
@@ -77,14 +81,16 @@ class WlmImporter
 
     protected function staffFromWlm($wlmCourse)
     {
-        if (!array_key_exists('Staff', $wlmCourse)) {
+        if (! array_key_exists('Staff', $wlmCourse)) {
             return collect([]);
         }
+
         return collect($wlmCourse['Staff'])->map(function ($wlmStaff) {
-            if (!$this->staffList->has($wlmStaff['GUID'])) {
+            if (! $this->staffList->has($wlmStaff['GUID'])) {
                 $wlmStaff['Email'] = $this->getStaffEmail($wlmStaff);
                 $this->staffList[$wlmStaff['GUID']] = User::staffFromWlmData($wlmStaff);
             }
+
             return $this->staffList[$wlmStaff['GUID']];
         })->pluck('id');
     }
@@ -94,36 +100,40 @@ class WlmImporter
      * array.  It's a little nasty as once in a while there is a student matric
      * which is encoded in a weird way (not utf8 or ascii - probably an excel-ism)
      * so that's why there is some unpleasant reject() and try/catch stuff in
-     * here... :: sadface ::
+     * here... :: sadface ::.
      */
     protected function studentsFromWlm($wlmCourse)
     {
-        if (!array_key_exists('Students', $wlmCourse)) {
+        if (! array_key_exists('Students', $wlmCourse)) {
             return collect([]);
         }
+
         return collect($wlmCourse['Students'])->reject(function ($wlmStudent) {
             return preg_match('/^[0-9]{7}$/u', $wlmStudent['Matric']) !== 1;
         })->map(function ($wlmStudent) use ($wlmCourse) {
-            if (!$this->studentList->has($wlmStudent['Matric'])) {
+            if (! $this->studentList->has($wlmStudent['Matric'])) {
                 try {
                     $this->studentList[$wlmStudent['Matric']] = User::studentFromWlmData($wlmStudent);
                 } catch (\Exception $e) {
-                    Log::info('WLM Import - Failed to insert student with matric ' . $wlmStudent['Matric']);
+                    Log::info('WLM Import - Failed to insert student with matric '.$wlmStudent['Matric']);
+
                     return false;
                 }
             }
+
             return $this->studentList[$wlmStudent['Matric']];
         })->reject(function ($student) {
-            return (bool) !$student;
+            return (bool) ! $student;
         })->pluck('id');
     }
 
     protected function getStaffEmail($wlmStaff)
     {
         $staff = $this->client->getStaff($wlmStaff['GUID']);
-        if (!preg_match('/\@/', $staff['Email'])) {
-            $staff['Email'] = $wlmStaff['GUID'] . '@glasgow.ac.uk';
+        if (! preg_match('/\@/', $staff['Email'])) {
+            $staff['Email'] = $wlmStaff['GUID'].'@glasgow.ac.uk';
         }
+
         return $staff['Email'];
     }
 }

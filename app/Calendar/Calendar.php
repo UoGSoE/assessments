@@ -18,6 +18,7 @@ class Calendar
         foreach ($events as $event) {
             $this->addEvent($event);
         }
+
         return $this;
     }
 
@@ -29,6 +30,7 @@ class Calendar
             ->setSummary($event['title'])
             ->setDescription($event['comment']);
         $this->calendar->addComponent($icalEvent);
+
         return $this;
     }
 
@@ -40,6 +42,7 @@ class Calendar
             'title' => $assessment->title,
             'comment' => $assessment->comment,
         ];
+
         return $this->addEvent($event);
     }
 
@@ -48,6 +51,7 @@ class Calendar
         foreach ($assessments as $assessment) {
             $this->addAssessment($assessment);
         }
+
         return $this;
     }
 

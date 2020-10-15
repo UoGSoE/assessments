@@ -1,15 +1,16 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Exceptions\AssessmentNotOverdueException;
+use App\Exceptions\NotYourCourseException;
+use App\Exceptions\TooMuchTimePassedException;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Exceptions\NotYourCourseException;
-use App\Exceptions\TooMuchTimePassedException;
-use App\Exceptions\AssessmentNotOverdueException;
+use Tests\TestCase;
 
 class StudentFeedbackTest extends TestCase
 {

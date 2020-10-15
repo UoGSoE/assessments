@@ -1,14 +1,15 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use App\Assessment;
-use Tests\TestCase;
-use Tests\CreatesApplication;
-use Illuminate\Support\Facades\DB;
+use App\Models\Assessment;
 use App\Spreadsheet\SheetToDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Tests\CreatesApplication;
+use Tests\TestCase;
 
 class SheetToDatabaseTest extends TestCase
 {
@@ -25,11 +26,10 @@ class SheetToDatabaseTest extends TestCase
         }
 
         $this->createStaff([
-            'email' => "angela.busse@glasgow.ac.uk",
+            'email' => 'angela.busse@glasgow.ac.uk',
         ]);
         $this->createCourse(['code' => 'ENG4037']);
     }
-
 
     /** @test */
     public function can_convert_a_valid_row_to_an_assessment()
@@ -118,18 +118,19 @@ class SheetToDatabaseTest extends TestCase
     protected function getRowData($attribs = [])
     {
         $staff = $this->createStaff();
+
         return array_merge([
-            "ENG4037",
-            "4",
-            "moodle quiz",
-            "moodle - graded",
-            "Angela Busse",
-            "angela.busse@glasgow.ac.uk",
+            'ENG4037',
+            '4',
+            'moodle quiz',
+            'moodle - graded',
+            'Angela Busse',
+            'angela.busse@glasgow.ac.uk',
             now()->format('d/m/Y H:i'),
             now()->addWeeks(2)->format('d/m/Y H:i'),
-            "No",
-            "0",
-            "my comments",
+            'No',
+            '0',
+            'my comments',
         ], $attribs);
     }
 }

@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Models\Assessment;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
-use App\Assessment;
+use Tests\TestCase;
 
 class FeedbackTest extends TestCase
 {
@@ -28,7 +29,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function we_can_get_the_percantage_of_negative_feedback_for_an_assessment()
     {
-        $students = \App\User::factory()->count(10)->student()->create();
+        $students = \App\Models\User::factory()->count(10)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
@@ -42,7 +43,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function we_can_get_the_number_of_feedbacks_left_for_a_member_of_staff()
     {
-        $students = \App\User::factory()->count(3)->student()->create();
+        $students = \App\Models\User::factory()->count(3)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);
@@ -64,7 +65,7 @@ class FeedbackTest extends TestCase
         $leftOnTime = $this->createAssessment([
             'staff_id' => $staff->id,
             'deadline' => Carbon::now()->subWeeks(4),
-            'feedback_left' => Carbon::now()->subweeks(2)
+            'feedback_left' => Carbon::now()->subweeks(2),
         ]);
         $leftLate = $this->createAssessment([
             'staff_id' => $staff->id,
@@ -78,7 +79,7 @@ class FeedbackTest extends TestCase
     /** @test */
     public function an_assessment_with_lots_of_negative_feedback_is_flagged()
     {
-        $students = \App\User::factory()->count(5)->student()->create();
+        $students = \App\Models\User::factory()->count(5)->student()->create();
         $course = $this->createCourse();
         $course->students()->saveMany($students);
         $assessment = $this->createAssessment(['course_id' => $course->id]);

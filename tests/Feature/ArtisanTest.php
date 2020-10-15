@@ -1,23 +1,24 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Assessment;
+use App\Models\Course;
+use App\Mail\WlmImportProblem;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
-use Carbon\Carbon;
-use App\Assessment;
-use App\Wlm\FakeWlmClient;
 use App\Wlm\FakeBrokenWlmClient;
-use App\Course;
-use App\Mail\WlmImportProblem;
+use App\Wlm\FakeWlmClient;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Storage;
+use Tests\TestCase;
 
 class ArtisanTest extends TestCase
 {
@@ -63,10 +64,10 @@ class ArtisanTest extends TestCase
     public function running_the_auto_signoff_command_signs_off_appropriate_assessments()
     {
         $canBeSignedOff = Assessment::factory()->count(3)->create([
-            'deadline' => Carbon::now()->subWeeks(7)
+            'deadline' => Carbon::now()->subWeeks(7),
         ]);
         $cantBeSignedOff = Assessment::factory()->count(2)->create([
-            'deadline' => Carbon::now()->subWeeks(2)
+            'deadline' => Carbon::now()->subWeeks(2),
         ]);
 
         $this->assertEquals(5, Assessment::notSignedOff()->count());
@@ -127,8 +128,8 @@ class ArtisanTest extends TestCase
 
         \Artisan::call('assessments:generateics');
 
-        Storage::disk('calendars')->assertExists("eng/year1.ics");
-        Storage::disk('calendars')->assertExists("eng/all.ics");
+        Storage::disk('calendars')->assertExists('eng/year1.ics');
+        Storage::disk('calendars')->assertExists('eng/all.ics');
         Storage::disk('calendars')->assertExists("eng/{$staff->getUuid()}.ics");
         Storage::disk('calendars')->assertExists("eng/{$student->getUuid()}.ics");
     }

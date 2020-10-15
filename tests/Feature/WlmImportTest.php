@@ -1,19 +1,20 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Wlm\WlmImporter;
+use App\Models\AssessmentFeedback;
+use App\Models\Course;
+use App\Models\User;
 use App\Wlm\FakeWlmClient;
 use App\Wlm\WlmClient;
-use App\Course;
-use App\User;
-use App\AssessmentFeedback;
+use App\Wlm\WlmImporter;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class WlmImportTest extends TestCase
 {
@@ -82,7 +83,7 @@ class WlmImportTest extends TestCase
     /**
      * @test
      * @group integration
-    */
+     */
     public function can_import_the_data_from_the_real_wlm()
     {
         $importer = new WlmImporter(new WlmClient);
@@ -93,5 +94,4 @@ class WlmImportTest extends TestCase
         $this->assertGreaterThan(0, User::staff()->count());
         $this->assertGreaterThan(0, User::student()->count());
     }
-
 }

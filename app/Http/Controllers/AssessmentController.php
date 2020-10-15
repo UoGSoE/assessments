@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\Request;
-use App\Assessment;
-use App\User;
-use App\Course;
+use App\Models\Assessment;
+use App\Models\Course;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AssessmentController extends Controller
 {
     public function show($id)
     {
         $assessment = Assessment::findOrFail($id);
+
         return view('assessment.show', compact('assessment'));
     }
 
@@ -23,6 +24,7 @@ class AssessmentController extends Controller
         $staff = User::staff()->orderBy('surname')->get();
         $courses = Course::orderBy('code')->get();
         $feedbackTypes = Assessment::getFeedbackTypes();
+
         return view('assessment.create', compact('assessment', 'staff', 'courses', 'feedbackTypes'));
     }
 
@@ -36,6 +38,7 @@ class AssessmentController extends Controller
             'course_id' => 'required|integer|exists:courses,id',
         ]);
         $assessment = Assessment::createViaForm($request);
+
         return redirect()->route('assessment.show', $assessment->id)->with('success_message', 'Created');
     }
 
@@ -44,6 +47,7 @@ class AssessmentController extends Controller
         $assessment = Assessment::findOrFail($id);
         $staff = User::staff()->orderBy('surname')->get();
         $feedbackTypes = Assessment::getFeedbackTypes();
+
         return view('assessment.edit', compact('assessment', 'staff', 'feedbackTypes'));
     }
 
@@ -56,6 +60,7 @@ class AssessmentController extends Controller
         ]);
         $assessment = Assessment::findOrFail($id);
         $assessment->updateViaForm($request);
+
         return redirect()->route('assessment.show', $id)->with('success_message', 'Updated');
     }
 
@@ -64,6 +69,7 @@ class AssessmentController extends Controller
         $assessment = Assessment::findOrFail($id);
         $assessment->feedbacks()->get()->each->delete();
         $assessment->delete();
+
         return redirect()->route('report.feedback')->with('success_message', 'Assessment deleted');
     }
 }

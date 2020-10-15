@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class StudentAssessmentTest extends TestCase
 {
@@ -64,7 +65,7 @@ class StudentAssessmentTest extends TestCase
         $response->assertSee($assessment->course->title);
         $response->assertSee($assessment->deadline->format('d/m/Y H:i'));
         $response->assertSee($assessment->staff->fullName());
-        $this->assertMatchesRegularExpression("/Feedback Completed.+No/s", $response->content());
+        $this->assertMatchesRegularExpression('/Feedback Completed.+No/s', $response->content());
     }
 
     /** @test */
@@ -79,6 +80,6 @@ class StudentAssessmentTest extends TestCase
         $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
 
         $response->assertStatus(200);
-        $this->assertMatchesRegularExpression("#Feedback Completed.+" . $feedbackLeftString . "#s", $response->content());
+        $this->assertMatchesRegularExpression('#Feedback Completed.+'.$feedbackLeftString.'#s', $response->content());
     }
 }

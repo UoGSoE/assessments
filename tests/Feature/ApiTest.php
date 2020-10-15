@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Models\Assessment;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Assessment;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class ApiTest extends TestCase
 {
@@ -27,10 +28,10 @@ class ApiTest extends TestCase
                     'feedback_left' => $assessment1->feedback_left,
                     'feedback_type' => $assessment1->feedback_type,
                     'course' => [
-                        'id' => $assessment1->course->id
+                        'id' => $assessment1->course->id,
                     ],
                     'staff' => [
-                        'id' => $assessment1->staff->id
+                        'id' => $assessment1->staff->id,
                     ],
                 ],
                 [
@@ -39,10 +40,10 @@ class ApiTest extends TestCase
                     'feedback_left' => $assessment2->feedback_left,
                     'feedback_type' => $assessment2->feedback_type,
                     'course' => [
-                        'id' => $assessment2->course->id
+                        'id' => $assessment2->course->id,
                     ],
                     'staff' => [
-                        'id' => $assessment2->staff->id
+                        'id' => $assessment2->staff->id,
                     ],
                 ],
             ],

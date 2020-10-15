@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class AdminAssessmentTest extends TestCase
 {
@@ -97,7 +98,7 @@ class AdminAssessmentTest extends TestCase
             'comment' => 'I am very happy with my cheese purchase',
             'staff_id' => $staff->id,
             'course_id' => $course->id,
-            'feedback_type' => 'HAPPYEASTER'
+            'feedback_type' => 'HAPPYEASTER',
         ]);
 
         $response->assertStatus(302);
@@ -111,5 +112,4 @@ class AdminAssessmentTest extends TestCase
             'feedback_type' => 'HAPPYEASTER',
         ]);
     }
-
 }

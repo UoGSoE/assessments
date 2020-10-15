@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class StudentFeedbackTest extends TestCase
 {
@@ -87,6 +88,6 @@ class StudentFeedbackTest extends TestCase
         $response = $this->actingAs($student)->get(route('assessment.show', $assessment->id));
 
         $response->assertStatus(200);
-        $response->assertSee("You reported feedback late on " . $feedback->created_at->format('d/m/Y'));
+        $response->assertSee('You reported feedback late on '.$feedback->created_at->format('d/m/Y'));
     }
 }

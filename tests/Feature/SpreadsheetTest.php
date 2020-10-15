@@ -1,16 +1,17 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Assessment;
+use App\Models\Course;
 use App\Spreadsheet\Spreadsheet;
 use Carbon\Carbon;
-use App\Course;
-use App\Assessment;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class SpreadsheetTest extends TestCase
 {
@@ -39,7 +40,7 @@ class SpreadsheetTest extends TestCase
     /**
       This test is commented out as I can't figure out how to create a spreadsheet with
       a date that Spout/Excel is happy with... :-/
-    */
+     */
     // public function test_importing_invalid_course_data_produces_session_errors()
     // {
     //     $this->staff1 = $this->createStaff();
@@ -138,7 +139,7 @@ class SpreadsheetTest extends TestCase
     protected function createSpreadsheet($data = null)
     {
         $spreadsheet = new Spreadsheet;
-        if (!$data) {
+        if (! $data) {
             $data = [
                 [
                     Carbon::now()->addDays(2)->format('l, F d, Y'),
@@ -158,10 +159,11 @@ class SpreadsheetTest extends TestCase
                     'Homework',
                     $this->staff2->fullName(),
                     $this->staff2->username,
-                    'CADBURYS'
+                    'CADBURYS',
                 ],
             ];
         }
+
         return $spreadsheet->generate($data);
     }
 }

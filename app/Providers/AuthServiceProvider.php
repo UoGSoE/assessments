@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,11 +30,12 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_admin) {
                 return true;
             }
+
             return false;
         });
 
         Gate::define('leave_feedback', function ($student, $assessment) {
-            if (!$student->is_student) {
+            if (! $student->is_student) {
                 return false;
             }
             if ($student->notOnCourse($assessment->course)) {
@@ -49,6 +50,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($student->hasLeftFeedbackFor($assessment)) {
                 return false;
             }
+
             return true;
         });
 
@@ -62,6 +64,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->notOnCourse($assessment->course)) {
                 return false;
             }
+
             return true;
         });
 
@@ -72,6 +75,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->id != $assessment->staff_id) {
                 return false;
             }
+
             return true;
         });
 
@@ -85,6 +89,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->id == $assessment->staff_id) {
                 return true;
             }
+
             return false;
         });
 
@@ -95,6 +100,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->notOnCourse($course)) {
                 return false;
             }
+
             return true;
         });
 
@@ -102,6 +108,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_student) {
                 return false;
             }
+
             return true;
         });
     }

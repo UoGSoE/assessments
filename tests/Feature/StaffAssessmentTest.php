@@ -1,14 +1,15 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class StaffAssessmentTest extends TestCase
 {
@@ -45,7 +46,6 @@ class StaffAssessmentTest extends TestCase
         $staff->markAllFeedbacksAsNotified();
 
         $this->assertEquals(0, $staff->newFeedbacks()->count());
-
     }
 
     /** @test */

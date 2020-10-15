@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Carbon\Carbon;
 use App\Spreadsheet\Spreadsheet;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class AdminTest extends DuskTestCase
 {
@@ -74,7 +75,7 @@ class AdminTest extends DuskTestCase
             $browser->loginAs($admin)
                     ->visit("/assessment/{$assessment->id}")
                     ->click('#edit-assessment-button')
-                    ->assertSee("Edit Assessment")
+                    ->assertSee('Edit Assessment')
                     ->type('type', 'something')
                     ->select('staff_id', "$staff->id")
                     ->type('date', $now->format('d/m/Y'))
@@ -97,9 +98,9 @@ class AdminTest extends DuskTestCase
             $staff = $this->createStaff();
             $course = $this->createCourse();
             $browser->loginAs($admin)
-                    ->visit("/admin/report/feedback")
+                    ->visit('/admin/report/feedback')
                     ->click('#add-assessment-button')
-                    ->assertSee("New Assessment")
+                    ->assertSee('New Assessment')
                     ->type('type', 'something')
                     ->select('staff_id', "$staff->id")
                     ->type('date', $now->format('d/m/Y'))
@@ -131,13 +132,13 @@ class AdminTest extends DuskTestCase
             $student->recordFeedback($assessment);
             $browser->loginAs($admin)
                     ->visit("/assessment/{$assessment->id}")
-                    ->press("#delete-button")
+                    ->press('#delete-button')
                     ->waitFor('#pop-up')
                     ->assertSee('Do you really want to delete')
                     ->clickLink('No')
                     ->assertDontSee('Do you really want to delete')
                     ->assertSee($assessment->course->code)
-                    ->press("#delete-button")
+                    ->press('#delete-button')
                     ->waitFor('#pop-up')
                     ->clickLink('Yes')
                     ->assertSee('Feedback Report')
@@ -150,11 +151,11 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessments = \App\Assessment::factory()->count(5)->create();
+            $assessments = \App\Models\Assessment::factory()->count(5)->create();
             $firstAssessment = $assessments->first();
-            $feedbacks = \App\AssessmentFeedback::factory()->count(5)->create();
+            $feedbacks = \App\Models\AssessmentFeedback::factory()->count(5)->create();
             $browser->loginAs($admin)
-                    ->visit("/admin/report/feedback")
+                    ->visit('/admin/report/feedback')
                     ->assertSee($firstAssessment->course->code)
                     ->press('#delete-button')
                     ->waitFor('#pop-up')
@@ -162,7 +163,7 @@ class AdminTest extends DuskTestCase
                     ->clickLink('No')
                     ->assertDontSee('Do you really want to delete')
                     ->assertSee($firstAssessment->course->code)
-                    ->press("#delete-button")
+                    ->press('#delete-button')
                     ->waitFor('#pop-up')
                     ->clickLink('Yes')
                     ->assertSee('Feedback Report')
@@ -180,13 +181,13 @@ class AdminTest extends DuskTestCase
             $staff2 = $this->createStaff();
             $course = $this->createCourse();
             $course->staff()->sync([$staff1->id]);
-            $assessments = \App\Assessment::factory()->count(5)->create(['staff_id' => $staff1->id]);
-            $assessments = \App\Assessment::factory()->count(7)->create(['staff_id' => $staff2->id]);
+            $assessments = \App\Models\Assessment::factory()->count(5)->create(['staff_id' => $staff1->id]);
+            $assessments = \App\Models\Assessment::factory()->count(7)->create(['staff_id' => $staff2->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\Models\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
             $browser->loginAs($admin)
-                    ->visit("/")
+                    ->visit('/')
                     ->clickLink('Admin')
                     ->click('#staff-report-button')
                     ->assertSee('Staff Report')
@@ -202,11 +203,11 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessment = \App\Assessment::factory()->create();
+            $assessment = \App\Models\Assessment::factory()->create();
             $staff = $assessment->staff;
 
             $browser->loginAs($admin)
-                    ->visit("/")
+                    ->visit('/')
                     ->clickLink('Admin')
                     ->clickLink($staff->fullName())
                     ->assertSee('Staff Details')
@@ -214,7 +215,7 @@ class AdminTest extends DuskTestCase
                     ->pause(300);
             $this->assertTrue($staff->fresh()->is_admin);
             $browser->loginAs($admin)
-                    ->visit("/")
+                    ->visit('/')
                     ->clickLink('Admin')
                     ->clickLink($staff->fullName())
                     ->assertSee('Staff Details')
@@ -231,7 +232,7 @@ class AdminTest extends DuskTestCase
             $admin = $this->createAdmin();
             $sheet = $this->createSpreadsheet();
             $browser->loginAs($admin)
-                    ->visit("/")
+                    ->visit('/')
                     ->clickLink('Admin')
                     ->click('#upload-coursework-button')
                     ->assertSee('Upload Coursework Spreadsheet')
@@ -250,7 +251,7 @@ class AdminTest extends DuskTestCase
         $spreadsheet = new Spreadsheet;
         $this->staff1 = $this->createStaff();
         $this->staff2 = $this->createStaff();
-        if (!$data) {
+        if (! $data) {
             $data = [
                 [
                     Carbon::now()->addDays(2)->format('l, F d, Y'),
@@ -274,6 +275,7 @@ class AdminTest extends DuskTestCase
                 ],
             ];
         }
+
         return $spreadsheet->generate($data);
     }
 }

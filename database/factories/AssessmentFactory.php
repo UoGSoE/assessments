@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Assessment;
-use App\Course;
-use App\User;
+use App\Models\Assessment;
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AssessmentFactory extends Factory
@@ -34,6 +34,7 @@ class AssessmentFactory extends Factory
         ];
         $now = \Carbon\Carbon::now();
         $deadline = $now->addWeeks(rand(1, 26));
+
         return [
             'deadline' => $deadline,
             'type' => $this->faker->randomElement($types),

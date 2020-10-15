@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Auth;
 use Illuminate\Http\Request;
-use App\Course;
 
 class HomeController extends Controller
 {
     public function index()
     {
         $assessments = Auth::user()->assessmentsAsJson();
+
         return view('home', compact('assessments'));
     }
 
@@ -21,8 +22,10 @@ class HomeController extends Controller
         }
         $assessments = Course::active()->with('assessments')->get()->flatMap(function ($course) {
             $year = $course->getYear();
+
             return $course->assessments->map->toEvent($course, $year);
         })->toJson();
+
         return view('landing', compact('assessments'));
     }
 }

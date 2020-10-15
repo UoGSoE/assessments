@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use Laravel\Dusk\DuskServiceProvider;
-use Eluceo\iCal\Component\Calendar;
-use App\Wlm\WlmClientInterface;
 use App\Wlm\WlmClient;
+use App\Wlm\WlmClientInterface;
 use DB;
+use Eluceo\iCal\Component\Calendar;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Dusk\DuskServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Storage;
-use App\Course;
+use App\Models\Course;
 use Carbon\Carbon;
 use Hashids\Hashids;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Storage;
 
 class User extends Authenticatable
 {
@@ -19,7 +19,7 @@ class User extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
-        'username', 'email', 'password', 'surname', 'forenames', 'is_student'
+        'username', 'email', 'password', 'surname', 'forenames', 'is_student',
     ];
 
     protected $hidden = [
@@ -27,7 +27,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'is_admin' => 'boolean'
+        'is_admin' => 'boolean',
     ];
 
     public function courses()
@@ -35,6 +35,7 @@ class User extends Authenticatable
         if ($this->is_student) {
             return $this->belongsToMany(Course::class, 'course_student', 'student_id')->active();
         }
+
         return $this->belongsToMany(Course::class, 'course_staff', 'staff_id')->active();
     }
 
@@ -46,6 +47,7 @@ class User extends Authenticatable
     public function assessmentsWhereFeedbacksDue()
     {
         $cutoff = Carbon::now()->subDays(config('assessments.feedback_grace_days'));
+
         return $this->assessments()->where('deadline', '<=', $cutoff);
     }
 
@@ -119,7 +121,7 @@ class User extends Authenticatable
 
     public function fullName()
     {
-        return $this->surname . ', ' . $this->forenames;
+        return $this->surname.', '.$this->forenames;
     }
 
     public function isStudent()
@@ -137,17 +139,19 @@ class User extends Authenticatable
         if (preg_match('/^[0-9]{7}[a-z]$/i', $username)) {
             return true;
         }
+
         return false;
     }
 
     public function notOnCourse($courseId)
     {
-        if (!is_numeric($courseId)) {
+        if (! is_numeric($courseId)) {
             $courseId = $courseId->id;
         }
         if ($this->courses->where('id', $courseId)->first()) {
             return false;
         }
+
         return true;
     }
 
@@ -162,12 +166,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Used to generate a unique filename for the users ical file
+     * Used to generate a unique filename for the users ical file.
      */
     public function getUuid()
     {
         $hasher = new Hashids(config('assessments.hash_seed'), 10);
-        return $this->username . '_' . $hasher->encode($this->id);
+
+        return $this->username.'_'.$hasher->encode($this->id);
     }
 
     public function icsPath()
@@ -177,6 +182,6 @@ class User extends Authenticatable
 
     public function icsUrl()
     {
-        return url('calendars/' . $this->icsPath());
+        return url('calendars/'.$this->icsPath());
     }
 }

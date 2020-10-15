@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Exceptions\AssessmentNotOverdueException;
+use App\Exceptions\NotYourCourseException;
+use App\Exceptions\TooMuchTimePassedException;
+use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\Exceptions\NotYourCourseException;
-use App\Notifications\ProblematicAssessment;
-use App\Exceptions\TooMuchTimePassedException;
-use App\Exceptions\AssessmentNotOverdueException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Assessment extends Model
 {
@@ -30,7 +30,6 @@ class Assessment extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-
 
     public function course()
     {
@@ -70,6 +69,7 @@ class Assessment extends Model
         if ($this->totalNegativeFeedbacks() == 0) {
             return 0;
         }
+
         return 100.0 / ($this->course->students->count() / $this->totalNegativeFeedbacks());
     }
 
@@ -80,17 +80,18 @@ class Assessment extends Model
 
     public function getTitleAttribute()
     {
-        return $this->course->code . ' - ' . $this->type;
+        return $this->course->code.' - '.$this->type;
     }
 
     /**
-     * This is just a formatter for some reports
+     * This is just a formatter for some reports.
      */
     public function reportSignedOff()
     {
         if ($this->feedback_left) {
             return $this->feedback_left->format('Y-m-d');
         }
+
         return 'No';
     }
 
@@ -99,6 +100,7 @@ class Assessment extends Model
         if ($this->feedback_due->lt(Carbon::now())) {
             return true;
         }
+
         return false;
     }
 
@@ -121,6 +123,7 @@ class Assessment extends Model
         if ($this->feedback_due->addDays(21)->gte(Carbon::now())) {
             return false;
         }
+
         return true;
     }
 
@@ -132,9 +135,10 @@ class Assessment extends Model
 
     public function feedbackWasGiven()
     {
-        if (!$this->feedback_left) {
+        if (! $this->feedback_left) {
             return false;
         }
+
         return true;
     }
 
@@ -143,9 +147,10 @@ class Assessment extends Model
         if ($this->notOverdue()) {
             return false;
         }
-        if (!$this->feedback_left) {
+        if (! $this->feedback_left) {
             return true;
         }
+
         return $this->feedback_left->gt($this->feedback_due);
     }
 
@@ -184,6 +189,7 @@ class Assessment extends Model
         if ($this->percentageNegativeFeedbacks() > 30) {
             return true;
         }
+
         return false;
     }
 
@@ -192,11 +198,12 @@ class Assessment extends Model
         if ($this->officeHaveBeenNotified()) {
             return false;
         }
-        if (!$this->isProblematic()) {
+        if (! $this->isProblematic()) {
             return false;
         }
         $this->notify(new ProblematicAssessment($this));
         $this->markOfficeNotified();
+
         return true;
     }
 
@@ -221,6 +228,7 @@ class Assessment extends Model
         if (is_numeric($user)) {
             $user = User::findOrFail($user);
         }
+
         return $this->feedbacks()->where('student_id', '=', $user->id)->first();
     }
 
@@ -236,36 +244,39 @@ class Assessment extends Model
         $assessment = new static($request->only(['comment', 'staff_id', 'type', 'course_id', 'feedback_type']));
         $assessment->deadline = $assessment->stringsToCarbon($request->date, $request->time);
         $assessment->save();
+
         return $assessment;
     }
 
     protected function stringsToCarbon($date, $time)
     {
-        return Carbon::createFromFormat('d/m/Y H:i', $date . ' ' . $time);
+        return Carbon::createFromFormat('d/m/Y H:i', $date.' '.$time);
     }
 
     public function deadlineDate()
     {
-        if (!$this->deadline) {
+        if (! $this->deadline) {
             return '';
         }
+
         return $this->deadline->format('d/m/Y');
     }
 
     public function deadlineTime()
     {
-        if (!$this->deadline) {
+        if (! $this->deadline) {
             return '16:00';
         }
+
         return $this->deadline->format('H:i');
     }
 
     /**
-     * Used for generating the JSON encoded data for the javascript calendar
+     * Used for generating the JSON encoded data for the javascript calendar.
      */
     public function toEvent($course = null, $year = false)
     {
-        if (!$course) {
+        if (! $course) {
             $course = $this->course;
         }
         $event = [
@@ -290,12 +301,13 @@ class Assessment extends Model
             $event['color'] = 'steelblue';
             $event['textColor'] = 'white';
         }
+
         return $event;
     }
 
     /**
      * Gets a list of unique feedback types - used to populate the type-ahead when
-     * admins are manually create/editing an assessment
+     * admins are manually create/editing an assessment.
      */
     public static function getFeedbackTypes()
     {

@@ -2,10 +2,10 @@
 
 namespace Tests;
 
-use Laravel\Dusk\TestCase as BaseTestCase;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Laravel\Dusk\TestCase as BaseTestCase;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -46,31 +46,31 @@ abstract class DuskTestCase extends BaseTestCase
 
     public function createStudent($attribs = [])
     {
-        return \App\User::factory()->student()->create($attribs);
+        return \App\Models\User::factory()->student()->create($attribs);
     }
 
     public function createStaff($attribs = [])
     {
-        return \App\User::factory()->staff()->create($attribs);
+        return \App\Models\User::factory()->staff()->create($attribs);
     }
 
     public function createAdmin($attribs = [])
     {
-        return \App\User::factory()->admin()->create($attribs);
+        return \App\Models\User::factory()->admin()->create($attribs);
     }
 
     public function createCourse($attribs = [])
     {
-        return \App\Course::factory()->create($attribs);
+        return \App\Models\Course::factory()->create($attribs);
     }
 
     public function createAssessment($attribs = [])
     {
-        return \App\Assessment::factory()->create($attribs);
+        return \App\Models\Assessment::factory()->create($attribs);
     }
 
     public function createFeedback($attribs = [])
     {
-        return \App\AssessmentFeedback::factory()->create($attribs);
+        return \App\Models\AssessmentFeedback::factory()->create($attribs);
     }
 }

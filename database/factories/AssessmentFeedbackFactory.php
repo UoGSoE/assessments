@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Assessment;
-use App\AssessmentFeedback;
-use App\Course;
-use App\User;
+use App\Models\Assessment;
+use App\Models\AssessmentFeedback;
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AssessmentFeedbackFactory extends Factory

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\User;
 
 class StaffController extends Controller
 {
     public function show($id)
     {
         $staff = User::findOrFail($id);
+
         return view('staff.show', compact('staff'));
     }
 
@@ -18,6 +19,7 @@ class StaffController extends Controller
         $staff = User::findOrFail($id);
         $staff->is_admin = ! $staff->is_admin;
         $staff->save();
+
         return ['status' => 'ok'];
     }
 }
