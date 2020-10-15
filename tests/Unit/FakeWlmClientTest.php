@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Wlm\FakeWlmClient;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Wlm\FakeWlmClient;
+use Tests\TestCase;
 
 class FakeWlmClientTest extends TestCase
 {
@@ -68,7 +69,6 @@ class FakeWlmClientTest extends TestCase
 
         $staff = $client->getStaff('WLMDOWN');
     }
-
 
     public function getWlmClient()
     {

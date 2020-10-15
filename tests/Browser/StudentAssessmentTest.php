@@ -1,12 +1,13 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class StudentAssessmentTest extends DuskTestCase
 {
@@ -46,7 +47,7 @@ class StudentAssessmentTest extends DuskTestCase
             $this->assertDatabaseHas('assessment_feedbacks', [
                 'course_id' => $course1->id,
                 'student_id' => $student->id,
-                'assessment_id' => $assessment1->id
+                'assessment_id' => $assessment1->id,
             ]);
         });
     }

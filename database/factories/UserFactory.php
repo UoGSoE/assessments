@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\User;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -39,7 +39,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'username' => $this->faker->unique()->numberBetween(1000000, 9999999) . $this->faker->randomLetter,
+                'username' => $this->faker->unique()->numberBetween(1000000, 9999999).$this->faker->randomLetter,
                 'is_student' => true,
             ];
         });

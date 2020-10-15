@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Calendar\Calendar;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Calendar\Calendar;
 use Storage;
+use Tests\TestCase;
 
 class CalendarTest extends TestCase
 {

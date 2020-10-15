@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Assessment;
+use Illuminate\Console\Command;
 
 class NotifyOffice extends Command
 {

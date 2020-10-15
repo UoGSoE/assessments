@@ -5,5 +5,5 @@ return [
     'ou' => env('LDAP_OU'),
     'password_bypass' => env('LDAP_PASSWORD_BYPASS', false),
     'username' => env('LDAP_USERNAME'),
-    'password' => env('LDAP_PASSWORD')
+    'password' => env('LDAP_PASSWORD'),
 ];

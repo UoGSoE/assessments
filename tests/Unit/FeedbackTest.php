@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Assessment;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Carbon\Carbon;
-use App\Assessment;
+use Tests\TestCase;
 
 class FeedbackTest extends TestCase
 {
@@ -64,7 +65,7 @@ class FeedbackTest extends TestCase
         $leftOnTime = $this->createAssessment([
             'staff_id' => $staff->id,
             'deadline' => Carbon::now()->subWeeks(4),
-            'feedback_left' => Carbon::now()->subweeks(2)
+            'feedback_left' => Carbon::now()->subweeks(2),
         ]);
         $leftLate = $this->createAssessment([
             'staff_id' => $staff->id,

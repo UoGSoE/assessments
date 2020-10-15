@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Calendar\Calendar;
 use App\Course;
 use App\User;
-use App\Calendar\Calendar;
+use Illuminate\Console\Command;
 
 class GenerateIcs extends Command
 {
@@ -47,13 +47,13 @@ class GenerateIcs extends Command
         foreach ($courses as $course) {
             $year = $course->getYear();
             $assessments = $course->assessments;
-            if (!array_key_exists($year, $cals)) {
+            if (! array_key_exists($year, $cals)) {
                 $cals[$year] = resolve(Calendar::class);
             }
             $cals[$year]->addAssessments($assessments);
             $allCal->addAssessments($assessments);
         }
-        $allCal->save("eng/all.ics");
+        $allCal->save('eng/all.ics');
         foreach ($cals as $year => $cal) {
             $cal->save("eng/year{$year}.ics");
         }

@@ -15,9 +15,10 @@ class Staff
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->isStaff()) {
+        if (! $request->user()->isStaff()) {
             return redirect('/');
         }
+
         return $next($request);
     }
 }

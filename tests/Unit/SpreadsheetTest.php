@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Spreadsheet\Spreadsheet;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class SpreadsheetTest extends TestCase
 {
@@ -28,11 +29,11 @@ class SpreadsheetTest extends TestCase
         $spreadsheet = new Spreadsheet;
         $data = [
             0 => [
-                'Jimmy', '01/02/2015', '1234567'
+                'Jimmy', '01/02/2015', '1234567',
             ],
             1 => [
-                'Fred', '02/03/2016', '9292929'
-            ]
+                'Fred', '02/03/2016', '9292929',
+            ],
         ];
 
         $filename = $spreadsheet->generate($data);
@@ -44,6 +45,5 @@ class SpreadsheetTest extends TestCase
         $this->assertEquals('Fred', $newData[1][0]);
         $this->assertEquals('02/03/2016', $newData[1][1]);
         $this->assertEquals('9292929', $newData[1][2]);
-
     }
 }

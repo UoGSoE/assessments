@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Spreadsheet\Spreadsheet;
 use App\Assessment;
+use App\Spreadsheet\Spreadsheet;
 use App\User;
+use Illuminate\Http\Request;
 
 class ExportController extends Controller
 {
@@ -19,12 +19,14 @@ class ExportController extends Controller
     public function assessments()
     {
         $filename = $this->sheet->generate($this->generateAssessmentsData());
+
         return response()->download($filename, 'assessments.xlsx');
     }
 
     public function staff()
     {
         $filename = $this->sheet->generate($this->generateStaffData());
+
         return response()->download($filename, 'staff.xlsx');
     }
 
@@ -44,7 +46,7 @@ class ExportController extends Controller
                 'Given',
                 'Student Complaints',
                 'Other Comments',
-            ]
+            ],
         ];
         foreach ($assessments as $assessment) {
             $row = [
@@ -62,6 +64,7 @@ class ExportController extends Controller
             ];
             $rows[] = $row;
         }
+
         return $rows;
     }
 
@@ -73,12 +76,12 @@ class ExportController extends Controller
                 'No. Assessments',
                 'No. Student Feedbacks',
                 'Missed Deadlines',
-            ]
+            ],
         ];
         $staff = User::staff()->with('assessments.feedbacks')->orderBy('surname')->get();
         foreach ($staff as $user) {
             $row = [
-                $user->fullName() . ($user->is_admin ? ' (Admin)' : ''),
+                $user->fullName().($user->is_admin ? ' (Admin)' : ''),
                 $user->numberOfAssessments(),
                 $user->totalStudentFeedbacks(),
                 $user->numberOfMissedDeadlines(),

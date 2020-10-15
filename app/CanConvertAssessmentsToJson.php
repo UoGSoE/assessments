@@ -9,12 +9,13 @@ trait CanConvertAssessmentsToJson
         if ($this->isStaff()) {
             return $this->staffAssessmentsAsJson();
         }
+
         return $this->studentAssessmentsAsJson();
     }
 
     /**
      * Returns a json encoded list of assessments from a student account for use
-     * in the jquery fullcalendar view
+     * in the jquery fullcalendar view.
      */
     protected function studentAssessmentsAsJson()
     {
@@ -45,11 +46,12 @@ trait CanConvertAssessmentsToJson
                 $data[] = $event;
             }
         }
+
         return json_encode($data);
     }
 
     /**
-     * Create a modified Event array for staff for the feedback due deadline
+     * Create a modified Event array for staff for the feedback due deadline.
      */
     protected function getFeedbackEvent($event, $assessment)
     {
@@ -63,11 +65,12 @@ trait CanConvertAssessmentsToJson
             return false;
         }
         $feedbackEvent = $event;
-        $feedbackEvent['title'] = 'Feedback Due ' . $feedbackEvent['title'];
+        $feedbackEvent['title'] = 'Feedback Due '.$feedbackEvent['title'];
         $feedbackEvent['color'] = 'crimson';
         $feedbackEvent['textColor'] = 'white';
         $feedbackEvent['start'] = $assessment->feedback_due->toIso8601String();
         $feedbackEvent['end'] = $assessment->feedback_due->addHours(1)->toIso8601String();
+
         return $feedbackEvent;
     }
 }

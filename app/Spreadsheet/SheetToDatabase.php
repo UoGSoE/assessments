@@ -2,8 +2,8 @@
 
 namespace App\Spreadsheet;
 
-use App\Course;
 use App\Assessment;
+use App\Course;
 use App\User;
 use Carbon\Carbon;
 
@@ -51,14 +51,16 @@ class SheetToDatabase
         ];
 
         $course = Course::findByCode($row[$columns['course']]);
-        if (!$course) {
-            $this->addError('Unknown course code : ' . $row[$columns['course']]);
+        if (! $course) {
+            $this->addError('Unknown course code : '.$row[$columns['course']]);
+
             return false;
         }
 
         $staff = User::findByEmail($row[$columns['staff_email']]);
-        if (!$staff) {
-            $this->addError('Unknown staff email : ' . $row[$columns['staff_email']]);
+        if (! $staff) {
+            $this->addError('Unknown staff email : '.$row[$columns['staff_email']]);
+
             return false;
         }
 
@@ -72,11 +74,13 @@ class SheetToDatabase
             $submissionDate->hour(16)
                 ->minute(0);
         } catch (\Exception $e) {
-            $this->addError('Could not parse date : ' . $row[$columns['submission_deadline']]);
+            $this->addError('Could not parse date : '.$row[$columns['submission_deadline']]);
+
             return false;
         }
         if ($this->assessmentIsInThePast($submissionDate)) {
-            $this->addError('Assessment date is in the past : ' . $submissionDate->format('d/M/Y'));
+            $this->addError('Assessment date is in the past : '.$submissionDate->format('d/M/Y'));
+
             return false;
         }
 
@@ -106,6 +110,7 @@ class SheetToDatabase
         if ($date->lt(Carbon::now())) {
             return true;
         }
+
         return false;
     }
 }

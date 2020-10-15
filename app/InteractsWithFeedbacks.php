@@ -7,7 +7,7 @@ use App\Notifications\OverdueFeedback;
 trait InteractsWithFeedbacks
 {
     /**
-     * Records a student leaving feedback about an assessment
+     * Records a student leaving feedback about an assessment.
      */
     public function recordFeedback($assessment)
     {
@@ -18,7 +18,7 @@ trait InteractsWithFeedbacks
     }
 
     /**
-     * Check if a student has left feedback for an assessment
+     * Check if a student has left feedback for an assessment.
      */
     public function hasLeftFeedbackFor($assessment)
     {
@@ -26,12 +26,13 @@ trait InteractsWithFeedbacks
         if ($feedback) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Sends a member of staff a notification if they have any new feedback
-     * left by students
+     * left by students.
      */
     public function notifyAboutNewFeedback()
     {
@@ -61,13 +62,14 @@ trait InteractsWithFeedbacks
     }
 
     /**
-     * Checks if a student has left any feedback at all (just used in some reports)
+     * Checks if a student has left any feedback at all (just used in some reports).
      */
     public function hasLeftFeedbacks()
     {
         if ($this->feedbacks()->count() == 0) {
             return false;
         }
+
         return true;
     }
 }

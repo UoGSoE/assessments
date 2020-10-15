@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Assessment;
+use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {

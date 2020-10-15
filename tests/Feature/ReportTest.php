@@ -1,13 +1,14 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\User;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class ReportTest extends TestCase
 {
@@ -27,7 +28,7 @@ class ReportTest extends TestCase
             $response->assertSee($assessment->type);
             $response->assertSee($assessment->feedback_due->format('Y-m-d'));
             $response->assertSee($assessment->reportSignedOff());
-            $response->assertSee("" . $assessment->totalNegativeFeedbacks());
+            $response->assertSee(''.$assessment->totalNegativeFeedbacks());
         }
     }
 
@@ -48,9 +49,9 @@ class ReportTest extends TestCase
         $response->assertSee('Staff Report');
         foreach ($staff as $user) {
             $response->assertSee($user->fullName());
-            $response->assertSee("" . $user->numberOfAssessments());
-            $response->assertSee("" . $user->totalStudentFeedbacks());
-            $response->assertSee("" . $user->numberOfMissedDeadlines());
+            $response->assertSee(''.$user->numberOfAssessments());
+            $response->assertSee(''.$user->totalStudentFeedbacks());
+            $response->assertSee(''.$user->numberOfMissedDeadlines());
         }
         $response->assertSee("is-admin-{$admin->id}");
     }

@@ -1,15 +1,16 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Wlm\FakeWlmClient;
 use App\Course;
 use App\User;
+use App\Wlm\FakeWlmClient;
 use App\Wlm\WlmImporter;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class WlmImportTest extends TestCase
 {
@@ -20,7 +21,7 @@ class WlmImportTest extends TestCase
             'Code' => 'ENG1234',
             'Title' => 'A Test Course',
             'CurrentFlag' => 'Yes',
-            'Discipline' => 'Electronics'
+            'Discipline' => 'Electronics',
         ];
 
         $course = Course::fromWlmData($wlmCourse);
@@ -38,7 +39,7 @@ class WlmImportTest extends TestCase
             'Code' => 'ENG1234',
             'Title' => 'A Test Course',
             'CurrentFlag' => 'No',
-            'Discipline' => 'Electronics'
+            'Discipline' => 'Electronics',
         ];
 
         $course = Course::fromWlmData($wlmCourse);
@@ -53,7 +54,7 @@ class WlmImportTest extends TestCase
             'GUID' => 'fake1x',
             'Surname' => 'Fake',
             'Forenames' => 'Jenny',
-            'Email' => 'fake@example.com'
+            'Email' => 'fake@example.com',
         ];
 
         $staff = User::staffFromWlmData($wlmStaff);
@@ -99,7 +100,7 @@ class WlmImportTest extends TestCase
             'GUID' => 'fake1x',
             'Surname' => 'Fake',
             'Forenames' => 'Jenny',
-            'Email' => 'fake@example.com'
+            'Email' => 'fake@example.com',
         ];
         $staff = User::staffFromWlmData($wlmStaff);
         $staff = User::staffFromWlmData($wlmStaff);
@@ -108,7 +109,7 @@ class WlmImportTest extends TestCase
         $wlmCourse = [
             'Code' => 'ENG1234',
             'Title' => 'A Test Course',
-            'Discipline' => 'Electronics'
+            'Discipline' => 'Electronics',
         ];
         $course = Course::fromWlmData($wlmCourse);
         $course = Course::fromWlmData($wlmCourse);

@@ -1,19 +1,20 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Wlm\WlmClient;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Wlm\WlmClient;
+use Tests\TestCase;
 
 class WlmClientTest extends TestCase
 {
     /**
      * @test
      * @group integration
-    */
+     */
     public function can_get_a_list_of_all_courses_from_the_wlm()
     {
         $client = $this->getWlmClient();
@@ -27,7 +28,7 @@ class WlmClientTest extends TestCase
     /**
      * @test
      * @group integration
-    */
+     */
     public function can_get_a_member_of_staff_from_the_wlm()
     {
         $client = $this->getWlmClient();
@@ -41,7 +42,7 @@ class WlmClientTest extends TestCase
     /**
      * @test
      * @group integration
-    */
+     */
     public function getting_a_non_existant_member_of_staff_returns_an_error()
     {
         $client = $this->getWlmClient();
@@ -57,7 +58,7 @@ class WlmClientTest extends TestCase
     /**
      * @test
      * @group integration
-    */
+     */
     public function can_get_a_single_course_from_the_wlm()
     {
         $client = $this->getWlmClient();
@@ -73,7 +74,7 @@ class WlmClientTest extends TestCase
 
     /**
      * @group integration
-    */
+     */
     public function trying_to_talk_to_the_wlm_if_its_offline_throws_an_exception()
     {
         $client = $this->getWlmClient();

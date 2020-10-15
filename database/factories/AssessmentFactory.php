@@ -34,6 +34,7 @@ class AssessmentFactory extends Factory
         ];
         $now = \Carbon\Carbon::now();
         $deadline = $now->addWeeks(rand(1, 26));
+
         return [
             'deadline' => $deadline,
             'type' => $this->faker->randomElement($types),

@@ -1,11 +1,12 @@
 <?php
+
 // @codingStandardsIgnoreFile
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class StaffTest extends DuskTestCase
 {
@@ -23,14 +24,14 @@ class StaffTest extends DuskTestCase
             $assessment2 = $this->createAssessment(['deadline' => Carbon::now()]);
 
             $browser->loginAs($staff)
-                    ->visit("/home")
+                    ->visit('/home')
                     ->assertSee('Your Assessments')
                     ->assertSee($assessment1->course->code)
                     ->assertSee($assessment2->course->code)
                     ->clickLink($assessment2->title)
                     ->assertSee($assessment2->type)
                     ->assertSee($assessment2->deadline->format('d/m/Y'))
-                    ->visit("/home")
+                    ->visit('/home')
                     ->clickLink($assessment1->title)
                     ->assertSee('Assessment Details')
                     ->assertSee($assessment1->type)
@@ -49,7 +50,7 @@ class StaffTest extends DuskTestCase
             $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(3)->startOfWeek()]);
 
             $browser->loginAs($staff)
-                    ->visit("/home")
+                    ->visit('/home')
                     ->assertSee('Your Assessments')
                     ->assertSee($assessment1->course->code);
         });
@@ -66,8 +67,8 @@ class StaffTest extends DuskTestCase
             $assessment = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(4)]);
 
             /*
-                By way of an explanation... The date field on the form has a JS datepicker 
-                attached, so this just clicks the date field, picks the first day available and 
+                By way of an explanation... The date field on the form has a JS datepicker
+                attached, so this just clicks the date field, picks the first day available and
                 saves it.  The first day on the datepicker *should* be the first day of the month
                  - hence the startofMonth() carbon call.
             */
@@ -81,6 +82,5 @@ class StaffTest extends DuskTestCase
                     ->assertSee(Carbon::now()->startOfMonth()->format('d/m/Y'))
                     ->assertDontSee('Save');
         });
-        
     }
 }

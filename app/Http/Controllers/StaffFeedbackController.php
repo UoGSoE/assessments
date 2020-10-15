@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\Request;
 use App\Assessment;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class StaffFeedbackController extends Controller
 {
@@ -18,6 +18,7 @@ class StaffFeedbackController extends Controller
         }
         $assessment->feedback_left = Carbon::createFromFormat('d/m/Y', $request->date);
         $assessment->save();
+
         return redirect()->route('assessment.show', $id)->with('success_message', 'Feedback marked as complete');
     }
 }

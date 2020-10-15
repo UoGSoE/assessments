@@ -5,5 +5,5 @@ return [
     'wlm_uri' => env('WLM_URI'),
     'feedback_grace_days' => 21,
     'sysadmin_email' => env('SYSADMIN_EMAIL'),
-    'hash_seed' => env('APP_KEY')
+    'hash_seed' => env('APP_KEY'),
 ];

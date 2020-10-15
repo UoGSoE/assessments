@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Wlm\WlmImporter;
+use Illuminate\Console\Command;
 
 class WlmImport extends Command
 {
