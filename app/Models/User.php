@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Course;
+use App\Models\Course;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

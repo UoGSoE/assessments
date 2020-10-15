@@ -4,7 +4,7 @@
 
 namespace Tests\Unit;
 
-use App\Assessment;
+use App\Models\Assessment;
 use App\Spreadsheet\SheetToDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessment;
-use App\User;
+use App\Models\Assessment;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

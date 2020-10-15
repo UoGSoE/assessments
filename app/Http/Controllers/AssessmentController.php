@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessment;
-use App\Course;
-use App\User;
+use App\Models\Assessment;
+use App\Models\Course;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;

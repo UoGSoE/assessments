@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessment;
-use App\AssessmentFeedback;
+use App\Models\Assessment;
+use App\Models\AssessmentFeedback;
 use Illuminate\Http\Request;
 
 class OldDataController extends Controller

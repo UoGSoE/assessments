@@ -151,9 +151,9 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessments = \App\Assessment::factory()->count(5)->create();
+            $assessments = \App\Models\Assessment::factory()->count(5)->create();
             $firstAssessment = $assessments->first();
-            $feedbacks = \App\AssessmentFeedback::factory()->count(5)->create();
+            $feedbacks = \App\Models\AssessmentFeedback::factory()->count(5)->create();
             $browser->loginAs($admin)
                     ->visit('/admin/report/feedback')
                     ->assertSee($firstAssessment->course->code)
@@ -181,10 +181,10 @@ class AdminTest extends DuskTestCase
             $staff2 = $this->createStaff();
             $course = $this->createCourse();
             $course->staff()->sync([$staff1->id]);
-            $assessments = \App\Assessment::factory()->count(5)->create(['staff_id' => $staff1->id]);
-            $assessments = \App\Assessment::factory()->count(7)->create(['staff_id' => $staff2->id]);
+            $assessments = \App\Models\Assessment::factory()->count(5)->create(['staff_id' => $staff1->id]);
+            $assessments = \App\Models\Assessment::factory()->count(7)->create(['staff_id' => $staff2->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\Models\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
             $browser->loginAs($admin)
                     ->visit('/')
@@ -203,7 +203,7 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
-            $assessment = \App\Assessment::factory()->create();
+            $assessment = \App\Models\Assessment::factory()->create();
             $staff = $assessment->staff;
 
             $browser->loginAs($admin)

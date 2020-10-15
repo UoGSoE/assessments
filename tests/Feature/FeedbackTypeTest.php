@@ -4,7 +4,7 @@
 
 namespace Tests\Feature;
 
-use App\Assessment;
+use App\Models\Assessment;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;

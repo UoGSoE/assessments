@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Auth\Ldap;
-use App\Course;
+use App\Models\Course;
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;

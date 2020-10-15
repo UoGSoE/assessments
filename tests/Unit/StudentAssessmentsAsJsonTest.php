@@ -4,10 +4,10 @@
 
 namespace Tests\Unit;
 
-use App\Assessment;
-use App\AssessmentFeedback;
-use App\Course;
-use App\User;
+use App\Models\Assessment;
+use App\Models\AssessmentFeedback;
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;

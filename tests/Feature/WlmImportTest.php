@@ -4,9 +4,9 @@
 
 namespace Tests\Feature;
 
-use App\AssessmentFeedback;
-use App\Course;
-use App\User;
+use App\Models\AssessmentFeedback;
+use App\Models\Course;
+use App\Models\User;
 use App\Wlm\FakeWlmClient;
 use App\Wlm\WlmClient;
 use App\Wlm\WlmImporter;

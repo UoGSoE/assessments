@@ -2,9 +2,9 @@
 
 namespace App\Spreadsheet;
 
-use App\Assessment;
-use App\Course;
-use App\User;
+use App\Models\Assessment;
+use App\Models\Course;
+use App\Models\User;
 use Carbon\Carbon;
 
 class SheetToDatabase

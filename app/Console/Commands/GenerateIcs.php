@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Calendar\Calendar;
-use App\Course;
-use App\User;
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class GenerateIcs extends Command

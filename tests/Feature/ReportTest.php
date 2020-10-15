@@ -4,7 +4,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -16,7 +16,7 @@ class ReportTest extends TestCase
     public function admin_can_view_the_overall_feedback_report()
     {
         $admin = $this->createAdmin();
-        $assessments = \App\Assessment::factory()->count(2)->create();
+        $assessments = \App\Models\Assessment::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->get(route('report.feedback'));
 
@@ -37,9 +37,9 @@ class ReportTest extends TestCase
     {
         $admin = $this->createAdmin();
         $staff = User::factory()->count(2)->staff()->create()->each(function ($user) {
-            $assessments = \App\Assessment::factory()->count(2)->create(['staff_id' => $user->id]);
+            $assessments = \App\Models\Assessment::factory()->count(2)->create(['staff_id' => $user->id]);
             $assessments->each(function ($assessment) {
-                $feedbacks = \App\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
+                $feedbacks = \App\Models\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
         });
 

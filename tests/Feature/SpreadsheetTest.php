@@ -4,8 +4,8 @@
 
 namespace Tests\Feature;
 
-use App\Assessment;
-use App\Course;
+use App\Models\Assessment;
+use App\Models\Course;
 use App\Spreadsheet\Spreadsheet;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

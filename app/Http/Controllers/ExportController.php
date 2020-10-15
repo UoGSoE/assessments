@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessment;
+use App\Models\Assessment;
 use App\Spreadsheet\Spreadsheet;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ExportController extends Controller

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessment;
+use App\Models\Assessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 

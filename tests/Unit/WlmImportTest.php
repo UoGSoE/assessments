@@ -4,8 +4,8 @@
 
 namespace Tests\Unit;
 
-use App\Course;
-use App\User;
+use App\Models\Course;
+use App\Models\User;
 use App\Wlm\FakeWlmClient;
 use App\Wlm\WlmImporter;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
