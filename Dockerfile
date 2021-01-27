@@ -94,7 +94,6 @@ ENV APP_DEBUG=1
 COPY --from=qa-composer /var/www/html/vendor /var/www/html/vendor
 
 #- Install sensiolabs security scanner and clear the caches
-RUN curl -o /usr/local/bin/security-checker https://get.sensiolabs.org/security-checker.phar && \
-    curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
+RUN curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
