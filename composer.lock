@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2644bc90bd4b13d302e52f592d07eaa",
+    "content-hash": "eb86a396f715688cb129773f2bb1c1eb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,25 +64,26 @@
         },
         {
             "name": "box/spout",
-            "version": "v2.7.3",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/box/spout.git",
-                "reference": "3681a3421a868ab9a65da156c554f756541f452b"
+                "reference": "7964dadc2128f3a00ffa393395b618ea115c8032"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/box/spout/zipball/3681a3421a868ab9a65da156c554f756541f452b",
-                "reference": "3681a3421a868ab9a65da156c554f756541f452b",
+                "url": "https://api.github.com/repos/box/spout/zipball/7964dadc2128f3a00ffa393395b618ea115c8032",
+                "reference": "7964dadc2128f3a00ffa393395b618ea115c8032",
                 "shasum": ""
             },
             "require": {
                 "ext-xmlreader": "*",
                 "ext-zip": "*",
-                "php": ">=5.4.0"
+                "php": ">=7.1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.0"
+                "friendsofphp/php-cs-fixer": "^2",
+                "phpunit/phpunit": "^7"
             },
             "suggest": {
                 "ext-iconv": "To handle non UTF-8 CSV files (if \"php-intl\" is not already installed or is too limited)",
@@ -91,7 +92,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8.x-dev"
+                    "dev-master": "3.1.x-dev"
                 }
             },
             "autoload": {
@@ -130,9 +131,9 @@
             ],
             "support": {
                 "issues": "https://github.com/box/spout/issues",
-                "source": "https://github.com/box/spout/tree/v2.7.3"
+                "source": "https://github.com/box/spout/tree/v3.1.0"
             },
-            "time": "2017-09-25T19:44:35+00:00"
+            "time": "2019-12-02T21:21:41+00:00"
         },
         {
             "name": "brick/math",
@@ -2510,6 +2511,50 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.10.4"
             },
             "time": "2020-12-20T10:01:03+00:00"
+        },
+        {
+            "name": "ohffs/simple-spout",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ohnotnow/simple-spout.git",
+                "reference": "06af3fb08f23651a0b6c76b0909f085882be7d89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ohnotnow/simple-spout/zipball/06af3fb08f23651a0b6c76b0909f085882be7d89",
+                "reference": "06af3fb08f23651a0b6c76b0909f085882be7d89",
+                "shasum": ""
+            },
+            "require": {
+                "box/spout": "^3.1"
+            },
+            "require-dev": {
+                "nesbot/carbon": "^1.22",
+                "phpunit/phpunit": "~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ohffs\\SimpleSpout\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Billy Bofh",
+                    "email": "billybofh@gmail.com"
+                }
+            ],
+            "description": "Basic spreadsheet import/export",
+            "support": {
+                "issues": "https://github.com/ohnotnow/simple-spout/issues",
+                "source": "https://github.com/ohnotnow/simple-spout/tree/1.0.0"
+            },
+            "time": "2021-01-28T15:10:24+00:00"
         },
         {
             "name": "opis/closure",

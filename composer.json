@@ -9,7 +9,6 @@
     "type": "project",
     "require": {
         "php": "^7.3",
-        "box/spout": "^2.7",
         "doctrine/dbal": "^2.6",
         "eluceo/ical": "^0.16.0",
         "fideloper/proxy": "^4.2",
@@ -20,6 +19,7 @@
         "laravel/horizon": "^5.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "ohffs/simple-spout": "^1.0",
         "predis/predis": "^1.1",
         "sentry/sentry-laravel": "^2.3"
     },
