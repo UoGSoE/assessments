@@ -8,7 +8,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3",
+        "php": "^7.3|^8.0",
         "doctrine/dbal": "^2.6",
         "eluceo/ical": "^0.16.0",
         "fideloper/proxy": "^4.2",
