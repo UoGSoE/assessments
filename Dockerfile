@@ -10,28 +10,6 @@ RUN chmod u+x /usr/local/bin/app-start /usr/local/bin/app-healthcheck
 CMD ["tini", "--", "/usr/local/bin/app-start"]
 
 
-### Build JS/css assets
-FROM node:10 as frontend
-
-# workaround for mix.version() webpack bug
-RUN ln -s /home/node/public /public
-
-USER node
-WORKDIR /home/node
-
-RUN mkdir -p /home/node/public/css /home/node/public/js /home/node/resources
-
-COPY --chown=node:node package*.json webpack.mix.js .babelrc* /home/node/
-COPY --chown=node:node resources/js* /home/node/resources/js
-COPY --chown=node:node resources/sass* /home/node/resources/sass
-COPY --chown=node:node resources/scss* /home/node/resources/scss
-COPY --chown=node:node resources/css* /home/node/resources/css
-
-RUN npm install && \
-    npm run production && \
-    npm cache clean --force
-
-
 ### Prod php dependencies
 FROM dev as prod-composer
 ENV APP_ENV=production
@@ -83,12 +61,6 @@ COPY docker/custom_php.ini /usr/local/etc/php/conf.d/custom_php.ini
 #- Copy in our prod php dep's
 COPY --from=prod-composer /var/www/html/vendor /var/www/html/vendor
 
-#- Copy in our front-end assets
-RUN mkdir -p /var/www/html/public/js /var/www/html/public/css
-COPY --from=frontend /home/node/public/js /var/www/html/public/js
-COPY --from=frontend /home/node/public/css /var/www/html/public/css
-COPY --from=frontend /home/node/mix-manifest.json /var/www/html/mix-manifest.json
-
 #- Copy in our code
 COPY . /var/www/html
 
@@ -125,4 +97,3 @@ RUN composer global require enlightn/security-checker && \
     curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
-
