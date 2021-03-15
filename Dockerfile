@@ -1,5 +1,5 @@
 ### PHP version we are targetting
-ARG PHP_VERSION=7.2
+ARG PHP_VERSION=7.4
 
 
 ### Placeholder for basic dev stage for use with docker-compose
@@ -7,7 +7,7 @@ FROM uogsoe/soe-php-apache:${PHP_VERSION} as dev
 
 COPY docker/app-start docker/app-healthcheck /usr/local/bin/
 RUN chmod u+x /usr/local/bin/app-start /usr/local/bin/app-healthcheck
-CMD ["/usr/local/bin/app-start"]
+CMD ["tini", "--", "/usr/local/bin/app-start"]
 
 
 ### Build JS/css assets
@@ -33,7 +33,7 @@ RUN npm install && \
 
 
 ### Prod php dependencies
-FROM uogsoe/soe-php-apache:${PHP_VERSION} as prod-composer
+FROM dev as prod-composer
 ENV APP_ENV=production
 ENV APP_DEBUG=0
 
@@ -110,9 +110,6 @@ RUN php /var/www/html/artisan storage:link && \
 #- Set up the default healthcheck
 HEALTHCHECK --start-period=30s CMD /usr/local/bin/app-healthcheck
 
-#- And off we go...
-CMD ["/usr/local/bin/app-start"]
-
 
 ### Build the ci version of the app (prod+dev packages)
 FROM prod as ci
@@ -124,6 +121,8 @@ ENV APP_DEBUG=1
 COPY --from=qa-composer /var/www/html/vendor /var/www/html/vendor
 
 #- Install sensiolabs security scanner and clear the caches
-RUN curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
+RUN composer global require enlightn/security-checker && \
+    curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
     php /var/www/html/artisan cache:clear
+
