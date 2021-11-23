@@ -45,28 +45,28 @@ class Course extends Model
         return static::where('code', '=', $code)->first();
     }
 
-    public static function fromWlmData($wlmCourse)
+    public static function fromTODBData($todbCourse)
     {
-        $code = $wlmCourse['Code'];
-        $title = $wlmCourse['Title'];
-        $discipline = $wlmCourse['Discipline'];
+        $code = $todbCourse['Code'];
+        $title = $todbCourse['Title'];
+        $discipline = $todbCourse['Discipline'];
         $course = static::findByCode($code);
         if (!$course) {
             $course = new static(['code' => $code]);
         }
-        $course->is_active = $course->getWlmStatus($wlmCourse);
+        $course->is_active = $course->getTODBStatus($todbCourse);
         $course->title = $title;
         $course->discipline = $discipline;
         $course->save();
         return $course;
     }
 
-    protected function getWlmStatus($wlmCourse)
+    protected function getTODBStatus($todbCourse)
     {
-        if (!array_key_exists('CurrentFlag', $wlmCourse)) {
+        if (!array_key_exists('CurrentFlag', $todbCourse)) {
             return false;
         }
-        if ($wlmCourse['CurrentFlag'] === 'Yes') {
+        if ($todbCourse['CurrentFlag'] === 'Yes') {
             return true;
         }
         return false;

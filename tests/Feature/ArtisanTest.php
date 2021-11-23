@@ -3,21 +3,18 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Mail;
+use App\Assessment;
+use App\Course;
+use App\Mail\TODBImportProblem;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
+use App\TODB\FakeBrokenTODBClient;
+use App\TODB\FakeTODBClient;
 use Carbon\Carbon;
-use App\Assessment;
-use App\Wlm\FakeWlmClient;
-use App\Wlm\FakeBrokenWlmClient;
-use App\Course;
-use App\Mail\WlmImportProblem;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Storage;
+use Tests\TestCase;
 
 class ArtisanTest extends TestCase
 {
@@ -77,41 +74,41 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_wlm_import_command_creates_correct_data_and_preserves_local_data()
+    public function running_the_todb_import_command_creates_correct_data_and_preserves_local_data()
     {
         $assessment = $this->createAssessment();
-        $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
+        $this->app->instance('App\TODB\TODBClientInterface', new FakeTODBClient);
 
-        \Artisan::call('assessments:wlmimport');
+        \Artisan::call('assessments:todbimport');
 
         $this->assertCount(3, Course::all());
         $this->assertDatabaseHas('assessments', ['id' => $assessment->id]);
     }
 
     /** @test */
-    public function running_the_wlm_import_command_with_the_sync_option_creates_correct_data_and_removes_old_data()
+    public function running_the_todb_import_command_with_the_sync_option_creates_correct_data_and_removes_old_data()
     {
         $assessment = $this->createAssessment();
-        $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
+        $this->app->instance('App\TODB\TODBClientInterface', new FakeTODBClient);
 
-        \Artisan::call('assessments:wlmimport', ['--sync' => true]);
+        \Artisan::call('assessments:todbimport', ['--sync' => true]);
 
         $this->assertCount(2, Course::all());
         $this->assertDatabaseMissing('assessments', ['id' => $assessment->id]);
     }
 
     /** @test */
-    public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
+    public function running_the_todb_import_command_notifies_sysadmin_if_it_goes_wrong()
     {
         //$this->disableExceptionHandling();
 
         Mail::fake();
 
-        $this->app->instance('App\Wlm\WlmClientInterface', new FakeBrokenWlmClient);
+        $this->app->instance('App\TODB\TODBClientInterface', new FakeBrokenTODBClient);
 
-        \Artisan::call('assessments:wlmimport');
+        \Artisan::call('assessments:todbimport');
 
-        Mail::assertSent(WlmImportProblem::class, function ($mail) {
+        Mail::assertSent(TODBImportProblem::class, function ($mail) {
             return $mail->hasTo(config('assessments.sysadmin_email'));
         });
     }

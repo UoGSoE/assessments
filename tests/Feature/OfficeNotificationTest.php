@@ -15,7 +15,7 @@ use App\Notifications\OverdueFeedback;
 class OfficeNotificationTest extends TestCase
 {
     /** @test */
-    public function teaching_office_are_notified_when_an_assessment_becomes_problematic()
+    public function todb_are_notified_when_an_assessment_becomes_problematic()
     {
         Notification::fake();
         $course = $this->createCourse();
@@ -43,7 +43,7 @@ class OfficeNotificationTest extends TestCase
     }
 
     /** @test */
-    public function teaching_office_are_only_notified_once_about_problematic_assessments()
+    public function todb_are_only_notified_once_about_problematic_assessments()
     {
         Notification::fake();
         $course = $this->createCourse();

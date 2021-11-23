@@ -24,38 +24,38 @@ trait CanBeCreatedFromOutsideSources
     }
 
     /**
-     * Create a staff record based on data from the Workload Model
+     * Create a staff record based on data from the Teaching Office DB
      */
-    public static function staffFromWlmData($wlmStaff)
+    public static function staffFromTODBData($todbStaff)
     {
-        $wlmStaff['Username'] = $wlmStaff['GUID'];
-        return static::userFromWlmData($wlmStaff, false);
+        $todbStaff['Username'] = $todbStaff['GUID'];
+        return static::userFromTODBData($todbStaff, false);
     }
 
     /**
-     * Create a student record based on data from the Workload Model
+     * Create a student record based on data from the Teaching Office DB
      */
-    public static function studentFromWlmData($wlmStudent)
+    public static function studentFromTODB($todbStudent)
     {
-        $wlmStudent['Username'] = strtolower($wlmStudent['Matric'] . substr($wlmStudent['Surname'], 0, 1));
-        $wlmStudent['Email'] = $wlmStudent['Username'] . "@student.gla.ac.uk";
-        return static::userFromWlmData($wlmStudent, true);
+        $todbStudent['Username'] = strtolower($todbStudent['Matric'] . substr($todbStudent['Surname'], 0, 1));
+        $todbStudent['Email'] = $todbStudent['Username'] . "@student.gla.ac.uk";
+        return static::userFromTODB($todbStudent, true);
     }
 
     /**
-     * Create a user record based on WLM data
+     * Create a user record based on Teaching Office data
      */
-    protected static function userFromWlmData($wlmData, $isStudent = false)
+    protected static function userFromTODB($todbUser, $isStudent = false)
     {
-        $user = User::findByUsername($wlmData['Username']);
+        $user = User::findByUsername($todbUser['Username']);
         if (!$user) {
             $user = new static([
-                'username' => $wlmData['Username'],
-                'email' => $wlmData['Email'],
+                'username' => $todbUser['Username'],
+                'email' => $todbUser['Email'],
             ]);
         }
-        $user->surname = $wlmData['Surname'] ?? 'Unknown';
-        $user->forenames = $wlmData['Forenames'] ?? 'Unknown';
+        $user->surname = $todbUser['Surname'] ?? 'Unknown';
+        $user->forenames = $todbUser['Forenames'] ?? 'Unknown';
         $user->password = bcrypt(Str::random(32));
         $user->is_student = $isStudent;
         $user->save();
