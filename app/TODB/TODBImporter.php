@@ -6,22 +6,16 @@ use App\Course;
 use App\Mail\TODBImportProblem;
 use App\TODB\TODBClientInterface;
 use App\User;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TODBImporter
 {
     protected $client;
-    protected $staffList;
-    protected $studentList;
-    protected $courseList;
 
     public function __construct(TODBClientInterface $client)
     {
         $this->client = $client;
-        $this->staffList = collect([]);
-        $this->studentList = collect([]);
-        $this->courseList = collect([]);
     }
 
     public function run($maximumCourses = 1000000)
@@ -31,16 +25,18 @@ class TODBImporter
             if ($this->client->statusCode != 200) {
                 throw new \Exception('Failed to get data from the TODB');
             }
-            $courseIds = $courses->filter(function ($todbCourse) {
-                if (!preg_match('/^(ENG|TEST)/', $todbCourse['Code'])) {
+
+            $courses->filter(function ($todbCourse) {
+                if (!preg_match('/^(ENG|TEST)/', $todbCourse['code'])) {
                     return false;
                 }
                 return true;
-            })->take($maximumCourses)->each(function ($todbCourse) {
-                $course = $this->courseFromTODB($todbCourse);
-                $this->courseList[$course->code] = $course;
-                $course->staff()->sync($this->staffFromTODB($todbCourse));
-                $course->students()->sync($this->studentsFromTODB($todbCourse));
+            })
+            ->take($maximumCourses)
+            ->each(function ($todbCourse) {
+                $course = Course::fromTODBData($todbCourse);
+                $course->staff()->sync($this->getStaff($todbCourse['staff']));
+                $course->students()->sync($this->getStudents($todbCourse['students']));
             });
         } catch (\Exception $e) {
             Mail::to(config('assessments.sysadmin_email'))->send(new TODBImportProblem($e->getMessage()));
@@ -49,81 +45,43 @@ class TODBImporter
         return true;
     }
 
-    public function sync($maximumCourses = 1000000)
+    public function getStaff($todbStaffList)
     {
-        $importResult = $this->run($maximumCourses);
-        if ($importResult) {
-            $this->removeDataNotInTODB();
-        }
-        return $importResult;
-    }
-
-    protected function removeDataNotInTODB()
-    {
-        // little last sanity check before we erase the whole system...
-        if ($this->staffList->isEmpty() or $this->studentList->isEmpty() or $this->courseList->isEmpty()) {
-            return;
-        }
-
-        User::staff()->whereNotIn('id', $this->staffList->pluck('id'))->delete();
-        User::student()->whereNotIn('id', $this->studentList->pluck('id'))->delete();
-        Course::whereNotIn('id', $this->courseList->pluck('id'))->delete();
-    }
-
-    protected function courseFromTODB($todbCourse)
-    {
-        return Course::fromTODBData($todbCourse);
-    }
-
-    protected function staffFromTODB($todbCourse)
-    {
-        if (!array_key_exists('Staff', $todbCourse)) {
-            return collect([]);
-        }
-        return collect($todbCourse['Staff'])->map(function ($todbStaff) {
-            if (!$this->staffList->has($todbStaff['GUID'])) {
-                $todbStaff['Email'] = $this->getStaffEmail($todbStaff);
-                $this->staffList[$todbStaff['GUID']] = User::staffFromTODBData($todbStaff);
+        $staffIds = [];
+        foreach ($todbStaffList as $todbStaff) {
+            $staff = User::staff()->where('username', $todbStaff['guid'])->first();
+            if (!$staff) {
+                $staff = User::create([
+                    'username' => $todbStaff['guid'],
+                    'forenames' => $todbStaff['forenames'],
+                    'surname' => $todbStaff['surname'],
+                    'email' => $todbStaff['email'],
+                    'is_student' => false,
+                    'password' => bcrypt(Str::random(32))
+                ]);
             }
-            return $this->staffList[$todbStaff['GUID']];
-        })->pluck('id');
+            $staffIds[] = $staff->id;
+        }
+        return $staffIds;
     }
 
-    /**
-     * This tries to extract the student info from the original TODB 'Students'
-     * array.  It's a little nasty as once in a while there is a student matric
-     * which is encoded in a weird way (not utf8 or ascii - probably an excel-ism)
-     * so that's why there is some unpleasant reject() and try/catch stuff in
-     * here... :: sadface ::
-     */
-    protected function studentsFromTODB($todbCourse)
+    public function getStudents($todbStudentList)
     {
-        if (!array_key_exists('Students', $todbCourse)) {
-            return collect([]);
-        }
-        return collect($todbCourse['Students'])->reject(function ($todbStudent) {
-            return preg_match('/^[0-9]{7}$/u', $todbStudent['Matric']) !== 1;
-        })->map(function ($todbStudent) use ($todbCourse) {
-            if (!$this->studentList->has($todbStudent['Matric'])) {
-                try {
-                    $this->studentList[$todbStudent['Matric']] = User::studentFromTODBData($todbStudent);
-                } catch (\Exception $e) {
-                    Log::info('TODB Import - Failed to insert student with matric ' . $todbStudent['Matric']);
-                    return false;
-                }
+        $studentIds = [];
+        foreach ($todbStudentList as $todbStudent) {
+            $student = User::student()->where('username', $todbStudent['matric'])->first();
+            if (!$student) {
+                $student = User::create([
+                    'username' => $todbStudent['matric'],
+                    'forenames' => $todbStudent['forenames'],
+                    'surname' => $todbStudent['surname'],
+                    'email' => $todbStudent['email'],
+                    'is_student' => true,
+                    'password' => bcrypt(Str::random(32))
+                ]);
             }
-            return $this->studentList[$todbStudent['Matric']];
-        })->reject(function ($student) {
-            return (bool) !$student;
-        })->pluck('id');
-    }
-
-    protected function getStaffEmail($todbStaff)
-    {
-        $staff = $this->client->getStaff($todbStaff['GUID']);
-        if (!preg_match('/\@/', $staff['Email'])) {
-            $staff['Email'] = $todbStaff['GUID'] . '@glasgow.ac.uk';
+            $studentIds[] = $student->id;
         }
-        return $staff['Email'];
+        return $studentIds;
     }
 }

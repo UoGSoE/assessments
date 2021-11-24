@@ -24,25 +24,6 @@ trait CanBeCreatedFromOutsideSources
     }
 
     /**
-     * Create a staff record based on data from the Teaching Office DB
-     */
-    public static function staffFromTODBData($todbStaff)
-    {
-        $todbStaff['Username'] = $todbStaff['GUID'];
-        return static::userFromTODB($todbStaff, false);
-    }
-
-    /**
-     * Create a student record based on data from the Teaching Office DB
-     */
-    public static function studentFromTODBData($todbStudent)
-    {
-        $todbStudent['Username'] = strtolower($todbStudent['Matric'] . substr($todbStudent['Surname'], 0, 1));
-        $todbStudent['Email'] = $todbStudent['Username'] . "@student.gla.ac.uk";
-        return static::userFromTODB($todbStudent, true);
-    }
-
-    /**
      * Create a user record based on Teaching Office data
      */
     protected static function userFromTODB($todbUser, $isStudent = false)

@@ -27,9 +27,6 @@ class TODBImportTest extends TestCase
             $this->assertCount(2, $course->staff()->get());
             $this->assertCount(2, $course->students()->get());
         });
-        User::staff()->get()->each(function ($staff) {
-            $this->assertEquals("{$staff->username}@glasgow.ac.uk", $staff->email);
-        });
         $courseA = Course::first();
         $this->assertEquals('TEST1234', $courseA->code);
         $this->assertEquals('Fake Course 1234', $courseA->title);
@@ -50,29 +47,6 @@ class TODBImportTest extends TestCase
             $this->assertCount(2, $course->staff()->get());
             $this->assertCount(2, $course->students()->get());
         });
-    }
-
-    /** @test */
-    public function data_not_in_the_todb_can_be_removed_from_the_local_db_after_import()
-    {
-        $student = $this->createStudent();
-        $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(10)]);
-        $course = $assessment->course;
-        $course->students()->sync([$student->id]);
-        $student->recordFeedback($assessment);
-        $staff = $assessment->staff;
-        $importer = new TODBImporter(new FakeTODBClient);
-
-        $importer->sync();
-
-        $this->assertDatabaseMissing('users', ['id' => $staff->id]);
-        $this->assertDatabaseMissing('users', ['id' => $student->id]);
-        $this->assertDatabaseMissing('courses', ['id' => $course->id]);
-        $this->assertDatabaseMissing('assessment_feedbacks', ['student_id' => $student->id]);
-        //$this->assertEquals(0, AssessmentFeedback::count());
-        $this->assertCount(2, Course::all());
-        $this->assertCount(3, User::staff()->get());
-        $this->assertCount(3, User::student()->get());
     }
 
     /**

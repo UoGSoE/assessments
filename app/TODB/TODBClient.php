@@ -2,58 +2,32 @@
 
 namespace App\TODB;
 
-use GuzzleHttp\Client;
+use Zttp\Zttp;
 
 class TODBClient implements TODBClientInterface
 {
     public $response;
     public $statusCode;
-    public $responseMessage;
-    public $responseCode;
     protected $client;
-    protected $todbStaff;
     protected $baseUri;
 
     public function __construct()
     {
-        $this->client = new Client;
-        $this->todbStaff = collect([]);
+        $this->client = new Zttp;
         $this->baseUri = config('assessments.todb_uri');
-    }
-
-    protected function get($url)
-    {
-        return $this->client->get($url);
-    }
-
-    public function getData($endpoint)
-    {
-        $this->response = $this->get($this->baseUri . $endpoint);
-        $this->statusCode = $this->response->getStatusCode();
-        $json = json_decode($this->response->getBody(), true);
-        if (!array_key_exists('Data', $json)) {
-            return collect([]);
-        }
-        $this->responseMessage = $json['Response'];
-        $this->responseCode = $json['ResponseCode'];
-        return collect($json['Data']);
     }
 
     public function getCourses()
     {
-        return $this->getData('getcourse/all');
-    }
+        $this->response = $this->client::withHeaders([
+            'x-api-key' => config('assessments.todb_key')
+        ])->get($this->baseUri . 'courses');
 
-    public function getCourse($code)
-    {
-        return $this->getData("getcourse/{$code}");
-    }
-
-    public function getStaff($guid)
-    {
-        if (!$this->todbStaff->has($guid)) {
-            $this->todbStaff[$guid] = $this->getData("getdetails/{$guid}");
+        $this->statusCode = $this->response->getStatusCode();
+        $json = $this->response->json();
+        if (!array_key_exists('data', $json)) {
+            return collect([]);
         }
-        return $this->todbStaff[$guid];
+        return collect($json['data']);
     }
 }

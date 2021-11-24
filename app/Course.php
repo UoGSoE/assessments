@@ -47,29 +47,16 @@ class Course extends Model
 
     public static function fromTODBData($todbCourse)
     {
-        $code = $todbCourse['Code'];
-        $title = $todbCourse['Title'];
-        $discipline = $todbCourse['Discipline'];
+        $code = $todbCourse['code'];
         $course = static::findByCode($code);
         if (!$course) {
             $course = new static(['code' => $code]);
         }
-        $course->is_active = $course->getTODBStatus($todbCourse);
-        $course->title = $title;
-        $course->discipline = $discipline;
+        $course->title = $todbCourse['title'];
+        $course->discipline = $todbCourse['discipline']['title'];
+        $course->is_active = $todbCourse['is_current'];
         $course->save();
         return $course;
-    }
-
-    protected function getTODBStatus($todbCourse)
-    {
-        if (!array_key_exists('CurrentFlag', $todbCourse)) {
-            return false;
-        }
-        if ($todbCourse['CurrentFlag'] === 'Yes') {
-            return true;
-        }
-        return false;
     }
 
     public function getYear()

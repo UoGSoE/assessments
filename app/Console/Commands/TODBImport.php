@@ -12,14 +12,14 @@ class TODBImport extends Command
      *
      * @var string
      */
-    protected $signature = 'assessments:todbimport {--sync : Also remove data not in the Teaching Office DB}';
+    protected $signature = 'assessments:todbimport';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import/sync data from the Teaching Office DB';
+    protected $description = 'Import data from the Teaching Office DB';
 
     /**
      * Create a new command instance.
@@ -38,10 +38,6 @@ class TODBImport extends Command
      */
     public function handle()
     {
-        if ($this->option('sync')) {
-            app(TODBImporter::class)->sync();
-        } else {
-            app(TODBImporter::class)->run();
-        }
+        app(TODBImporter::class)->run();
     }
 }
