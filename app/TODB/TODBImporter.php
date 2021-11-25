@@ -51,14 +51,17 @@ class TODBImporter
         foreach ($todbStaffList as $todbStaff) {
             $staff = User::staff()->where('username', $todbStaff['guid'])->first();
             if (!$staff) {
-                $staff = User::create([
-                    'username' => $todbStaff['guid'],
-                    'forenames' => $todbStaff['forenames'],
-                    'surname' => $todbStaff['surname'],
-                    'email' => $todbStaff['email'],
-                    'is_student' => false,
-                    'password' => bcrypt(Str::random(32))
-                ]);
+                $staff = User::staff()->where('email', $todbStaff['email'])->first();
+                if (!$staff) {
+                    $staff = User::create([
+                        'username' => $todbStaff['guid'],
+                        'forenames' => $todbStaff['forenames'],
+                        'surname' => $todbStaff['surname'],
+                        'email' => $todbStaff['email'],
+                        'is_student' => false,
+                        'password' => bcrypt(Str::random(32))
+                    ]);
+                }
             }
             $staffIds[] = $staff->id;
         }
