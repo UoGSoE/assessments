@@ -5,9 +5,8 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WlmImportProblem extends Mailable
+class TODBImportProblem extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +29,6 @@ class WlmImportProblem extends Mailable
      */
     public function build()
     {
-        return $this->from('noreply@eng.gla.ac.uk')->markdown('emails.wlm.error');
+        return $this->from('noreply@eng.gla.ac.uk')->markdown('emails.todb.error');
     }
 }

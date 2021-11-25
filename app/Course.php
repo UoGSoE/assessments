@@ -45,31 +45,18 @@ class Course extends Model
         return static::where('code', '=', $code)->first();
     }
 
-    public static function fromWlmData($wlmCourse)
+    public static function fromTODBData($todbCourse)
     {
-        $code = $wlmCourse['Code'];
-        $title = $wlmCourse['Title'];
-        $discipline = $wlmCourse['Discipline'];
+        $code = $todbCourse['code'];
         $course = static::findByCode($code);
         if (!$course) {
             $course = new static(['code' => $code]);
         }
-        $course->is_active = $course->getWlmStatus($wlmCourse);
-        $course->title = $title;
-        $course->discipline = $discipline;
+        $course->title = $todbCourse['title'];
+        $course->discipline = $todbCourse['discipline']['title'];
+        $course->is_active = $todbCourse['is_current'];
         $course->save();
         return $course;
-    }
-
-    protected function getWlmStatus($wlmCourse)
-    {
-        if (!array_key_exists('CurrentFlag', $wlmCourse)) {
-            return false;
-        }
-        if ($wlmCourse['CurrentFlag'] === 'Yes') {
-            return true;
-        }
-        return false;
     }
 
     public function getYear()

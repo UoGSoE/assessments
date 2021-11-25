@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Wlm;
+namespace App\TODB;
 
-class FakeBrokenWlmClient implements WlmClientInterface
+class FakeBrokenTODBClient implements TODBClientInterface
 {
     public function getCourses()
     {
-        throw new \Exception('Broken WLM test exception');
+        throw new \Exception('Broken Teaching Office test exception');
     }
 
     public function getCourse($code)
