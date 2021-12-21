@@ -72,7 +72,7 @@ class TODBImporter
     {
         $studentIds = [];
         foreach ($todbStudentList as $todbStudent) {
-            $guid = $todbStudent['matric'] . $todbStudent['surname'][0];
+            $guid = strstr($todbStudent['email'], '@', true);
             $student = User::student()->where('username', $guid)->first();
             if (!$student) {
                 $student = User::create([
