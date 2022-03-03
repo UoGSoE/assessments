@@ -75,14 +75,17 @@ class TODBImporter
             $guid = $todbStudent['matric'] . $todbStudent['surname'][0];
             $student = User::student()->where('username', $guid)->first();
             if (!$student) {
-                $student = User::create([
-                    'username' => $guid,
-                    'forenames' => $todbStudent['forenames'],
-                    'surname' => $todbStudent['surname'],
-                    'email' => $todbStudent['email'],
-                    'is_student' => true,
-                    'password' => bcrypt(Str::random(32))
-                ]);
+                $student = User::student()->where('email', $todbStudent['email'])->first();
+                if (!$student) {
+                    $student = User::create([
+                        'username' => $guid,
+                        'forenames' => $todbStudent['forenames'],
+                        'surname' => $todbStudent['surname'],
+                        'email' => $todbStudent['email'],
+                        'is_student' => true,
+                        'password' => bcrypt(Str::random(32))
+                    ]);
+                }
             }
             $studentIds[] = $student->id;
         }
