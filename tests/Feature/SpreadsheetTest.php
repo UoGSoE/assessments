@@ -3,14 +3,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Assessment;
+use App\Course;
 use App\Spreadsheet\Spreadsheet;
 use Carbon\Carbon;
-use App\Course;
-use App\Assessment;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class SpreadsheetTest extends TestCase
 {
@@ -133,6 +133,187 @@ class SpreadsheetTest extends TestCase
         $this->assertEquals($assessment2->staff->numberOfAssessments(), $row2[1]);
         $this->assertEquals($assessment2->staff->totalStudentFeedbacks(), $row2[2]);
         $this->assertEquals($assessment2->staff->numberOfMissedDeadlines(), $row2[3]);
+    }
+
+    /** @test */
+    public function can_import_courses()
+    {
+        $admin = $this->createAdmin();
+        $spreadsheet = $this->createCoursesSpreadsheet();
+
+        $file = new \Illuminate\Http\UploadedFile($spreadsheet, 'courses.xlsx', 'application/octet-stream', filesize($spreadsheet), UPLOAD_ERR_OK, true);
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('course.import.save'), [], [], ['sheet' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('courses', [
+            'title' => 'Aero Engineering',
+            'code' => 'ENG1000',
+            'discipline' => 'Aero',
+            'is_active' => 1,
+        ]);
+        $this->assertDatabaseHas('courses', [
+            'title' => 'Bio Engineering',
+            'code' => 'ENG2000',
+            'discipline' => 'Bio',
+            'is_active' => 1,
+        ]);
+        $this->assertDatabaseHas('courses', [
+            'title' => 'Chemical Engineering',
+            'code' => 'ENG3000',
+            'discipline' => 'Chem',
+            'is_active' => 0,
+        ]);
+    }
+
+    /** @test */
+    public function can_import_student_course_allocations()
+    {
+        $admin = $this->createAdmin();
+        $course1 = $this->createCourse(['code' => 'ENG1000']);
+        $course2 = $this->createCourse(['code' => 'ENG9999']);
+        $spreadsheet = $this->createStudentsAllocationsSpreadsheet();
+
+        $file = new \Illuminate\Http\UploadedFile($spreadsheet, 'courses.xlsx', 'application/octet-stream', filesize($spreadsheet), UPLOAD_ERR_OK, true);
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('course.students.import.save'), [], [], ['sheet' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('users', [
+            'forenames' => 'John',
+            'surname' => 'Smith',
+            'email' => '123456789S@student.gla.ac.uk',
+            'username' => '123456789S',
+        ]);
+        $this->assertDatabaseHas('users', [
+            'forenames' => 'Jane',
+            'surname' => 'Doe',
+            'email' => '99999999D@student.gla.ac.uk',
+            'username' => '99999999D'
+        ]);
+
+        $this->assertCount(2, $course1->students);
+        $this->assertCount(1, $course2->students);
+    }
+
+    /** @test */
+    public function can_import_staff_course_allocations()
+    {
+        $admin = $this->createAdmin();
+        $course1 = $this->createCourse(['code' => 'ENG1000']);
+        $course2 = $this->createCourse(['code' => 'ENG9999']);
+        $spreadsheet = $this->createStaffAllocationsSpreadsheet();
+
+        $file = new \Illuminate\Http\UploadedFile($spreadsheet, 'courses.xlsx', 'application/octet-stream', filesize($spreadsheet), UPLOAD_ERR_OK, true);
+        $response = $this->actingAs($admin)
+                        ->call('POST', route('course.staff.import.save'), [], [], ['sheet' => $file]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success_message');
+        $this->assertDatabaseHas('users', [
+            'forenames' => 'John',
+            'surname' => 'Smith',
+            'email' => 'johnsmith@example.com',
+            'username' => 'jsmi2x',
+        ]);
+        $this->assertDatabaseHas('users', [
+            'forenames' => 'Jane',
+            'surname' => 'Doe',
+            'email' => 'janedoe@example.com',
+            'username' => 'jdoi2x'
+        ]);
+
+        $this->assertCount(2, $course1->staff);
+        $this->assertCount(1, $course2->staff);
+    }
+
+    public function createCoursesSpreadsheet($data = null)
+    {
+        $spreadsheet = new Spreadsheet;
+        if (!$data) {
+            $data = [
+                [
+                    'Aero Engineering',     //Course title
+                    'ENG1000',              //Course code
+                    'Aero',                 //Course discipline
+                    'Yes'                   //Course active? (Yes/No)
+                ],
+                [
+                    'Bio Engineering',      //Course title
+                    'ENG2000',              //Course code
+                    'Bio',                  //Course discipline
+                    'Yes'                   //Course active? (Yes/No)
+                ],
+                [
+                    'Chemical Engineering', //Course title
+                    'ENG3000',              //Course code
+                    'Chem',                 //Course discipline
+                    'No'                    //Course active? (Yes/No)
+                ],
+            ];
+        }
+        return $spreadsheet->generate($data);
+    }
+
+    public function createStudentsAllocationsSpreadsheet($data = null)
+    {
+        $spreadsheet = new Spreadsheet;
+        if (!$data) {
+            $data = [
+                [
+                    'John',                     //Student forenames
+                    'Smith',                    //Student surname
+                    '123456789S',               //Student GUID
+                    'ENG1000'                   //Course code
+                ],
+                [
+                    'John',                     //Student forenames
+                    'Smith',                    //Student surname
+                    '123456789S',               //Student GUID
+                    'ENG9999'                   //Course code
+                ],
+                [
+                    'Jane',                     //Student forenames
+                    'Doe',                    //Student surname
+                    '99999999D',               //Student GUID
+                    'ENG1000'                   //Course code
+                ],
+            ];
+        }
+        return $spreadsheet->generate($data);
+    }
+
+    public function createStaffAllocationsSpreadsheet($data = null)
+    {
+        $spreadsheet = new Spreadsheet;
+        if (!$data) {
+            $data = [
+                [
+                    'John',                     //Staff forenames
+                    'Smith',                    //Staff surname
+                    'jsmi2x',               //Staff GUID
+                    'johnsmith@example.com',     //Staff email
+                    'ENG1000'                   //Course code
+                ],
+                [
+                    'John',                     //Staff forenames
+                    'Smith',                    //Staff surname
+                    'jsmi2x',               //Staff GUID
+                    'johnsmith@example.com',     //Staff email
+                    'ENG9999'                   //Course code
+                ],
+                [
+                    'Jane',                     //Staff forenames
+                    'Doe',                    //Staff surname
+                    'jdoi2x',               //Staff GUID
+                    'janedoe@example.com',     //Staff email
+                    'ENG1000'                   //Course code
+                ],
+            ];
+        }
+        return $spreadsheet->generate($data);
     }
 
     protected function createSpreadsheet($data = null)

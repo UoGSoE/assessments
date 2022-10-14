@@ -1,0 +1,27 @@
+name: assessments
+recipe: laravel
+config:
+  cache: redis
+  webroot: public
+  php: '7.1'
+services:
+  mail:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+tooling:
+  mfs:
+    service: appserver
+    cmd: php artisan migrate:fresh && php artisan db:seed --class=TestDataSeeder
+  phpunit:
+    service: appserver
+    cmd: php ./vendor/bin/phpunit
+  puf:
+    service: appserver
+    cmd: php ./vendor/bin/phpunit --filter
+  fixldap:
+    service: appserver
+    description: "Set up insecure ldap"
+    user: root
+    cmd: apt-get install -y libldap-common && printf "\nTLS_REQCERT never\n" >> /etc/ldap/ldap.conf

@@ -74,34 +74,6 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_todb_import_command_creates_correct_data_and_preserves_local_data()
-    {
-        $assessment = $this->createAssessment();
-        $this->app->instance('App\TODB\TODBClientInterface', new FakeTODBClient);
-
-        \Artisan::call('assessments:todbimport');
-
-        $this->assertCount(3, Course::all());
-        $this->assertDatabaseHas('assessments', ['id' => $assessment->id]);
-    }
-
-    /** @test */
-    public function running_the_todb_import_command_notifies_sysadmin_if_it_goes_wrong()
-    {
-        //$this->disableExceptionHandling();
-
-        Mail::fake();
-
-        $this->app->instance('App\TODB\TODBClientInterface', new FakeBrokenTODBClient);
-
-        \Artisan::call('assessments:todbimport');
-
-        Mail::assertSent(TODBImportProblem::class, function ($mail) {
-            return $mail->hasTo(config('assessments.sysadmin_email'));
-        });
-    }
-
-    /** @test */
     public function running_the_ical_generator_command_creates_the_correct_files()
     {
         Storage::fake('calendars');
