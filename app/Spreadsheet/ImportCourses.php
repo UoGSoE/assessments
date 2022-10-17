@@ -51,6 +51,10 @@ class ImportCourses
 
     public function rowToCourse($row)
     {
+        if ($row[0] == 'Course Title') {
+            return;
+        }
+
         //Course title
         if (!$row[0]) {
             $this->errors->add('title', "Row {$this->currentRow}: Course title is required");
@@ -85,6 +89,10 @@ class ImportCourses
 
     public function rowToStudentAllocation($row)
     {
+        if ($row[0] == 'Forenames') {
+            return;
+        }
+
         //Student forenames
         if (!$row[0]) {
             $this->errors->add('forenames', "Row {$this->currentRow}: Student forenames is required");
@@ -122,7 +130,7 @@ class ImportCourses
         $course = Course::where('code', $row[3])->first();
 
         if (!$course) {
-            $this->errors->add('course', "Row {$this->currentRow}: Course {$row[4]} not found");
+            $this->errors->add('course', "Row {$this->currentRow}: Course {$row[3]} not found");
             return false;
         }
 
@@ -131,6 +139,10 @@ class ImportCourses
 
     public function rowToStaffAllocation($row)
     {
+        if ($row[0] == 'Forenames') {
+            return;
+        }
+
         //Staff forenames
         if (!$row[0]) {
             $this->errors->add('forenames', "Row {$this->currentRow}: Staff forenames is required");
