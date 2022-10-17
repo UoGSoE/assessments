@@ -16,7 +16,6 @@ class Kernel extends ConsoleKernel
         Commands\NotifyNewFeedbacks::class,
         Commands\NotifyOffice::class,
         Commands\AutoSignoffAssessments::class,
-        Commands\TODBImport::class,
         Commands\GenerateIcs::class,
     ];
 
@@ -28,7 +27,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('assessments:todbimport')->dailyAt('02:00');
         $schedule->command('assessments:autosignoff')->dailyAt('03:00');
         $schedule->command('assessments:notifyoffice')->dailyAt('04:00');
         $schedule->command('assessments:notifystaff')->dailyAt('05:00');

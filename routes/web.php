@@ -13,7 +13,6 @@ Route::get('/course/{id}', 'CourseController@show')->name('course.show');
 // authenticated routes
 
 Route::group(['middleware' => 'auth'], function () {
-
     Route::get('/', 'HomeController@landing')->name('landing');
 
     Route::get('/home', 'HomeController@index')->name('home');
@@ -25,6 +24,13 @@ Route::group(['middleware' => 'auth'], function () {
     // admin only routes
 
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
+        Route::get('/courses/import', 'CourseController@import')->name('course.import');
+        Route::post('/courses/import', 'CourseController@importSave')->name('course.import.save');
+
+        Route::get('/courses/students/import', 'CourseController@importStudents')->name('course.students.import');
+        Route::post('/courses/students/import', 'CourseController@importStudentsSave')->name('course.students.import.save');
+        Route::get('/courses/staff/import', 'CourseController@importStaff')->name('course.staff.import');
+        Route::post('/courses/staff/import', 'CourseController@importStaffSave')->name('course.staff.import.save');
 
         Route::get('report/feedback', 'ReportController@feedback')->name('report.feedback');
         Route::get('report/assessment', 'ReportController@assessments')->name('report.assessment');
