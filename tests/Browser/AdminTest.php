@@ -3,10 +3,10 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Carbon\Carbon;
 use App\Spreadsheet\Spreadsheet;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\DuskTestCase;
 
 class AdminTest extends DuskTestCase
 {
@@ -234,7 +234,7 @@ class AdminTest extends DuskTestCase
                     ->visit("/")
                     ->clickLink('Admin')
                     ->click('#upload-coursework-button')
-                    ->assertSee('Upload Coursework Spreadsheet')
+                    ->assertSee('Import deadlines')
                     ->attach('sheet', $sheet)
                     ->press('Upload')
                     ->assertSee('TEST9999')
@@ -276,5 +276,4 @@ class AdminTest extends DuskTestCase
         }
         return $spreadsheet->generate($data);
     }
-
 }

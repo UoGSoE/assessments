@@ -2,7 +2,7 @@
 
 @section('content')
 <h2 class="title is-2">
-    Upload Coursework Spreadsheet
+    Import deadlines
 </h2>
 <form method="POST" action="{!! route('coursework.update') !!}" enctype="multipart/form-data">
     {!! csrf_field() !!}

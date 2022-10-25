@@ -48,12 +48,7 @@
                     </span>
                     Export as Excel
                 </a>
-                <a href="{!! route('coursework.edit') !!}" id="upload-coursework-button" class="dropdown-item" title="Import Coursework Sheet" aria-label="Import coursework sheet">
-                    <span class="icon">
-                        <i class="fa fa-upload"></i>
-                    </span>
-                    Import coursework sheet
-                </a>
+
                 <a href="{!! route('report.staff') !!}" id="staff-report-button" class="dropdown-item" title="Staff Report" aria-label="Staff Report">
                     <span class="icon">
                         <i class="fa fa-user"></i>
@@ -65,19 +60,25 @@
                     <span class="icon">
                         <i class="fa fa-upload"></i>
                     </span>
-                    Import courses
+                    1. Import courses
                 </a>
                 <a href="{!! route('course.students.import') !!}" id="import-student-allocations-button" class="dropdown-item" title="Import student allocations" aria-label="Import student allocations">
                     <span class="icon">
                         <i class="fa fa-upload"></i>
                     </span>
-                    Import student allocations
+                    2. Import student allocations
                 </a>
                 <a href="{!! route('course.staff.import') !!}" id="import-staff-allocations-button" class="dropdown-item" title="Import staff allocations" aria-label="Import staff allocations">
                     <span class="icon">
                         <i class="fa fa-upload"></i>
                     </span>
-                    Import staff allocations
+                    3. Import staff allocations
+                </a>
+                <a href="{!! route('coursework.edit') !!}" id="upload-coursework-button" class="dropdown-item" title="Import deadlines" aria-label="Import deadlines">
+                    <span class="icon">
+                        <i class="fa fa-upload"></i>
+                    </span>
+                    4. Import deadlines
                 </a>
             </div>
         </div>
