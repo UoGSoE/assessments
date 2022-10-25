@@ -174,12 +174,12 @@ class ImportCourses
         }
 
         $staff = User::firstOrCreate([
-            'username' => $row[2],
+            'email' => $row[3],
         ], [
             'is_student' => false,
             'forenames' => $row[0],
             'surname' => $row[1],
-            'email' => $row[3],
+            'username' => $row[2],
             'password' => bcrypt(Str::random(64))
         ]);
 
