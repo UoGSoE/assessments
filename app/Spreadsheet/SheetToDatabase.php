@@ -2,8 +2,8 @@
 
 namespace App\Spreadsheet;
 
-use App\Course;
 use App\Assessment;
+use App\Course;
 use App\User;
 use Carbon\Carbon;
 
@@ -67,10 +67,13 @@ class SheetToDatabase
             if ($row[$columns['submission_deadline']] instanceof \DateTime) {
                 $submissionDate = Carbon::instance($row[$columns['submission_deadline']]);
             } else {
-                $submissionDate = Carbon::createFromFormat('d/m/Y H:i', $row[$columns['submission_deadline']]);
+                if (strpos($row[$columns['submission_deadline']], ':') === false) {
+                    $submissionDate = Carbon::createFromFormat('d/m/Y', $row[$columns['submission_deadline']]);
+                    $submissionDate->setTime(16, 0, 0);
+                } else {
+                    $submissionDate = Carbon::createFromFormat('d/m/Y H:i', $row[$columns['submission_deadline']]);
+                }
             }
-            $submissionDate->hour(16)
-                ->minute(0);
         } catch (\Exception $e) {
             $this->addError('Could not parse date : ' . $row[$columns['submission_deadline']]);
             return false;

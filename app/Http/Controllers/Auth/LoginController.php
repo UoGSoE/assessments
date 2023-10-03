@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Auth\Ldap;
-use Auth;
-use App\User;
 use App\Course;
+use App\Http\Controllers\Controller;
+use App\User;
+use Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -59,14 +59,22 @@ class LoginController extends Controller
     {
         $username = trim(strtolower($request->username));
         $password = $request->password;
-        $ldapUser = $this->ldap->authenticate($username, $password);
-        if (!$ldapUser) {
-            return $this->sendFailedLoginResponse($request);
+        if (!config('ldap.password_bypass')) {
+            $ldapUser = $this->ldap->authenticate($username, $password);
+            if (!$ldapUser) {
+                return $this->sendFailedLoginResponse($request);
+            }
+            $user = User::where('username', $username)->first();
+            if (!$user) {
+                $user = User::createFromLdap($ldapUser);
+            }
+        } else {
+            $user = User::where('username', $username)->first();
+            if (!$user) {
+                return $this->sendFailedLoginResponse($request);
+            }
         }
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            $user = User::createFromLdap($ldapUser);
-        }
+
         Auth::login($user, $remember = true);
         return $this->sendLoginResponse($request);
     }

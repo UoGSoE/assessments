@@ -4,11 +4,11 @@
 namespace Tests\Unit;
 
 use App\Assessment;
-use Tests\TestCase;
-use Tests\CreatesApplication;
-use Illuminate\Support\Facades\DB;
 use App\Spreadsheet\SheetToDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Tests\CreatesApplication;
+use Tests\TestCase;
 
 class SheetToDatabaseTest extends TestCase
 {
@@ -41,7 +41,7 @@ class SheetToDatabaseTest extends TestCase
 
         $this->assertCount(0, $convertor->errors->all());
         $this->assertEquals(1, Assessment::count());
-        $this->assertEquals(now()->format('d/m/Y 16:00'), $assessment->deadline->format('d/m/Y H:i'));
+        $this->assertEquals(now()->addDays(1)->format('d/m/Y H:i'), $assessment->deadline->format('d/m/Y H:i'));
         $this->assertEquals($row[0], $assessment->course->code);
         $this->assertEquals($row[2], $assessment->type);
         $this->assertEquals($row[3], $assessment->feedback_type);
@@ -53,6 +53,19 @@ class SheetToDatabaseTest extends TestCase
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
         $row[6] = now()->addWeeks(2);
+
+        $assessment = $convertor->rowToAssessment($row);
+
+        $this->assertEquals(now()->addWeeks(2)->format('d/m/Y H:i'), $assessment->deadline->format('d/m/Y H:i'));
+    }
+
+    /** @test */
+    public function assessment_date_without_time_is_defaulted_to_16_00(): void
+    {
+        $this->withoutExceptionHandling();
+        $convertor = app(SheetToDatabase::class);
+        $row = $this->getRowData();
+        $row[6] = now()->addWeeks(2)->format('d/m/Y');
 
         $assessment = $convertor->rowToAssessment($row);
 
@@ -125,7 +138,7 @@ class SheetToDatabaseTest extends TestCase
             "moodle - graded",
             "Angela Busse",
             "angela.busse@glasgow.ac.uk",
-            now()->format('d/m/Y H:i'),
+            now()->addDays(1)->format('d/m/Y H:i'),
             now()->addWeeks(2)->format('d/m/Y H:i'),
             "No",
             "0",
