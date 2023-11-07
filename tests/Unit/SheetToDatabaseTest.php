@@ -41,7 +41,7 @@ class SheetToDatabaseTest extends TestCase
 
         $this->assertCount(0, $convertor->errors->all());
         $this->assertEquals(1, Assessment::count());
-        $this->assertEquals(now()->format('d/m/Y 16:00'), $assessment->deadline->format('d/m/Y H:i'));
+        $this->assertEquals(now()->addDay(1)->format('d/m/Y 16:00'), $assessment->deadline->format('d/m/Y H:i'));
         $this->assertEquals($row[0], $assessment->course->code);
         $this->assertEquals($row[2], $assessment->type);
         $this->assertEquals($row[3], $assessment->feedback_type);
@@ -126,7 +126,7 @@ class SheetToDatabaseTest extends TestCase
             'moodle - graded',
             'Angela Busse',
             'angela.busse@glasgow.ac.uk',
-            now()->format('d/m/Y H:i'),
+            now()->addDay(1)->format('d/m/Y H:i'),
             now()->addWeeks(2)->format('d/m/Y H:i'),
             'No',
             '0',
