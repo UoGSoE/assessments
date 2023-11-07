@@ -17,7 +17,7 @@ abstract class TestCase extends BaseTestCase
 
         // Enable foreign key support for SQLITE databases
         if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
-            DB::statement(DB::raw('PRAGMA foreign_keys=on'));
+            DB::statement('PRAGMA foreign_keys=on');
         }
     }
 
