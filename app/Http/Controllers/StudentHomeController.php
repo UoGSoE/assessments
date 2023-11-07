@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use Auth;
+use Illuminate\View\View;
 
 class StudentHomeController extends Controller
 {

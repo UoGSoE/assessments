@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Models\Assessment;
 use App\Models\User;
+use Illuminate\View\View;
 
 class ReportController extends Controller
 {
