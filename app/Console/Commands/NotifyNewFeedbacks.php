@@ -36,7 +36,7 @@ class NotifyNewFeedbacks extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $staff = User::staff()->get();
         foreach ($staff as $user) {

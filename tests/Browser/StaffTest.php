@@ -13,7 +13,7 @@ class StaffTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function staff_can_see_all_assessments()
+    public function staff_can_see_all_assessments(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -40,7 +40,7 @@ class StaffTest extends DuskTestCase
     }
 
     /** @test */
-    public function staff_can_see_assessments_where_feedback_is_coming_up()
+    public function staff_can_see_assessments_where_feedback_is_coming_up(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -57,7 +57,7 @@ class StaffTest extends DuskTestCase
     }
 
     /** @test */
-    public function staff_can_mark_assessment_feedback_as_having_been_given()
+    public function staff_can_mark_assessment_feedback_as_having_been_given(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();

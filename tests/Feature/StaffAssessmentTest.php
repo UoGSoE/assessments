@@ -10,7 +10,7 @@ use Tests\TestCase;
 class StaffAssessmentTest extends TestCase
 {
     /** @test */
-    public function can_get_a_list_of_feedbacks_which_have_not_already_been_notified_about()
+    public function can_get_a_list_of_feedbacks_which_have_not_already_been_notified_about(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -27,7 +27,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function can_mark_all_unread_feedbacks_as_read()
+    public function can_mark_all_unread_feedbacks_as_read(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -45,7 +45,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_can_see_all_applicable_assessments()
+    public function staff_can_see_all_applicable_assessments(): void
     {
         $staff = $this->createStaff();
         $course1 = $this->createCourse();
@@ -72,7 +72,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_can_see_assessments_where_feedback_is_due()
+    public function staff_can_see_assessments_where_feedback_is_due(): void
     {
         $staff = $this->createStaff();
         $course1 = $this->createCourse();
@@ -89,7 +89,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_can_see_feedbacks_for_assessments_which_are_theirs()
+    public function staff_can_see_feedbacks_for_assessments_which_are_theirs(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -106,7 +106,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_cant_see_feedbacks_for_assessments_which_are_not_theirs()
+    public function staff_cant_see_feedbacks_for_assessments_which_are_not_theirs(): void
     {
         $staff1 = $this->createStaff();
         $staff2 = $this->createStaff();
@@ -122,7 +122,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_can_mark_that_an_assessment_has_had_complete_feedback_left()
+    public function staff_can_mark_that_an_assessment_has_had_complete_feedback_left(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -138,7 +138,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function staff_cant_set_an_invalid_date_for_complete_feedback_left()
+    public function staff_cant_set_an_invalid_date_for_complete_feedback_left(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -153,7 +153,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function can_see_the_date_feedback_was_marked_as_complete_if_it_has_been_marked_as_such()
+    public function can_see_the_date_feedback_was_marked_as_complete_if_it_has_been_marked_as_such(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -170,7 +170,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function can_see_the_form_form_feedback_completed_if_it_hasnt_been_marked_as_such_and_it_is_their_assessment()
+    public function can_see_the_form_form_feedback_completed_if_it_hasnt_been_marked_as_such_and_it_is_their_assessment(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -184,7 +184,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function cant_see_the_form_form_feedback_completed_if_it_isnt_their_assessment()
+    public function cant_see_the_form_form_feedback_completed_if_it_isnt_their_assessment(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();
@@ -198,7 +198,7 @@ class StaffAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function cant_see_the_form_form_feedback_completed_if_assessment_not_passed_its_deadline_yet()
+    public function cant_see_the_form_form_feedback_completed_if_assessment_not_passed_its_deadline_yet(): void
     {
         $staff = $this->createStaff();
         $course = $this->createCourse();

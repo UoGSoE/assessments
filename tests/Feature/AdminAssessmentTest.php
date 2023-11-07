@@ -10,7 +10,7 @@ use Tests\TestCase;
 class AdminAssessmentTest extends TestCase
 {
     /** @test */
-    public function admin_can_edit_an_assessment()
+    public function admin_can_edit_an_assessment(): void
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();
@@ -40,7 +40,7 @@ class AdminAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function admin_cant_save_an_assessment_with_invalid_data()
+    public function admin_cant_save_an_assessment_with_invalid_data(): void
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();
@@ -63,7 +63,7 @@ class AdminAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_delete_an_assessment_and_all_associated_records()
+    public function admin_can_delete_an_assessment_and_all_associated_records(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -81,7 +81,7 @@ class AdminAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_create_an_assessment()
+    public function admin_can_create_an_assessment(): void
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();

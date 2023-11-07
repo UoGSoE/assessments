@@ -11,7 +11,7 @@ use Tests\TestCase;
 class CalendarTest extends TestCase
 {
     /** @test */
-    public function can_render_a_calendar_to_a_string()
+    public function can_render_a_calendar_to_a_string(): void
     {
         $cal = resolve(Calendar::class);
 
@@ -23,7 +23,7 @@ class CalendarTest extends TestCase
     }
 
     /** @test */
-    public function can_add_an_assessment_to_a_calendar()
+    public function can_add_an_assessment_to_a_calendar(): void
     {
         $cal = resolve(Calendar::class);
         $assessment = $this->createAssessment(['comment' => 'A COMMENT']);
@@ -37,7 +37,7 @@ class CalendarTest extends TestCase
     }
 
     /** @test */
-    public function can_add_multiple_assessments_to_a_calendar()
+    public function can_add_multiple_assessments_to_a_calendar(): void
     {
         $cal = resolve(Calendar::class);
         $assessment1 = $this->createAssessment();
@@ -53,7 +53,7 @@ class CalendarTest extends TestCase
     }
 
     /** @test */
-    public function can_save_a_calender_to_disk()
+    public function can_save_a_calender_to_disk(): void
     {
         $cal = resolve(Calendar::class);
 

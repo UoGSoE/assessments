@@ -36,7 +36,7 @@ class AutoSignoffAssessments extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         Assessment::notSignedOff()->get()->each(function ($assessment) {
             if ($assessment->canBeAutoSignedOff()) {

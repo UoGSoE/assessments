@@ -16,7 +16,7 @@ use Tests\TestCase;
 class WlmImportTest extends TestCase
 {
     /** @test */
-    public function can_import_the_data_from_the_fake_wlm()
+    public function can_import_the_data_from_the_fake_wlm(): void
     {
         $importer = new WlmImporter(new FakeWlmClient);
 
@@ -39,7 +39,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function can_limit_course_numbers_while_importing_the_data_from_the_fake_wlm()
+    public function can_limit_course_numbers_while_importing_the_data_from_the_fake_wlm(): void
     {
         $importer = new WlmImporter(new FakeWlmClient);
 
@@ -55,7 +55,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function data_not_in_the_wlm_can_be_removed_from_the_local_db_after_import()
+    public function data_not_in_the_wlm_can_be_removed_from_the_local_db_after_import(): void
     {
         $student = $this->createStudent();
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(10)]);
@@ -82,7 +82,7 @@ class WlmImportTest extends TestCase
      *
      * @group integration
      */
-    public function can_import_the_data_from_the_real_wlm()
+    public function can_import_the_data_from_the_real_wlm(): void
     {
         $importer = new WlmImporter(new WlmClient);
 

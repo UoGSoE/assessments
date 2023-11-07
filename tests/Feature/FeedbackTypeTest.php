@@ -10,7 +10,7 @@ use Tests\TestCase;
 class FeedbackTypeTest extends TestCase
 {
     /** @test */
-    public function can_get_a_list_of_unique_feedback_types()
+    public function can_get_a_list_of_unique_feedback_types(): void
     {
         $assessments = Assessment::factory()->count(3)->create();
 

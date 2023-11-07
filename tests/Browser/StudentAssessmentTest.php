@@ -14,7 +14,7 @@ class StudentAssessmentTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function student_can_see_and_interact_with_their_assessments()
+    public function student_can_see_and_interact_with_their_assessments(): void
     {
         $this->browse(function (Browser $browser) {
             $student = $this->createStudent();

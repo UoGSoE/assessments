@@ -11,7 +11,7 @@ use Tests\TestCase;
 class StudentAssessmentsAsJsonTest extends TestCase
 {
     /** @test */
-    public function if_no_assessments_an_empty_json_array_is_returned()
+    public function if_no_assessments_an_empty_json_array_is_returned(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -23,7 +23,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function if_negative_feedback_given_json_has_feedback_missed_flagged()
+    public function if_negative_feedback_given_json_has_feedback_missed_flagged(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -51,7 +51,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function we_can_fetch_all_assessments_for_a_given_student_as_json()
+    public function we_can_fetch_all_assessments_for_a_given_student_as_json(): void
     {
         $student = $this->createStudent();
         $courses = Course::factory()->count(2)->create()->each(function ($course) use ($student) {
@@ -66,7 +66,7 @@ class StudentAssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function only_assessments_for_courses_marked_as_active_are_returned()
+    public function only_assessments_for_courses_marked_as_active_are_returned(): void
     {
         $student = $this->createStudent();
         $course1 = $this->createCourse(['is_active' => true]);

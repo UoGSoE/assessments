@@ -10,7 +10,7 @@ use Tests\TestCase;
 class StudentAssessmentTest extends TestCase
 {
     /** @test */
-    public function student_can_see_all_applicable_assessments()
+    public function student_can_see_all_applicable_assessments(): void
     {
         $student = $this->createStudent();
         $course1 = $this->createCourse();
@@ -49,7 +49,7 @@ class StudentAssessmentTest extends TestCase
     // }
 
     /** @test */
-    public function student_can_see_an_assessment_which_is_for_one_of_their_courses()
+    public function student_can_see_an_assessment_which_is_for_one_of_their_courses(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -66,7 +66,7 @@ class StudentAssessmentTest extends TestCase
     }
 
     /** @test */
-    public function student_can_see_feedback_completed_date_if_has_been_set()
+    public function student_can_see_feedback_completed_date_if_has_been_set(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();

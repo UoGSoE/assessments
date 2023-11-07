@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      *
      * @return void
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         $schedule->command('assessments:wlmimport')->dailyAt('02:00');
         $schedule->command('assessments:autosignoff')->dailyAt('03:00');
@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
      *
      * @return void
      */
-    protected function commands()
+    protected function commands(): void
     {
         require base_path('routes/console.php');
     }

@@ -10,7 +10,7 @@ use Tests\TestCase;
 class ReportTest extends TestCase
 {
     /** @test */
-    public function admin_can_view_the_overall_feedback_report()
+    public function admin_can_view_the_overall_feedback_report(): void
     {
         $admin = $this->createAdmin();
         $assessments = \App\Models\Assessment::factory()->count(2)->create();
@@ -30,7 +30,7 @@ class ReportTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_view_the_staff_report()
+    public function admin_can_view_the_staff_report(): void
     {
         $admin = $this->createAdmin();
         $staff = User::factory()->count(2)->staff()->create()->each(function ($user) {

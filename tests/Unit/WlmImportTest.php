@@ -11,7 +11,7 @@ use Tests\TestCase;
 class WlmImportTest extends TestCase
 {
     /** @test */
-    public function can_convert_wlm_format_course_to_a_local_course_model()
+    public function can_convert_wlm_format_course_to_a_local_course_model(): void
     {
         $wlmCourse = [
             'Code' => 'ENG1234',
@@ -29,7 +29,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function a_course_marked_as_not_current_on_the_wlm_is_marked_as_not_active_locally()
+    public function a_course_marked_as_not_current_on_the_wlm_is_marked_as_not_active_locally(): void
     {
         $wlmCourse = [
             'Code' => 'ENG1234',
@@ -44,7 +44,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function can_convert_wlm_staff_data_to_a_local_user_model()
+    public function can_convert_wlm_staff_data_to_a_local_user_model(): void
     {
         $wlmStaff = [
             'GUID' => 'fake1x',
@@ -63,7 +63,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function can_convert_wlm_student_data_to_a_local_user_model()
+    public function can_convert_wlm_student_data_to_a_local_user_model(): void
     {
         $wlmStudent = [
             'Matric' => '1234567',
@@ -81,7 +81,7 @@ class WlmImportTest extends TestCase
     }
 
     /** @test */
-    public function converting_wlm_data_twice_doesnt_create_duplicates_locally()
+    public function converting_wlm_data_twice_doesnt_create_duplicates_locally(): void
     {
         $wlmStudent = [
             'Matric' => '1234567',

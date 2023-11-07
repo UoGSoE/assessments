@@ -36,7 +36,7 @@ class NotifyOffice extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         Assessment::all()->each->notifyIfProblematic();
     }

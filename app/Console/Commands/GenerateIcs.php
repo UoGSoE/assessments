@@ -38,7 +38,7 @@ class GenerateIcs extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         // generate calendar for every course and one for each year
         $courses = Course::active()->with('assessments')->get();

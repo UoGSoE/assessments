@@ -76,7 +76,7 @@ class SpreadsheetTest extends TestCase
     // }
 
     /** @test */
-    public function can_export_assessments_as_a_spreadsheet()
+    public function can_export_assessments_as_a_spreadsheet(): void
     {
         $admin = $this->createAdmin();
         $assessment1 = $this->createAssessment();
@@ -101,7 +101,7 @@ class SpreadsheetTest extends TestCase
     }
 
     /** @test */
-    public function can_export_staff_report_as_a_spreadsheet()
+    public function can_export_staff_report_as_a_spreadsheet(): void
     {
         // create staff with specific surnames as the spreadsheet is ordered by surname
         // otherwise checking the data in specific rows is a bit tricky

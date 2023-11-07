@@ -11,7 +11,7 @@ class TestDataSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         // \App\AssessmentFeedback::truncate();
         // \App\Models\Assessment::truncate();

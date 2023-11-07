@@ -11,7 +11,7 @@ use Tests\TestCase;
 class FeedbackTest extends TestCase
 {
     /** @test */
-    public function we_can_get_the_total_negative_feedback_for_an_assessment()
+    public function we_can_get_the_total_negative_feedback_for_an_assessment(): void
     {
         $student1 = $this->createStudent();
         $student2 = $this->createStudent();
@@ -25,7 +25,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function we_can_get_the_percantage_of_negative_feedback_for_an_assessment()
+    public function we_can_get_the_percantage_of_negative_feedback_for_an_assessment(): void
     {
         $students = \App\Models\User::factory()->count(10)->student()->create();
         $course = $this->createCourse();
@@ -39,7 +39,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function we_can_get_the_number_of_feedbacks_left_for_a_member_of_staff()
+    public function we_can_get_the_number_of_feedbacks_left_for_a_member_of_staff(): void
     {
         $students = \App\Models\User::factory()->count(3)->student()->create();
         $course = $this->createCourse();
@@ -53,7 +53,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function we_can_get_the_number_of_feedback_deadlines_a_member_of_staff_has_missed()
+    public function we_can_get_the_number_of_feedback_deadlines_a_member_of_staff_has_missed(): void
     {
         $staff = $this->createStaff();
         $noFeedbackLeft = $this->createAssessment([
@@ -75,7 +75,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function an_assessment_with_lots_of_negative_feedback_is_flagged()
+    public function an_assessment_with_lots_of_negative_feedback_is_flagged(): void
     {
         $students = \App\Models\User::factory()->count(5)->student()->create();
         $course = $this->createCourse();
@@ -89,7 +89,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function we_can_get_a_list_of_assessments_with_no_feedback_left_by_academics()
+    public function we_can_get_a_list_of_assessments_with_no_feedback_left_by_academics(): void
     {
         Assessment::factory()->count(2)->create(['deadline' => Carbon::now()->subWeeks(3)]);
         Assessment::factory()->count(1)->create(['deadline' => Carbon::now()->subWeeks(3), 'feedback_left' => Carbon::now()]);
@@ -98,7 +98,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function an_assessment_can_be_signed_off_if_there_are_no_negative_feedbacks_and_a_sufficient_amount_of_time_has_passed()
+    public function an_assessment_can_be_signed_off_if_there_are_no_negative_feedbacks_and_a_sufficient_amount_of_time_has_passed(): void
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(7)]);
 
@@ -106,7 +106,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function an_assessment_cant_be_signed_off_if_it_has_negative_feedbacks()
+    public function an_assessment_cant_be_signed_off_if_it_has_negative_feedbacks(): void
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(7)]);
         $feedback = $this->createFeedback(['assessment_id' => $assessment->id]);
@@ -115,7 +115,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function an_assessment_cant_be_signed_off_too_soon()
+    public function an_assessment_cant_be_signed_off_too_soon(): void
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(5)]);
 
@@ -123,7 +123,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function an_assessment_can_be_signed_off_by_the_system()
+    public function an_assessment_can_be_signed_off_by_the_system(): void
     {
         $assessment = $this->createAssessment(['deadline' => Carbon::now()->subWeeks(4)]);
 
@@ -134,7 +134,7 @@ class FeedbackTest extends TestCase
     }
 
     /** @test */
-    public function a_bit_of_feedback_can_be_marked_as_notifying_the_staff_member()
+    public function a_bit_of_feedback_can_be_marked_as_notifying_the_staff_member(): void
     {
         $feedback = $this->createFeedback();
         $this->assertFalse($feedback->staffNotified());

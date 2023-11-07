@@ -32,7 +32,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function can_convert_a_valid_row_to_an_assessment()
+    public function can_convert_a_valid_row_to_an_assessment(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -48,7 +48,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function assessment_date_can_also_be_datetime_objects()
+    public function assessment_date_can_also_be_datetime_objects(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -60,7 +60,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function a_row_with_invalid_staff_email_is_skipped()
+    public function a_row_with_invalid_staff_email_is_skipped(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -74,7 +74,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function a_row_with_invalid_date_is_skipped()
+    public function a_row_with_invalid_date_is_skipped(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -88,7 +88,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function a_row_with_a_date_in_the_past_is_skipped()
+    public function a_row_with_a_date_in_the_past_is_skipped(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();
@@ -102,7 +102,7 @@ class SheetToDatabaseTest extends TestCase
     }
 
     /** @test */
-    public function a_row_without_comments_gets_an_empty_string_as_the_comment_db_column()
+    public function a_row_without_comments_gets_an_empty_string_as_the_comment_db_column(): void
     {
         $convertor = app(SheetToDatabase::class);
         $row = $this->getRowData();

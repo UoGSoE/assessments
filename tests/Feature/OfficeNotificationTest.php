@@ -13,7 +13,7 @@ use Tests\TestCase;
 class OfficeNotificationTest extends TestCase
 {
     /** @test */
-    public function teaching_office_are_notified_when_an_assessment_becomes_problematic()
+    public function teaching_office_are_notified_when_an_assessment_becomes_problematic(): void
     {
         Notification::fake();
         $course = $this->createCourse();
@@ -41,7 +41,7 @@ class OfficeNotificationTest extends TestCase
     }
 
     /** @test */
-    public function teaching_office_are_only_notified_once_about_problematic_assessments()
+    public function teaching_office_are_only_notified_once_about_problematic_assessments(): void
     {
         Notification::fake();
         $course = $this->createCourse();
@@ -63,7 +63,7 @@ class OfficeNotificationTest extends TestCase
     }
 
     /** @test */
-    public function can_be_notified_about_unread_feedbacks()
+    public function can_be_notified_about_unread_feedbacks(): void
     {
         Notification::fake();
         $staff = $this->createStaff();

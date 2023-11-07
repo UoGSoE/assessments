@@ -10,7 +10,7 @@ use Tests\TestCase;
 class ApiTest extends TestCase
 {
     /** @test */
-    public function we_can_get_a_json_feed_of_assessments()
+    public function we_can_get_a_json_feed_of_assessments(): void
     {
         $assessment1 = Assessment::factory()->create();
         $assessment2 = Assessment::factory()->create();

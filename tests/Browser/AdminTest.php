@@ -14,7 +14,7 @@ class AdminTest extends DuskTestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function admin_can_view_admin_stuff()
+    public function admin_can_view_admin_stuff(): void
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
@@ -61,7 +61,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_edit_an_assessment()
+    public function admin_can_edit_an_assessment(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -90,7 +90,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_create_a_new_assessment()
+    public function admin_can_create_a_new_assessment(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -119,7 +119,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_delete_an_assessment()
+    public function admin_can_delete_an_assessment(): void
     {
         $this->browse(function ($browser) {
             $now = Carbon::now();
@@ -147,7 +147,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_delete_all_old_data()
+    public function admin_can_delete_all_old_data(): void
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
@@ -173,7 +173,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_see_the_staff_report()
+    public function admin_can_see_the_staff_report(): void
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();
@@ -199,7 +199,7 @@ class AdminTest extends DuskTestCase
     }
 
     /** @test */
-    public function admin_can_see_toggle_users_admin_flag()
+    public function admin_can_see_toggle_users_admin_flag(): void
     {
         $this->browse(function ($browser) {
             $admin = $this->createAdmin();

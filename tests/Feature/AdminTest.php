@@ -12,7 +12,7 @@ use Tests\TestCase;
 class AdminTest extends TestCase
 {
     /** @test */
-    public function admin_can_see_all_assessments()
+    public function admin_can_see_all_assessments(): void
     {
         $admin = $this->createAdmin();
         $assessment1 = $this->createAssessment();
@@ -29,7 +29,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function problematic_assessments_are_flagged_up()
+    public function problematic_assessments_are_flagged_up(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -45,7 +45,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_sees_details_of_negative_feedback_when_viewing_an_assessment()
+    public function admin_sees_details_of_negative_feedback_when_viewing_an_assessment(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -64,7 +64,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_see_all_feedbacks_left_by_a_given_student()
+    public function admin_can_see_all_feedbacks_left_by_a_given_student(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -84,7 +84,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_see_the_details_for_a_course()
+    public function admin_can_see_the_details_for_a_course(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -104,7 +104,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_see_the_details_for_an_assessment()
+    public function admin_can_see_the_details_for_an_assessment(): void
     {
         $admin = $this->createAdmin();
         $course = $this->createCourse();
@@ -125,7 +125,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_remove_all_old_data()
+    public function admin_can_remove_all_old_data(): void
     {
         $admin = $this->createAdmin();
         $assessments = \App\Models\Assessment::factory()->count(2)->create();
@@ -141,7 +141,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_see_details_of_a_member_of_staff()
+    public function admin_can_see_details_of_a_member_of_staff(): void
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();
@@ -167,7 +167,7 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_toggle_a_users_admin_flag()
+    public function admin_can_toggle_a_users_admin_flag(): void
     {
         $admin = $this->createAdmin();
         $staff = $this->createStaff();

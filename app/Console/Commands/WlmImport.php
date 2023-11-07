@@ -36,7 +36,7 @@ class WlmImport extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         if ($this->option('sync')) {
             app(WlmImporter::class)->sync();

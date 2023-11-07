@@ -10,7 +10,7 @@ use Tests\TestCase;
 class StudentFeedbackTest extends TestCase
 {
     /** @test */
-    public function test_a_student_can_give_feedback_on_an_assessment()
+    public function test_a_student_can_give_feedback_on_an_assessment(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -29,7 +29,7 @@ class StudentFeedbackTest extends TestCase
     }
 
     /** @test */
-    public function test_a_student_cant_give_feedback_on_assessments_that_they_shouldnt_be_able_to()
+    public function test_a_student_cant_give_feedback_on_assessments_that_they_shouldnt_be_able_to(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -73,7 +73,7 @@ class StudentFeedbackTest extends TestCase
     }
 
     /** @test */
-    public function if_a_student_has_already_left_feedback_then_that_is_indicated_to_them()
+    public function if_a_student_has_already_left_feedback_then_that_is_indicated_to_them(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();

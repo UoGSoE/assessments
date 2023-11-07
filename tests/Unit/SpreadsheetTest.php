@@ -10,7 +10,7 @@ use Tests\TestCase;
 class SpreadsheetTest extends TestCase
 {
     /** @test */
-    public function importing_a_spreadsheet_returns_correct_data()
+    public function importing_a_spreadsheet_returns_correct_data(): void
     {
         $data = (new Spreadsheet)->import('./tests/data/assessments_2019_09_18.xlsx');
 
@@ -21,7 +21,7 @@ class SpreadsheetTest extends TestCase
     }
 
     /** @test */
-    public function generating_a_sheet_from_an_array_produces_correct_results()
+    public function generating_a_sheet_from_an_array_produces_correct_results(): void
     {
         $spreadsheet = new Spreadsheet;
         $data = [

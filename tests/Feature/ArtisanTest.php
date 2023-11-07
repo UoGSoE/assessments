@@ -20,7 +20,7 @@ use Tests\TestCase;
 class ArtisanTest extends TestCase
 {
     /** @test */
-    public function running_the_staff_notification_command_triggers_notifications()
+    public function running_the_staff_notification_command_triggers_notifications(): void
     {
         Notification::fake();
         $staff = $this->createStaff();
@@ -40,7 +40,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_office_notification_command_triggers_notifications()
+    public function running_the_office_notification_command_triggers_notifications(): void
     {
         Notification::fake();
         $course = $this->createCourse();
@@ -58,7 +58,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_auto_signoff_command_signs_off_appropriate_assessments()
+    public function running_the_auto_signoff_command_signs_off_appropriate_assessments(): void
     {
         $canBeSignedOff = Assessment::factory()->count(3)->create([
             'deadline' => Carbon::now()->subWeeks(7),
@@ -75,7 +75,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_wlm_import_command_creates_correct_data_and_preserves_local_data()
+    public function running_the_wlm_import_command_creates_correct_data_and_preserves_local_data(): void
     {
         $assessment = $this->createAssessment();
         $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
@@ -87,7 +87,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_wlm_import_command_with_the_sync_option_creates_correct_data_and_removes_old_data()
+    public function running_the_wlm_import_command_with_the_sync_option_creates_correct_data_and_removes_old_data(): void
     {
         $assessment = $this->createAssessment();
         $this->app->instance('App\Wlm\WlmClientInterface', new FakeWlmClient);
@@ -99,7 +99,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong()
+    public function running_the_wlm_import_command_notifies_sysadmin_if_it_goes_wrong(): void
     {
         Mail::fake();
 
@@ -113,7 +113,7 @@ class ArtisanTest extends TestCase
     }
 
     /** @test */
-    public function running_the_ical_generator_command_creates_the_correct_files()
+    public function running_the_ical_generator_command_creates_the_correct_files(): void
     {
         Storage::fake('calendars');
         $course = $this->createCourse(['code' => 'ENG1234']);

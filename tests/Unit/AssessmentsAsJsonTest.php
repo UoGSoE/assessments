@@ -11,7 +11,7 @@ use Tests\TestCase;
 class AssessmentsAsJsonTest extends TestCase
 {
     /** @test */
-    public function if_student_has_no_assessments_an_empty_json_array_is_returned()
+    public function if_student_has_no_assessments_an_empty_json_array_is_returned(): void
     {
         $student = $this->createStudent();
         $course = $this->createCourse();
@@ -23,7 +23,7 @@ class AssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function we_can_fetch_all_assessments_for_a_given_student_as_json()
+    public function we_can_fetch_all_assessments_for_a_given_student_as_json(): void
     {
         $student = $this->createStudent();
         $courses = Course::factory()->count(2)->create()->each(function ($course) use ($student) {
@@ -38,7 +38,7 @@ class AssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function only_assessments_for_courses_marked_as_active_are_returned_to_students()
+    public function only_assessments_for_courses_marked_as_active_are_returned_to_students(): void
     {
         $student = $this->createStudent();
         $course1 = $this->createCourse(['is_active' => true]);
@@ -54,7 +54,7 @@ class AssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function we_can_fetch_all_assessments_for_a_given_staffmember_as_json()
+    public function we_can_fetch_all_assessments_for_a_given_staffmember_as_json(): void
     {
         $staff = $this->createStaff();
         // create 6 assessments in total
@@ -72,7 +72,7 @@ class AssessmentsAsJsonTest extends TestCase
     }
 
     /** @test */
-    public function only_assessments_for_active_courses_are_returned_to_staff()
+    public function only_assessments_for_active_courses_are_returned_to_staff(): void
     {
         $staff = $this->createStaff();
         $course1 = $this->createCourse(['is_active' => true]);

@@ -11,7 +11,7 @@ class CourseTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function we_can_get_the_level_from_a_given_course()
+    public function we_can_get_the_level_from_a_given_course(): void
     {
         $course = Course::factory()->create(['code' => 'ENG1234']);
         $this->assertEquals(1, $course->level);

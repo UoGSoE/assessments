@@ -10,7 +10,7 @@ use Tests\TestCase;
 class FakeWlmClientTest extends TestCase
 {
     /** @test */
-    public function can_get_a_list_of_all_courses_from_the_wlm()
+    public function can_get_a_list_of_all_courses_from_the_wlm(): void
     {
         $client = $this->getWlmClient();
 
@@ -21,7 +21,7 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_member_of_staff_from_the_wlm()
+    public function can_get_a_member_of_staff_from_the_wlm(): void
     {
         $client = $this->getWlmClient();
 
@@ -32,7 +32,7 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function getting_a_non_existant_member_of_staff_returns_an_error()
+    public function getting_a_non_existant_member_of_staff_returns_an_error(): void
     {
         $client = $this->getWlmClient();
 
@@ -45,7 +45,7 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_single_course_from_the_wlm()
+    public function can_get_a_single_course_from_the_wlm(): void
     {
         $client = $this->getWlmClient();
 
@@ -59,7 +59,7 @@ class FakeWlmClientTest extends TestCase
     }
 
     /** @test */
-    public function trying_to_talk_to_the_wlm_if_its_offline_throws_an_exception()
+    public function trying_to_talk_to_the_wlm_if_its_offline_throws_an_exception(): void
     {
         $client = $this->getWlmClient();
 
