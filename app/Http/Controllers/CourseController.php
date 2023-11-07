@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class CourseController extends Controller
 {

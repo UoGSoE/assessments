@@ -5,9 +5,13 @@ namespace App\Wlm;
 class FakeWlmClient implements WlmClientInterface
 {
     public $response;
+
     public $statusCode;
+
     protected $wlmStaff;
+
     public $responseCode;
+
     public $responseMessage;
 
     public function __construct()

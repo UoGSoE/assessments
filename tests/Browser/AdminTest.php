@@ -29,34 +29,34 @@ class AdminTest extends DuskTestCase
             $assessment4 = $this->createAssessment(['course_id' => $course2->id, 'type' => 'TYPE4', 'deadline' => Carbon::now()->startOfWeek()->addDays(3)]);
             $student->recordFeedback($assessment1);
             $browser->loginAs($admin)
-                    ->visit('/')
-                    ->assertSee('Admin')
-                    ->clickLink('Admin')
-                    ->assertSee('Feedback Report')
-                    ->assertSee($assessment1->course->code)
-                    ->clickLink($assessment1->course->code)
-                    ->assertSee('Assessment Details')
-                    ->assertSee('Feedbacks Left')
-                    ->assertSee($student->fullName())
-                    ->clickLink($student->fullName())
-                    ->assertSee('Student Details')
-                    ->assertSee($student->fullName())
-                    ->assertSee('Assessments for')
-                    ->assertSee($assessment4->title)
-                    ->assertSee('Feedbacks Left')
-                    ->assertSee($assessment1->title)
-                    ->clickLink($assessment1->title)
-                    ->assertSee('Assessment Details')
-                    ->assertSee($assessment1->course->code)
-                    ->clickLink($assessment1->course->code)
-                    ->assertSee('Course Details')
-                    ->assertSee($course1->title)
-                    ->assertSee($course1->students()->first()->fullName())
-                    ->clickLink('Admin')
-                    ->clickLink($assessment1->staff->fullName())
-                    ->assertSee('Staff Details')
-                    ->assertSee($assessment1->staff->email)
-                    ->assertSee($assessment1->course->code);
+                ->visit('/')
+                ->assertSee('Admin')
+                ->clickLink('Admin')
+                ->assertSee('Feedback Report')
+                ->assertSee($assessment1->course->code)
+                ->clickLink($assessment1->course->code)
+                ->assertSee('Assessment Details')
+                ->assertSee('Feedbacks Left')
+                ->assertSee($student->fullName())
+                ->clickLink($student->fullName())
+                ->assertSee('Student Details')
+                ->assertSee($student->fullName())
+                ->assertSee('Assessments for')
+                ->assertSee($assessment4->title)
+                ->assertSee('Feedbacks Left')
+                ->assertSee($assessment1->title)
+                ->clickLink($assessment1->title)
+                ->assertSee('Assessment Details')
+                ->assertSee($assessment1->course->code)
+                ->clickLink($assessment1->course->code)
+                ->assertSee('Course Details')
+                ->assertSee($course1->title)
+                ->assertSee($course1->students()->first()->fullName())
+                ->clickLink('Admin')
+                ->clickLink($assessment1->staff->fullName())
+                ->assertSee('Staff Details')
+                ->assertSee($assessment1->staff->email)
+                ->assertSee($assessment1->course->code);
         });
     }
 
@@ -73,19 +73,19 @@ class AdminTest extends DuskTestCase
             $assessment = $this->createAssessment(['course_id' => $course->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
             $student->recordFeedback($assessment);
             $browser->loginAs($admin)
-                    ->visit("/assessment/{$assessment->id}")
-                    ->click('#edit-assessment-button')
-                    ->assertSee('Edit Assessment')
-                    ->type('type', 'something')
-                    ->select('staff_id', "$staff->id")
-                    ->type('date', $now->format('d/m/Y'))
-                    ->type('time', $now->format('H:i'))
-                    ->type('feedback_type', 'HAPPYEASTER')
-                    ->press('Update')
-                    ->assertSee('Updated')
-                    ->assertSee($staff->fullName())
-                    ->assertSee($now->format('d/m/Y H:i'))
-                    ->assertSee('HAPPYEASTER');
+                ->visit("/assessment/{$assessment->id}")
+                ->click('#edit-assessment-button')
+                ->assertSee('Edit Assessment')
+                ->type('type', 'something')
+                ->select('staff_id', "$staff->id")
+                ->type('date', $now->format('d/m/Y'))
+                ->type('time', $now->format('H:i'))
+                ->type('feedback_type', 'HAPPYEASTER')
+                ->press('Update')
+                ->assertSee('Updated')
+                ->assertSee($staff->fullName())
+                ->assertSee($now->format('d/m/Y H:i'))
+                ->assertSee('HAPPYEASTER');
         });
     }
 
@@ -98,23 +98,23 @@ class AdminTest extends DuskTestCase
             $staff = $this->createStaff();
             $course = $this->createCourse();
             $browser->loginAs($admin)
-                    ->visit('/admin/report/feedback')
-                    ->click('#add-assessment-button')
-                    ->assertSee('New Assessment')
-                    ->type('type', 'something')
-                    ->select('staff_id', "$staff->id")
-                    ->type('date', $now->format('d/m/Y'))
-                    ->type('time', $now->format('H:i'))
-                    ->type('comment', 'blah blah blah')
-                    ->type('feedback_type', 'HAPPYEASTER')
-                    ->select('course_id', "$course->id")
-                    ->press('Create')
-                    ->assertSee('Created')
-                    ->assertSee($staff->fullName())
-                    ->assertSee($now->format('d/m/Y H:i'))
-                    ->assertSee($course->title)
-                    ->assertSee('blah blah blah')
-                    ->assertSee('HAPPYEASTER');
+                ->visit('/admin/report/feedback')
+                ->click('#add-assessment-button')
+                ->assertSee('New Assessment')
+                ->type('type', 'something')
+                ->select('staff_id', "$staff->id")
+                ->type('date', $now->format('d/m/Y'))
+                ->type('time', $now->format('H:i'))
+                ->type('comment', 'blah blah blah')
+                ->type('feedback_type', 'HAPPYEASTER')
+                ->select('course_id', "$course->id")
+                ->press('Create')
+                ->assertSee('Created')
+                ->assertSee($staff->fullName())
+                ->assertSee($now->format('d/m/Y H:i'))
+                ->assertSee($course->title)
+                ->assertSee('blah blah blah')
+                ->assertSee('HAPPYEASTER');
         });
     }
 
@@ -131,18 +131,18 @@ class AdminTest extends DuskTestCase
             $assessment = $this->createAssessment(['course_id' => $course->id, 'type' => 'TYPE1', 'deadline' => Carbon::now()->subWeeks(4)]);
             $student->recordFeedback($assessment);
             $browser->loginAs($admin)
-                    ->visit("/assessment/{$assessment->id}")
-                    ->press('#delete-button')
-                    ->waitFor('#pop-up')
-                    ->assertSee('Do you really want to delete')
-                    ->clickLink('No')
-                    ->assertDontSee('Do you really want to delete')
-                    ->assertSee($assessment->course->code)
-                    ->press('#delete-button')
-                    ->waitFor('#pop-up')
-                    ->clickLink('Yes')
-                    ->assertSee('Feedback Report')
-                    ->assertSee('Assessment deleted');
+                ->visit("/assessment/{$assessment->id}")
+                ->press('#delete-button')
+                ->waitFor('#pop-up')
+                ->assertSee('Do you really want to delete')
+                ->clickLink('No')
+                ->assertDontSee('Do you really want to delete')
+                ->assertSee($assessment->course->code)
+                ->press('#delete-button')
+                ->waitFor('#pop-up')
+                ->clickLink('Yes')
+                ->assertSee('Feedback Report')
+                ->assertSee('Assessment deleted');
         });
     }
 
@@ -155,20 +155,20 @@ class AdminTest extends DuskTestCase
             $firstAssessment = $assessments->first();
             $feedbacks = \App\Models\AssessmentFeedback::factory()->count(5)->create();
             $browser->loginAs($admin)
-                    ->visit('/admin/report/feedback')
-                    ->assertSee($firstAssessment->course->code)
-                    ->press('#delete-button')
-                    ->waitFor('#pop-up')
-                    ->assertSee('Do you really want to delete')
-                    ->clickLink('No')
-                    ->assertDontSee('Do you really want to delete')
-                    ->assertSee($firstAssessment->course->code)
-                    ->press('#delete-button')
-                    ->waitFor('#pop-up')
-                    ->clickLink('Yes')
-                    ->assertSee('Feedback Report')
-                    ->assertSee('Old data removed')
-                    ->assertDontSee($firstAssessment->course->code);
+                ->visit('/admin/report/feedback')
+                ->assertSee($firstAssessment->course->code)
+                ->press('#delete-button')
+                ->waitFor('#pop-up')
+                ->assertSee('Do you really want to delete')
+                ->clickLink('No')
+                ->assertDontSee('Do you really want to delete')
+                ->assertSee($firstAssessment->course->code)
+                ->press('#delete-button')
+                ->waitFor('#pop-up')
+                ->clickLink('Yes')
+                ->assertSee('Feedback Report')
+                ->assertSee('Old data removed')
+                ->assertDontSee($firstAssessment->course->code);
         });
     }
 
@@ -187,14 +187,14 @@ class AdminTest extends DuskTestCase
                 $feedbacks = \App\Models\AssessmentFeedback::factory()->count(rand(1, 5))->create(['assessment_id' => $assessment->id]);
             });
             $browser->loginAs($admin)
-                    ->visit('/')
-                    ->clickLink('Admin')
-                    ->click('#staff-report-button')
-                    ->assertSee('Staff Report')
-                    ->assertSee($staff1->fullName())
-                    ->clickLink($staff1->fullName())
-                    ->assertSee('Staff Details')
-                    ->assertSee($staff1->courses()->first()->code);
+                ->visit('/')
+                ->clickLink('Admin')
+                ->click('#staff-report-button')
+                ->assertSee('Staff Report')
+                ->assertSee($staff1->fullName())
+                ->clickLink($staff1->fullName())
+                ->assertSee('Staff Details')
+                ->assertSee($staff1->courses()->first()->code);
         });
     }
 
@@ -207,20 +207,20 @@ class AdminTest extends DuskTestCase
             $staff = $assessment->staff;
 
             $browser->loginAs($admin)
-                    ->visit('/')
-                    ->clickLink('Admin')
-                    ->clickLink($staff->fullName())
-                    ->assertSee('Staff Details')
-                    ->check('is_admin')
-                    ->pause(300);
+                ->visit('/')
+                ->clickLink('Admin')
+                ->clickLink($staff->fullName())
+                ->assertSee('Staff Details')
+                ->check('is_admin')
+                ->pause(300);
             $this->assertTrue($staff->fresh()->is_admin);
             $browser->loginAs($admin)
-                    ->visit('/')
-                    ->clickLink('Admin')
-                    ->clickLink($staff->fullName())
-                    ->assertSee('Staff Details')
-                    ->uncheck('is_admin')
-                    ->pause(300);
+                ->visit('/')
+                ->clickLink('Admin')
+                ->clickLink($staff->fullName())
+                ->assertSee('Staff Details')
+                ->uncheck('is_admin')
+                ->pause(300);
             $this->assertFalse($staff->fresh()->is_admin);
         });
     }
@@ -232,17 +232,17 @@ class AdminTest extends DuskTestCase
             $admin = $this->createAdmin();
             $sheet = $this->createSpreadsheet();
             $browser->loginAs($admin)
-                    ->visit('/')
-                    ->clickLink('Admin')
-                    ->click('#upload-coursework-button')
-                    ->assertSee('Upload Coursework Spreadsheet')
-                    ->attach('sheet', $sheet)
-                    ->press('Upload')
-                    ->assertSee('TEST9999')
-                    ->assertSee('TEST1234')
-                    ->assertSee('Feedback Report')
-                    ->assertSee($this->staff1->fullName())
-                    ->assertSee($this->staff2->fullName());
+                ->visit('/')
+                ->clickLink('Admin')
+                ->click('#upload-coursework-button')
+                ->assertSee('Upload Coursework Spreadsheet')
+                ->attach('sheet', $sheet)
+                ->press('Upload')
+                ->assertSee('TEST9999')
+                ->assertSee('TEST1234')
+                ->assertSee('Feedback Report')
+                ->assertSee($this->staff1->fullName())
+                ->assertSee($this->staff2->fullName());
         });
     }
 

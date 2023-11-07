@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assessment;
-use App\Spreadsheet\Spreadsheet;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Spreadsheet\Spreadsheet;
 
 class ExportController extends Controller
 {

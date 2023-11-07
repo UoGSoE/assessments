@@ -6,10 +6,6 @@ namespace Tests\Unit;
 
 use App\Models\Course;
 use App\Models\User;
-use App\Wlm\FakeWlmClient;
-use App\Wlm\WlmImporter;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class WlmImportTest extends TestCase

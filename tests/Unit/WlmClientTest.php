@@ -5,14 +5,13 @@
 namespace Tests\Unit;
 
 use App\Wlm\WlmClient;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class WlmClientTest extends TestCase
 {
     /**
      * @test
+     *
      * @group integration
      */
     public function can_get_a_list_of_all_courses_from_the_wlm()
@@ -27,6 +26,7 @@ class WlmClientTest extends TestCase
 
     /**
      * @test
+     *
      * @group integration
      */
     public function can_get_a_member_of_staff_from_the_wlm()
@@ -41,6 +41,7 @@ class WlmClientTest extends TestCase
 
     /**
      * @test
+     *
      * @group integration
      */
     public function getting_a_non_existant_member_of_staff_returns_an_error()
@@ -57,6 +58,7 @@ class WlmClientTest extends TestCase
 
     /**
      * @test
+     *
      * @group integration
      */
     public function can_get_a_single_course_from_the_wlm()

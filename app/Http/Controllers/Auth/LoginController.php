@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Auth\Ldap;
-use App\Models\Course;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Auth;

@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Course;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Storage;
 
 class User extends Authenticatable
 {
@@ -79,16 +77,16 @@ class User extends Authenticatable
     public function totalStudentFeedbacks()
     {
         return $this->getAssessmentsWithStudentFeedback()
-                    ->reduce(function ($carry, $assessment) {
-                        return $carry + $assessment->totalNegativeFeedbacks();
-                    }, 0);
+            ->reduce(function ($carry, $assessment) {
+                return $carry + $assessment->totalNegativeFeedbacks();
+            }, 0);
     }
 
     public function numberOfMissedDeadlines()
     {
         return count($this->assessmentsWhereFeedbacksDue
-                    ->filter
-                    ->feedbackWasGivenLate());
+            ->filter
+            ->feedbackWasGivenLate());
     }
 
     /**
@@ -98,10 +96,10 @@ class User extends Authenticatable
     public function newFeedbacks()
     {
         return $this->assessments()->with('course', 'feedbacks')
-                    ->get()
-                    ->flatMap(function ($assessment) {
-                        return $assessment->negativeFeedbacks->filter->staffNotNotified();
-                    });
+            ->get()
+            ->flatMap(function ($assessment) {
+                return $assessment->negativeFeedbacks->filter->staffNotNotified();
+            });
     }
 
     public function getMatricAttribute()

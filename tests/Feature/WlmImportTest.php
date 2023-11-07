@@ -11,9 +11,6 @@ use App\Wlm\FakeWlmClient;
 use App\Wlm\WlmClient;
 use App\Wlm\WlmImporter;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 class WlmImportTest extends TestCase
@@ -82,6 +79,7 @@ class WlmImportTest extends TestCase
 
     /**
      * @test
+     *
      * @group integration
      */
     public function can_import_the_data_from_the_real_wlm()

@@ -2,18 +2,20 @@
 
 namespace App\Wlm;
 
-use App\Models\Course;
 use App\Mail\WlmImportProblem;
+use App\Models\Course;
 use App\Models\User;
-use App\Wlm\WlmClientInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class WlmImporter
 {
     protected $client;
+
     protected $staffList;
+
     protected $studentList;
+
     protected $courseList;
 
     public function __construct(WlmClientInterface $client)
@@ -110,7 +112,7 @@ class WlmImporter
 
         return collect($wlmCourse['Students'])->reject(function ($wlmStudent) {
             return preg_match('/^[0-9]{7}$/u', $wlmStudent['Matric']) !== 1;
-        })->map(function ($wlmStudent) use ($wlmCourse) {
+        })->map(function ($wlmStudent) {
             if (! $this->studentList->has($wlmStudent['Matric'])) {
                 try {
                     $this->studentList[$wlmStudent['Matric']] = User::studentFromWlmData($wlmStudent);

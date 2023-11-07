@@ -28,22 +28,22 @@ class StudentAssessmentTest extends DuskTestCase
             $assessment4 = $this->createAssessment(['type' => 'SHOULDNTSHOWUP', 'deadline' => Carbon::now()->startOfWeek()->addDays(4)]);
 
             $browser->loginAs($student)
-                    ->visit('/home')
-                    ->assertSee('Your Assessments')
-                    ->assertSee($assessment2->title)
-                    ->assertSee($assessment3->title)
-                    ->assertDontSee($assessment4->title)
-                    ->press('.fc-prev-button')   // ie, go back one month
-                    ->assertSee($assessment1->title)
-                    ->clickLink($assessment1->title)
-                    ->assertSee('Assessment Details')
-                    ->assertSee($assessment1->course->code)
-                    ->assertSee($assessment1->course->title)
-                    ->assertSee($assessment1->type)
-                    ->press('Report assessment feedback is overdue')
-                    ->assertSee('Feedback recorded')
-                    ->clickLink($assessment2->title)
-                    ->assertDontSee('Report assessment feedback');
+                ->visit('/home')
+                ->assertSee('Your Assessments')
+                ->assertSee($assessment2->title)
+                ->assertSee($assessment3->title)
+                ->assertDontSee($assessment4->title)
+                ->press('.fc-prev-button')   // ie, go back one month
+                ->assertSee($assessment1->title)
+                ->clickLink($assessment1->title)
+                ->assertSee('Assessment Details')
+                ->assertSee($assessment1->course->code)
+                ->assertSee($assessment1->course->title)
+                ->assertSee($assessment1->type)
+                ->press('Report assessment feedback is overdue')
+                ->assertSee('Feedback recorded')
+                ->clickLink($assessment2->title)
+                ->assertDontSee('Report assessment feedback');
             $this->assertDatabaseHas('assessment_feedbacks', [
                 'course_id' => $course1->id,
                 'student_id' => $student->id,

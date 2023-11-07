@@ -7,11 +7,17 @@ use GuzzleHttp\Client;
 class WlmClient implements WlmClientInterface
 {
     public $response;
+
     public $statusCode;
+
     public $responseMessage;
+
     public $responseCode;
+
     protected $client;
+
     protected $wlmStaff;
+
     protected $baseUri;
 
     public function __construct()

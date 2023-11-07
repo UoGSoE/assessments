@@ -4,17 +4,14 @@
 
 namespace Tests\Feature;
 
+use App\Mail\WlmImportProblem;
 use App\Models\Assessment;
 use App\Models\Course;
-use App\Mail\WlmImportProblem;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
 use App\Wlm\FakeBrokenWlmClient;
 use App\Wlm\FakeWlmClient;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Storage;

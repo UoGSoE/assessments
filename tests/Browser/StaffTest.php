@@ -24,18 +24,18 @@ class StaffTest extends DuskTestCase
             $assessment2 = $this->createAssessment(['deadline' => Carbon::now()]);
 
             $browser->loginAs($staff)
-                    ->visit('/home')
-                    ->assertSee('Your Assessments')
-                    ->assertSee($assessment1->course->code)
-                    ->assertSee($assessment2->course->code)
-                    ->clickLink($assessment2->title)
-                    ->assertSee($assessment2->type)
-                    ->assertSee($assessment2->deadline->format('d/m/Y'))
-                    ->visit('/home')
-                    ->clickLink($assessment1->title)
-                    ->assertSee('Assessment Details')
-                    ->assertSee($assessment1->type)
-                    ->assertSee($assessment1->deadline->format('d/m/Y'));
+                ->visit('/home')
+                ->assertSee('Your Assessments')
+                ->assertSee($assessment1->course->code)
+                ->assertSee($assessment2->course->code)
+                ->clickLink($assessment2->title)
+                ->assertSee($assessment2->type)
+                ->assertSee($assessment2->deadline->format('d/m/Y'))
+                ->visit('/home')
+                ->clickLink($assessment1->title)
+                ->assertSee('Assessment Details')
+                ->assertSee($assessment1->type)
+                ->assertSee($assessment1->deadline->format('d/m/Y'));
         });
     }
 
@@ -50,9 +50,9 @@ class StaffTest extends DuskTestCase
             $assessment1 = $this->createAssessment(['course_id' => $course->id, 'staff_id' => $staff->id, 'deadline' => Carbon::now()->subWeeks(3)->startOfWeek()]);
 
             $browser->loginAs($staff)
-                    ->visit('/home')
-                    ->assertSee('Your Assessments')
-                    ->assertSee($assessment1->course->code);
+                ->visit('/home')
+                ->assertSee('Your Assessments')
+                ->assertSee($assessment1->course->code);
         });
     }
 
@@ -73,14 +73,14 @@ class StaffTest extends DuskTestCase
                  - hence the startofMonth() carbon call.
             */
             $browser->loginAs($staff)
-                    ->visit("/assessment/{$assessment->id}")
-                    ->click('#datepicker')
-                    ->waitFor('.pika-lendar')
-                    ->click('[data-day="1"]')
-                    ->press('Save')
-                    ->assertSee('Feedback marked as complete')
-                    ->assertSee(Carbon::now()->startOfMonth()->format('d/m/Y'))
-                    ->assertDontSee('Save');
+                ->visit("/assessment/{$assessment->id}")
+                ->click('#datepicker')
+                ->waitFor('.pika-lendar')
+                ->click('[data-day="1"]')
+                ->press('Save')
+                ->assertSee('Feedback marked as complete')
+                ->assertSee(Carbon::now()->startOfMonth()->format('d/m/Y'))
+                ->assertDontSee('Save');
         });
     }
 }

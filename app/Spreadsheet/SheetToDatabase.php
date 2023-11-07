@@ -10,7 +10,9 @@ use Carbon\Carbon;
 class SheetToDatabase
 {
     public $errors;
+
     protected $sheet;
+
     protected $currentRow = 1;
 
     public function __construct(Spreadsheet $sheet)

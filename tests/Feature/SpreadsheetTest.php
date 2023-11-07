@@ -8,9 +8,6 @@ use App\Models\Assessment;
 use App\Models\Course;
 use App\Spreadsheet\Spreadsheet;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 class SpreadsheetTest extends TestCase
@@ -25,7 +22,7 @@ class SpreadsheetTest extends TestCase
 
         $file = new \Illuminate\Http\UploadedFile($spreadsheet, 'coursework.xlsx', 'application/octet-stream', filesize($spreadsheet), UPLOAD_ERR_OK, true);
         $response = $this->actingAs($admin)
-                        ->call('POST', route('coursework.update'), [], [], ['sheet' => $file]);
+            ->call('POST', route('coursework.update'), [], [], ['sheet' => $file]);
 
         $response->assertStatus(302);
         $response->assertSessionHas('success_message');

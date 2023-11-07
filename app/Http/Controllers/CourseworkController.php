@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Spreadsheet\SheetToDatabase;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CourseworkController extends Controller
@@ -31,7 +30,7 @@ class CourseworkController extends Controller
         $this->importer->importSheetData($tempFile);
 
         return redirect()->route('report.feedback')
-                ->withErrors($this->importer->errors)
-                ->with('success_message', 'Imported data');
+            ->withErrors($this->importer->errors)
+            ->with('success_message', 'Imported data');
     }
 }

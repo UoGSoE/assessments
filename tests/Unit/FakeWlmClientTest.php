@@ -5,8 +5,6 @@
 namespace Tests\Unit;
 
 use App\Wlm\FakeWlmClient;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class FakeWlmClientTest extends TestCase

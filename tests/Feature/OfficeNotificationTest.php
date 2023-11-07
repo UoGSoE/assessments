@@ -7,9 +7,6 @@ namespace Tests\Feature;
 use App\Notifications\OverdueFeedback;
 use App\Notifications\ProblematicAssessment;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
