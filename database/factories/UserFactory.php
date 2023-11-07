@@ -25,10 +25,10 @@ class UserFactory extends Factory
         static $password;
 
         return [
-            'username' => $this->faker->unique()->userName,
-            'email' => $this->faker->unique()->safeEmail,
+            'username' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'password' => $password ?: $password = bcrypt('secret'),
-            'surname' => preg_replace('/[^a-z\s]/i', ' ', $this->faker->lastName),
+            'surname' => preg_replace('/[^a-z\s]/i', ' ', $this->faker->lastName()),
             'forenames' => $this->faker->firstName(),
             'remember_token' => Str::random(10),
             'is_student' => false,
@@ -39,7 +39,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'username' => $this->faker->unique()->numberBetween(1000000, 9999999).$this->faker->randomLetter,
+                'username' => $this->faker->unique()->numberBetween(1000000, 9999999).$this->faker->randomLetter(),
                 'is_student' => true,
             ];
         });

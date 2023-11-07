@@ -23,7 +23,7 @@ class CourseFactory extends Factory
     {
         return [
             'code' => 'ENG'.$this->faker->unique()->numberBetween(1000, 5999),
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->sentence(),
             'is_active' => true,
             'discipline' => 'Electronics',
         ];
