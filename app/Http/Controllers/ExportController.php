@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Models\Assessment;
 use App\Models\User;
 use App\Spreadsheet\Spreadsheet;
@@ -15,14 +16,14 @@ class ExportController extends Controller
         $this->sheet = $sheet;
     }
 
-    public function assessments()
+    public function assessments(): BinaryFileResponse
     {
         $filename = $this->sheet->generate($this->generateAssessmentsData());
 
         return response()->download($filename, 'assessments.xlsx');
     }
 
-    public function staff()
+    public function staff(): BinaryFileResponse
     {
         $filename = $this->sheet->generate($this->generateStaffData());
 

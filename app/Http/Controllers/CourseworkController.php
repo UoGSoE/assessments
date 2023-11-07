@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Spreadsheet\SheetToDatabase;
 use Illuminate\Http\Request;
 
@@ -16,12 +18,12 @@ class CourseworkController extends Controller
         $this->importer = $importer;
     }
 
-    public function edit()
+    public function edit(): View
     {
         return view('coursework.import');
     }
 
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         if (! $request->hasFile('sheet')) {
             return redirect()->back()->withErrors(['sheet' => 'No spreadsheet given']);

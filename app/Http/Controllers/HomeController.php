@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Course;
 use Auth;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $assessments = Auth::user()->assessmentsAsJson();
 

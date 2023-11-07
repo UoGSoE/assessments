@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    public function show($id)
+    public function show($id): View
     {
         $staff = User::findOrFail($id);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Models\Assessment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 
 class StaffFeedbackController extends Controller
 {
-    public function store(Request $request, $id)
+    public function store(Request $request, $id): RedirectResponse
     {
         $this->validate($request, ['date' => 'required|date_format:d/m/Y']);
         $assessment = Assessment::findOrFail($id);

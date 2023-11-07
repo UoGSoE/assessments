@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Models\Assessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class StudentFeedbackController extends Controller
 {
-    public function store(Request $request, $assessmentId)
+    public function store(Request $request, $assessmentId): RedirectResponse
     {
         $assessment = Assessment::findOrFail($assessmentId);
         if (Gate::denies('leave_feedback', $assessment)) {

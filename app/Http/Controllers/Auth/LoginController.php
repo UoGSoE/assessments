@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\View\View;
 use App\Auth\Ldap;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -44,7 +45,7 @@ class LoginController extends Controller
         $this->ldap = $ldap;
     }
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('auth.login');
     }

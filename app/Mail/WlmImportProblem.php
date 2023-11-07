@@ -27,7 +27,7 @@ class WlmImportProblem extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->from('noreply@eng.gla.ac.uk')->markdown('emails.wlm.error');
     }
