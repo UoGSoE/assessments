@@ -24,8 +24,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
         Gate::define('edit_assessments', function ($user) {
             if ($user->is_admin) {
                 return true;
