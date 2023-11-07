@@ -11,7 +11,7 @@ Route::get('/course/{id}', [\App\Http\Controllers\CourseController::class, 'show
 
 // authenticated routes
 
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\HomeController::class, 'landing'])->name('landing');
 
     Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // admin only routes
 
-    Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
+    Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('report/feedback', [\App\Http\Controllers\ReportController::class, 'feedback'])->name('report.feedback');
         Route::get('report/assessment', [\App\Http\Controllers\ReportController::class, 'assessments'])->name('report.assessment');
         Route::get('report/staff', [\App\Http\Controllers\ReportController::class, 'staff'])->name('report.staff');
